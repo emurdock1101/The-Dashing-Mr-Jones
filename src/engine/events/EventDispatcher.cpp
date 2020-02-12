@@ -55,5 +55,11 @@ bool EventDispatcher::hasEventListener(EventListener* l, string eventType){
 }
 
 void EventDispatcher::dispatchEvent(Event* e){
-	
+	for (auto event: *listeners){
+		if (event.first == e->getType()){
+			for (EventListener* listener: *event.second){
+				listener->handleEvent(e);
+			}
+		}
+	}
 }
