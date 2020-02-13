@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
+#include "Event.h"
 #include "Sprite.h"
 #include "SpriteDispatcher.h"
 #include "MyGame.h"
@@ -16,7 +17,8 @@ MyGame::MyGame() : Game(1200, 1000) {
     coin->position = {100, 100};
     Game::addChild(coin);
 
-    coin->addEventListener(questManager, "quest");
+    questManager = new QuestManager();
+    coin->addEventListener(questManager, "COIN_PICKED_UP");
 }
 
 MyGame::~MyGame(){
@@ -25,10 +27,12 @@ MyGame::~MyGame(){
 void MyGame::update(set<SDL_Scancode> pressedKeys){
 	character->update(pressedKeys);
 	Game::update(pressedKeys);
-    if (abs(character->position.x - coin->position.x) < 50
+    if (Game::getChild(coin->id) != NULL
+            && abs(character->position.x - coin->position.x) < 50
             && abs(character->position.y - coin->position.y) < 50) {
-        //coin->dispatchEvent(TODO);
-        cout << "Quest is complete!" << endl;
+        Event *coinPickedUp = new Event("COIN_PICKED_UP", coin);
+        coin->dispatchEvent(coinPickedUp);
+        coin->removeThis();
     }
 	if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
 		character->position.x++;
