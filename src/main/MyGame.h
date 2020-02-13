@@ -6,7 +6,6 @@
 #include <iostream>
 #include "Game.h"
 #include "Sprite.h"
-#include "SpriteDispatcher.h"
 #include "AnimatedSprite.h"
 #include "QuestManager.h"
 
@@ -25,7 +24,7 @@ public:
 private:
 	
     Sprite *character;
-    SpriteDispatcher *coin;
+    Sprite *coin;
 
     QuestManager *questManager;
 

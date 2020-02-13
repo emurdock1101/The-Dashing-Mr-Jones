@@ -3,7 +3,6 @@
 #include <iostream>
 #include "Event.h"
 #include "Sprite.h"
-#include "SpriteDispatcher.h"
 #include "MyGame.h"
 
 using namespace std;
@@ -16,7 +15,7 @@ MyGame::MyGame() : Game(1200, 1000) {
     character->pivot = {character->width/2, character->height/2};
     Game::addChild(character);
 
-	coin = new SpriteDispatcher("coin","./resources/Coin.png");
+	coin = new Sprite("coin","./resources/Coin.png");
     coin->position = {500, 500};
     coin->width = 20;
     coin->height = 20;
