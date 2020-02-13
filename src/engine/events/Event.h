@@ -7,11 +7,13 @@
 
 using namespace std;
 
+
 class EventDispatcher;
 
 class Event{
 
 public:
+    static const string COIN_PICKED_UP;
 
 	Event(string type, EventDispatcher* source);
 

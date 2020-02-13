@@ -5,6 +5,8 @@
 
 using namespace std;
 
+const string Event::COIN_PICKED_UP = "COIN_PICKED_UP";
+
 Event::Event(string type, EventDispatcher* source){
 	this->eventType = type;
 	this->source = source;
