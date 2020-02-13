@@ -11,10 +11,17 @@ using namespace std;
 MyGame::MyGame() : Game(1200, 1000) {
 	character = new Sprite("character","./resources/character/Idle_1.png");
     character->position = {0, 0};
+    character->width = 200;
+    character->height = 200;
+    character->pivot = {character->width/2, character->height/2};
     Game::addChild(character);
 
-	coin = new SpriteDispatcher("coin","./resources/character/Idle_5.png");
-    coin->position = {100, 100};
+	coin = new SpriteDispatcher("coin","./resources/Coin.png");
+    coin->position = {500, 500};
+    coin->width = 20;
+    coin->height = 20;
+    coin->pivot = {coin->width/2, coin->height/2};
+    
     Game::addChild(coin);
 
     questManager = new QuestManager();
