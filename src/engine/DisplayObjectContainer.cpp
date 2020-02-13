@@ -33,7 +33,6 @@ void DisplayObjectContainer::removeImmediateChild(DisplayObject* child) {
     for (int i = 0; i < children.size(); i++) {
         if (children[i] == child) {
             children.erase(children.begin() + i);
-            delete child;
         }
     }
 }
@@ -41,19 +40,14 @@ void DisplayObjectContainer::removeImmediateChild(DisplayObject* child) {
 void DisplayObjectContainer::removeImmediateChild(string id) {
     for (int i = 0; i < children.size(); i++) {
         if (children[i]->id == id) {
-            // delete the child
-            DisplayObject *child = children[i];
             children.erase(children.begin() + i);
-            delete child;
         }
     }
 }
 
 void DisplayObjectContainer::removeChild(int index) {
     if (index < children.size()) {
-        DisplayObject *child = children[index];
         children.erase(children.begin() + index);
-        delete child;
     }
 }
 
