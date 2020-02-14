@@ -22,6 +22,7 @@ public:
 	virtual void draw(AffineTransform &at);
 	void cleanScene();
 	vector<DisplayObjectContainer*> inScene;
+	vector<DisplayObjectContainer*> drawable;
 
 
 private:
