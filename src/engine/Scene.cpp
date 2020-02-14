@@ -105,14 +105,14 @@ void Scene::loadScene(string sceneFilePath){
                 pch = strtok((char*)line.c_str(), " ");;
                 while(pch != NULL){
                     animArgs.push_back(pch);
-                    cout << pch << endl;
+                    //cout << pch << endl;
                     pch = strtok(NULL, " ");
                 }
                 bool t = true;
-                if(animArgs[4].compare("false"))
+                if(animArgs[4].compare("false")==0)
                     t = false;
                 temp->addAnimation(animArgs[0],animArgs[1],stoi(animArgs[2]),stoi(animArgs[3]),t);
-                temp->play("Sun");
+                temp->play(animArgs[1]);
             }
             if(args.size() > 12){
                 for(DisplayObjectContainer* x: inScene){
@@ -138,7 +138,9 @@ void Scene::cleanScene(){
     }
 }
 void Scene::update(set<SDL_Scancode> pressedKeys){
-
+    for(DisplayObjectContainer* x: drawable){
+        x->update(pressedKeys);
+    }
 }
 void Scene::draw(AffineTransform &at){
     for(DisplayObjectContainer* x: drawable){
