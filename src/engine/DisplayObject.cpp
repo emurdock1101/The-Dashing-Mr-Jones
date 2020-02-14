@@ -121,3 +121,15 @@ double DisplayObject::calculateRotation(SDL_Point &origin, SDL_Point &p) {
 	double x = p.x - origin.x;
 	return (atan2(y, x) * 180 / PI);
 }
+void DisplayObject::setDim(int a, int b){
+	this->image->w = a;
+	this->image->h = b;
+}
+void DisplayObject::setPos(int a, int b){
+	this->position.x = a;
+	this->position.y = b;
+}
+void DisplayObject::setPiv(int a, int b){
+	this->pivot.x = a;
+	this->pivot.y = b;
+}
