@@ -7,7 +7,7 @@
 #include "Game.h"
 #include "Sprite.h"
 #include "AnimatedSprite.h"
-
+#include "Scene.h"
 
 using namespace std;
 
@@ -19,6 +19,7 @@ public:
 
 	virtual void update(set<SDL_Scancode> pressedKeys);
 	virtual void draw(AffineTransform &at);
+	bool t = true;
 
 private:
 	
@@ -26,6 +27,7 @@ private:
 	Sprite* planet1;
 	Sprite* planet2;
 	Sprite* moon1_1;
+	Scene* sc;
 
 	DisplayObjectContainer* p1container;
 	DisplayObjectContainer* p2container;
