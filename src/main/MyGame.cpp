@@ -12,7 +12,7 @@ MyGame::MyGame() : Game(1200, 1000) {
 	allSprites = new DisplayObjectContainer();
 	// move that point to the middle
 	allSprites->position = {600, 500};
-	instance->addChild(allSprites);
+	//instance->addChild(allSprites);
 
 	sun = new AnimatedSprite("sun");
 	sun->addAnimation("./resources/solarSystem/", "Sun", 4, 2, true);
@@ -44,6 +44,10 @@ MyGame::MyGame() : Game(1200, 1000) {
 	moon1_1->position = {50, 0};
 	moon1_1->width = moon1_1->height = 15;
 	planet1->addChild(moon1_1);
+	
+	sc = new Scene();
+	sc->loadScene("./resources/scenes/Scene1.txt");
+	instance->addChild(sc);
 }
 
 MyGame::~MyGame(){
@@ -88,6 +92,14 @@ void MyGame::update(set<SDL_Scancode> pressedKeys){
 		allSprites->scaleY *= 1/1.05;
 	}
 	if (pressedKeys.find(SDL_SCANCODE_P) != pressedKeys.end()) {
+		if(t){
+			sc->loadScene("./resources/scenes/Scene2.txt");
+			t = false;
+		}
+		else{
+			sc->loadScene("./resources/scenes/Scene1.txt");
+			t = true;
+		}
 		sun->play("Sun");
 	}
 	if (pressedKeys.find(SDL_SCANCODE_L) != pressedKeys.end()) {
