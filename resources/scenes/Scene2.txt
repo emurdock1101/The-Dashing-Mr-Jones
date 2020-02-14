@@ -1,0 +1,6 @@
+DisplayObjectContainer run1 ./resources/character/Run_1.png 400 400 0 0 1 1 0 150 150 255
+DisplayObjectContainer run2 ./resources/character/Run_10.png 150 150 0 0 1 1 0 150 150 255 run1
+DisplayObject idle1 ./resources/character/Idle_1.png 0 0 0 0 1 1 0 150 150 255
+DisplayObject dead1 ./resources/character/Dead_1.png 150 0 0 0 1 1 0 150 150 255 run2
+AnimatedSprite sun 150 150 0 0 1 1 0 150 150 255 1
+./resources/solarSystem/ Sun 4 2 true
