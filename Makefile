@@ -1,11 +1,18 @@
 TARGET_EXEC ?= myGame
+DEVTOOL_TARGET_EXEC ?= devtool
 
 BUILD_DIR ?= ./bin
-SRC_DIRS ?= ./src
+
+SRC_DIRS ?= ./src/engine ./src/main
+DEVTOOL_SRC_DIRS ?= ./src/engine ./src/devtool
 
 SRCS := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
+
+DEVTOOL_SRCS := $(shell find $(DEVTOOL_SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
+DEVTOOL_OBJS := $(DEVTOOL_SRCS:%=$(BUILD_DIR)/%.o)
+DEVTOOL_DEPS := $(DEVTOOL_OBJS:.o=.d)
 
 INC_DIRS := $(shell find $(SRC_DIRS) -type d)
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
@@ -17,6 +24,9 @@ LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf
 
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(CXX) $(OBJS) -o $@ $(LDFLAGS)
+
+$(BUILD_DIR)/$(DEVTOOL_TARGET_EXEC): $(DEVTOOL_OBJS)
+	$(CXX) $(DEVTOOL_OBJS) -o $@ $(LDFLAGS)
 
 # assembly
 $(BUILD_DIR)/%.s.o: %.s
