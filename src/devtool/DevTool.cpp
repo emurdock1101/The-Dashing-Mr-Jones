@@ -12,15 +12,15 @@
 using namespace std;
 
 DevTool::DevTool() : Game(1200, 1000) {
-    scene = new Scene();
+	scene = new Scene();
 	selected = new Sprite("character","./resources/character/Idle_1.png");
-    selected->position = {0, 0};
-    selected->width = 200;
-    selected->height = 200;
-    selected->pivot = {selected->width/2, selected->height/2};
-    scene->addChild(selected);
+	selected->position = {0, 0};
+	selected->width = 200;
+	selected->height = 200;
+	selected->pivot = {selected->width/2, selected->height/2};
+	scene->addChild(selected);
 
-    Game::addChild(scene);
+	Game::addChild(scene);
 }
 
 DevTool::~DevTool() {
@@ -39,9 +39,9 @@ void DevTool::start(){
 		double duration = (( end - start ) / (double) CLOCKS_PER_SEC)*1000;
 		if(duration > ms_per_frame){
 			start = end;
-            //this->update(pressedKeys);
+			//this->update(pressedKeys);
 			AffineTransform at;
-            this->draw(at);
+			this->draw(at);
 		}
 
 		SDL_PollEvent(&event);
@@ -50,21 +50,21 @@ void DevTool::start(){
 			case SDL_QUIT:
 				quit = true;
 				break;
-            case SDL_MOUSEBUTTONDOWN:
-                dragging = true;
-                break;
-            case SDL_MOUSEBUTTONUP:
-                dragging = false;
-                selected->position.x -= selected->position.x % scene->gridPixels;
-                selected->position.y -= selected->position.y % scene->gridPixels;
-                break;
-            case SDL_MOUSEMOTION:
-                if (dragging) {
-                    cout << "MOVING" << endl;
-                    selected->position.x = event.motion.x;
-                    selected->position.y = event.motion.y;
-                }
-                break;
+			case SDL_MOUSEBUTTONDOWN:
+				dragging = true;
+				break;
+			case SDL_MOUSEBUTTONUP:
+				dragging = false;
+				selected->position.x -= selected->position.x % scene->gridPixels;
+				selected->position.y -= selected->position.y % scene->gridPixels;
+				break;
+			case SDL_MOUSEMOTION:
+				if (dragging) {
+					cout << "MOVING" << endl;
+					selected->position.x = event.motion.x;
+					selected->position.y = event.motion.y;
+				}
+				break;
 		}
 	}
 }
@@ -74,6 +74,6 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 }
 
 void DevTool::draw(AffineTransform &at){
-    SDL_SetRenderDrawColor(Game::renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+	SDL_SetRenderDrawColor(Game::renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 	Game::draw(at);
 }

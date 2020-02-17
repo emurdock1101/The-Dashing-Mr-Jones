@@ -23,10 +23,10 @@ public:
 
 private:
 	
-    Sprite *character;
-    Sprite *coin;
+	Sprite *character;
+	Sprite *coin;
 
-    QuestManager *questManager;
+	QuestManager *questManager;
 
 	// DisplayObject* character;
 };

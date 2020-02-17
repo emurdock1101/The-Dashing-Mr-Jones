@@ -13,15 +13,15 @@ using namespace std;
 class Scene : public DisplayObjectContainer {
 
 public:
-    Scene();
+	Scene();
 	virtual ~Scene();
 
-    //void loadScene(string path);
-    //void saveScene(string path);
+	//void loadScene(string path);
+	//void saveScene(string path);
 
 	virtual void draw(AffineTransform &at);
 
-    int gridPixels = 50;
+	int gridPixels = 50;
 };
 
 #endif

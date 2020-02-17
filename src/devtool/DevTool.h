@@ -24,9 +24,9 @@ public:
 	virtual void draw(AffineTransform &at);
 
 private:
-    Scene *scene;
-    Sprite *selected;
-    bool dragging = false;
+	Scene *scene;
+	Sprite *selected;
+	bool dragging = false;
 };
 
 #endif

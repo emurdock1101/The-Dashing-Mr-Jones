@@ -3,9 +3,9 @@
 using namespace std;
 
 int main(int argc, char ** argv) {
-    DevTool* devtool = new DevTool();
-    devtool->start();
+	DevTool* devtool = new DevTool();
+	devtool->start();
 
-    delete devtool;
-    return 0;
+	delete devtool;
+	return 0;
 }
