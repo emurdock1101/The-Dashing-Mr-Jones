@@ -23,6 +23,9 @@ DevTool::DevTool() : Game(1200, 1000) {
     Game::addChild(scene);
 }
 
+DevTool::~DevTool() {
+}
+
 void DevTool::start(){
 
 	int ms_per_frame = (1.0/(double)this->frames_per_sec)*1000;
@@ -52,6 +55,8 @@ void DevTool::start(){
                 break;
             case SDL_MOUSEBUTTONUP:
                 dragging = false;
+                selected->position.x -= selected->position.x % scene->gridPixels;
+                selected->position.y -= selected->position.y % scene->gridPixels;
                 break;
             case SDL_MOUSEMOTION:
                 if (dragging) {
@@ -69,5 +74,6 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 }
 
 void DevTool::draw(AffineTransform &at){
+    SDL_SetRenderDrawColor(Game::renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 	Game::draw(at);
 }

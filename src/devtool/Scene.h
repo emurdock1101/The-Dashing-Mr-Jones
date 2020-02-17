@@ -19,8 +19,9 @@ public:
     //void loadScene(string path);
     //void saveScene(string path);
 
-	vector<DisplayObject*> children;
-private:
+	virtual void draw(AffineTransform &at);
+
+    int gridPixels = 50;
 };
 
 #endif
