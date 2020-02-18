@@ -8,9 +8,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
+#include <filesystem>
+#include <vector> 
 
 using namespace std;
-
+namespace fs = std::__fs::filesystem;
 DevTool::DevTool() : Game(1200, 1000) {
 	scene = new Scene();
 	selected = new Sprite("character","./resources/character/Idle_1.png");
@@ -21,13 +23,20 @@ DevTool::DevTool() : Game(1200, 1000) {
 	scene->addChild(selected);
 
 	Game::addChild(scene);
+
+	vector<string> images = getImagesFromFolder("./resources");
+	for (string image : images){
+		cout << image << endl;
+	}
+
+
 }
 
 DevTool::~DevTool() {
 }
 
 void DevTool::start(){
-
+	//getImagesFromFolder("./resources/character");
 	int ms_per_frame = (1.0/(double)this->frames_per_sec)*1000;
 	std::clock_t start = std::clock();
 
@@ -67,6 +76,27 @@ void DevTool::start(){
 				break;
 		}
 	}
+}
+
+////https://stackoverflow.com/questions/612097/how-can-i-get-the-list-of-files-in-a-directory-using-c-or-c
+vector<string>DevTool::getImagesFromFolder(string folderName){
+	vector<string> images = {};
+	for (const auto &file: fs::directory_iterator(folderName)){
+		string temp = file.path();
+		if (temp.find(".png") != std::string::npos){ //find each image in the main directory
+			images.push_back(file.path());
+		}
+		//Go through each sub-directory and find those images
+		else if (!(temp.substr(1).find(".") != std::string::npos)){
+			for (const auto &fileInSubFolder : fs::directory_iterator(temp)){
+				string temp = fileInSubFolder.path();
+				if (temp.find(".png") != std::string::npos){
+					images.push_back(fileInSubFolder.path());
+				}
+			}
+		}
+	}
+	return images;
 }
 
 void DevTool::update(set<SDL_Scancode> pressedKeys){
