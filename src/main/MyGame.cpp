@@ -28,11 +28,11 @@ MyGame::MyGame() : Game(1200, 1000) {
 	sun->addChild(p1container);
 	sun->addChild(p2container);
 
-	planet1 = new Sprite("planet1","./resources/solarSystem/Planet.png");
-	planet1->position = {200, 0};
-	planet1->width = planet1->height = 30;
-	planet1->pivot = {15, 15};
-	p1container->addChild(planet1);
+	// planet1 = new Sprite("planet1","./resources/solarSystem/Planet.png");
+	// planet1->position = {200, 0};
+	// planet1->width = planet1->height = 30;
+	// planet1->pivot = {15, 15};
+	// p1container->addChild(planet1);
 
 	planet2 = new Sprite("planet2","./resources/solarSystem/Planet.png");
 	planet2->position = {300, 0};
