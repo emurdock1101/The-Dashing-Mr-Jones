@@ -8,6 +8,7 @@
 #include "Sprite.h"
 #include "AnimatedSprite.h"
 #include "Scene.h"
+#include "Sound.h"
 
 using namespace std;
 
@@ -28,6 +29,7 @@ private:
 	Sprite* planet2;
 	Sprite* moon1_1;
 	Scene* sc;
+	Sound* sound;
 
 	DisplayObjectContainer* p1container;
 	DisplayObjectContainer* p2container;
