@@ -1,8 +1,10 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 #include <iostream>
 #include "Sprite.h"
 #include "MyGame.h"
+#include "Sound.h"
 
 using namespace std;
 
@@ -48,6 +50,9 @@ MyGame::MyGame() : Game(1200, 1000) {
 	sc = new Scene();
 	sc->loadScene("./resources/scenes/Scene1.txt");
 	instance->addChild(sc);
+
+	sound = new Sound();
+	sound->playMusic("./resources/sounds/boss.ogg");
 }
 
 MyGame::~MyGame(){
@@ -104,6 +109,14 @@ void MyGame::update(set<SDL_Scancode> pressedKeys){
 	}
 	if (pressedKeys.find(SDL_SCANCODE_L) != pressedKeys.end()) {
 		sun->stop();
+	}
+	if (pressedKeys.find(SDL_SCANCODE_G) != pressedKeys.end()) {
+		sound->playSFX("./resources/sounds/TORYAH.wav");
+	}
+	if (pressedKeys.find(SDL_SCANCODE_H) != pressedKeys.end()) {
+		if (Mix_PlayingMusic() == 0) {
+			sound->playMusic("./resources/sounds/boss.ogg");
+		}
 	}
 	Game::update(pressedKeys);
 }
