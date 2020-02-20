@@ -19,15 +19,19 @@ public:
 	DevTool();
 	virtual ~DevTool();
 	virtual void start();
-	vector<string> getImagesFromFolder(string folderName);
 
 	virtual void update(set<SDL_Scancode> pressedKeys);
 	virtual void draw(AffineTransform &at);
+	vector<string> getImagesFromFolder(string folderName);
 
 private:
 	Scene *scene;
+	Scene *selectBar;
 	Sprite *selected;
+	Sprite *selectionArea;
 	bool dragging = false;
+
+	vector<Sprite*> spritesToDisplay;
 };
 
 #endif
