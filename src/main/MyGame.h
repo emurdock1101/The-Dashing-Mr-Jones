@@ -30,7 +30,7 @@ private:
 	Sprite* moon1_1;
 	Scene* sc;
 	Sound* sound;
-
+	DisplayObjectContainer* player;
 	DisplayObjectContainer* p1container;
 	DisplayObjectContainer* p2container;
 	DisplayObjectContainer* allSprites;
