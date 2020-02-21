@@ -5,6 +5,7 @@
 #include "MyGame.h"
 #include "Scene.h"
 #include "Camera.h"
+#include "Sound.h"
 
 
 using namespace std;
@@ -13,12 +14,18 @@ MyGame::MyGame() : Game(1200, 600) {
 	instance = this;
 
 	cammy = new Camera();
+	cammy->scaleX = 3;
+	cammy->scaleY = 3;
+	cammy->x = -50;
+	cammy->y = -50;
+	sound = new Sound();
 	sc = new Scene();
 	sc->loadScene("./resources/scenes/DemoScene.txt");
 	instance->addChild(sc);
 	this->pivot.x = this->windowWidth/2;
 	this->pivot.y = this->windowHeight/2;
 	player = sc->getObj("player");
+	sound->playMusic("./resources/sounds/boss.ogg");
 
 }
 
@@ -28,19 +35,75 @@ MyGame::~MyGame(){
 
 void MyGame::update(set<SDL_Scancode> pressedKeys){
 	if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
-		cammy->x -= 10;
+		if (player->position.y < 600) {
+			if (player->position.x < 100) {
+				player->position.x += 6;
+				cammy->x -= 6;
+			}
+			else {
+				sound->playSFX("./resources/sounds/TORYAH.wav");
+				//player->position.x = 99;
+				//cammy->x += 6;
+			}
+		}
+		else {
+			if (player->position.x < 500) {
+				player->position.x += 6;
+				cammy->x -= 6;
+			}
+			else {
+				sound->playSFX("./resources/sounds/TORYAH.wav");
+				//player->position.x = 99;
+				//cammy->x += 6;
+			}
+		}
 	}
 	if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
-		cammy->x += 10;
+		if (player->position.x > -100) {
+			player->position.x -= 6;
+			cammy->x += 6;
+		}
+		else {
+			sound->playSFX("./resources/sounds/TORYAH.wav");
+			//player->position.x = -99;
+			//cammy->x -= 6;
+		}
 	}
 	if (pressedKeys.find(SDL_SCANCODE_DOWN) != pressedKeys.end()) {
-		cammy->y -= 10;
+		if (player->position.y < 800) {
+			player->position.y += 6;
+			cammy->y -= 6;
+		}
+		else {
+			sound->playSFX("./resources/sounds/TORYAH.wav");
+			//player->position.y = 1;
+			//cammy->y += 6;
+		}
 	}
 	if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end()) {
-		cammy->y += 10;
+		if (player->position.x < 150) {
+			if (player->position.y > -200) {
+				player->position.y -= 6;
+				cammy->y += 6;
+			}
+			else {
+				sound->playSFX("./resources/sounds/TORYAH.wav");
+				//player->position.y = 499;
+				//cammy->y -= 6;
+			}
+		}
+		else {
+			if (player->position.y > 700) {
+				player->position.y -= 6;
+				cammy->y += 6;
+			}
+			else {
+				sound->playSFX("./resources/sounds/TORYAH.wav");
+			}
+		}
 	}
 	if (pressedKeys.find(SDL_SCANCODE_A) != pressedKeys.end()) {
-		//player->position.y += 20;
+		player->position.y += 20;
 	}
 	if (pressedKeys.find(SDL_SCANCODE_S) != pressedKeys.end()) {
 		player->position.y -= 20;
@@ -59,8 +122,10 @@ void MyGame::update(set<SDL_Scancode> pressedKeys){
 		cammy->scaleY += .05;
 	}
 	if (pressedKeys.find(SDL_SCANCODE_W) != pressedKeys.end()) {
-		cammy->scaleX -= .05;
-		cammy->scaleY -= .05;
+		if (cammy->scaleX > 3 && cammy->scaleY > 3) {
+			cammy->scaleX -= .05;
+			cammy->scaleY -= .05;
+		}
 	}
 	if (pressedKeys.find(SDL_SCANCODE_P) != pressedKeys.end()) {
 		if(t){
@@ -71,10 +136,14 @@ void MyGame::update(set<SDL_Scancode> pressedKeys){
 			sc->loadScene("./resources/scenes/Scene1.txt");
 			t = true;
 		}
-		
 	}
-	if (pressedKeys.find(SDL_SCANCODE_L) != pressedKeys.end()) {
-	
+	if (player->position.y <= 100) { 
+		cammy->scaleX = 4;
+		cammy->scaleY = 4;
+	}
+	if (player->position.y > 100) {
+		cammy->scaleY = 3;
+		cammy->scaleX = 3;
 	}
 	Game::update(pressedKeys);
 }

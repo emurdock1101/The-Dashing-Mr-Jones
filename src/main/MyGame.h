@@ -9,6 +9,7 @@
 #include "AnimatedSprite.h"
 #include "Scene.h"
 #include "Sound.h"
+#include "Camera.h"
 
 using namespace std;
 
@@ -24,16 +25,10 @@ public:
 
 private:
 	
-	AnimatedSprite* sun;
-	Sprite* planet1;
-	Sprite* planet2;
-	Sprite* moon1_1;
 	Scene* sc;
 	Sound* sound;
+	Camera* cammy;
 	DisplayObjectContainer* player;
-	DisplayObjectContainer* p1container;
-	DisplayObjectContainer* p2container;
-	DisplayObjectContainer* allSprites;
 
 	// DisplayObject* character;
 };

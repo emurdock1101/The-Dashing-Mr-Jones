@@ -11,6 +11,8 @@ public:
 	int y = 0;
 	int viewportWidth = 500;
 	int viewportHeight = 500;
+	double scaleX = 1;
+	double scaleY = 1;
 
 private:
 
