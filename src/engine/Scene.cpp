@@ -148,3 +148,10 @@ void Scene::draw(AffineTransform &at){
     }
 }
 
+DisplayObjectContainer* Scene::getObj(string id){
+    for(DisplayObjectContainer* x: inScene){
+        if(x->id.compare(id)==0){
+            return x;
+        }
+    }
+}
