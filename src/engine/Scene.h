@@ -23,6 +23,8 @@ public:
 	void cleanScene();
 	vector<DisplayObjectContainer*> inScene;
 	vector<DisplayObjectContainer*> drawable;
+	DisplayObjectContainer* getObj(string id);
+
 
 
 private:
