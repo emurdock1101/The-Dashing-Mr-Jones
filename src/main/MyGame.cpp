@@ -102,21 +102,6 @@ void MyGame::update(set<SDL_Scancode> pressedKeys){
 			}
 		}
 	}
-	if (pressedKeys.find(SDL_SCANCODE_A) != pressedKeys.end()) {
-		player->position.y += 20;
-	}
-	if (pressedKeys.find(SDL_SCANCODE_S) != pressedKeys.end()) {
-		player->position.y -= 20;
-	}
-	if (pressedKeys.find(SDL_SCANCODE_X) != pressedKeys.end()) {
-		player->position.y += 20;
-	}
-	if (pressedKeys.find(SDL_SCANCODE_Z) != pressedKeys.end()) {
-		player->position.x -= 20;
-	}
-	if (pressedKeys.find(SDL_SCANCODE_C) != pressedKeys.end()) {
-		player->position.x += 20;
-	}
 	if (pressedKeys.find(SDL_SCANCODE_Q) != pressedKeys.end()) {
 		cammy->scaleX += .05;
 		cammy->scaleY += .05;
