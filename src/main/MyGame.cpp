@@ -2,6 +2,7 @@
 #include <SDL2/SDL_image.h>
 #include <iostream>
 #include "Event.h"
+#include "EventParams.h"
 #include "Sprite.h"
 #include "MyGame.h"
 
@@ -24,7 +25,7 @@ MyGame::MyGame() : Game(1200, 1000) {
 	Game::addChild(coin);
 
 	questManager = new QuestManager();
-	coin->addEventListener(questManager, Event::COIN_PICKED_UP);
+	coin->addEventListener(questManager, EventParams::COIN_PICKED_UP);
 }
 
 MyGame::~MyGame(){
@@ -36,7 +37,7 @@ void MyGame::update(set<SDL_Scancode> pressedKeys){
 	if (Game::getChild(coin->id) != NULL
 			&& abs(character->position.x - coin->position.x) < 50
 			&& abs(character->position.y - coin->position.y) < 50) {
-		Event *coinPickedUp = new Event(Event::COIN_PICKED_UP, coin);
+		Event *coinPickedUp = new Event(EventParams::COIN_PICKED_UP, coin);
 		coin->dispatchEvent(coinPickedUp);
 		coin->removeThis();
 	}

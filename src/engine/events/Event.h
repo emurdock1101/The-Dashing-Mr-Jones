@@ -13,15 +13,14 @@ class EventDispatcher;
 class Event{
 
 public:
-    static const string COIN_PICKED_UP;
+	Event(int type, EventDispatcher* source);
 
-	Event(string type, EventDispatcher* source);
-
-	string getType();
+	int getType();
 	EventDispatcher* getSource();
 
 private:
-	string eventType = "";
+	// 0 is no event
+	int eventType = 0;
 	EventDispatcher* source;
 	
 };
