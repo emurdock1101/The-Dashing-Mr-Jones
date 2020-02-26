@@ -42,6 +42,8 @@ public:
 	int getWidth();
 	int getHeight();
 
+	bool isColliding(int x, int y);
+
 	bool visible = true;
 	SDL_Point position = {0, 0};
 	int width = 100;

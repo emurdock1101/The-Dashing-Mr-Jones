@@ -121,3 +121,19 @@ double DisplayObject::calculateRotation(SDL_Point &origin, SDL_Point &p) {
 	double x = p.x - origin.x;
 	return (atan2(y, x) * 180 / PI);
 }
+
+bool DisplayObject::isColliding(int x, int y) {
+	int globalX = 0;
+	int globalY = 0;
+	DisplayObject *currentParent = parent;
+	while (currentParent != NULL) {
+		globalX += currentParent->position.x;
+		globalY += currentParent->position.y;
+		currentParent = currentParent->parent;
+	}
+	globalX += position.x;
+	globalY += position.y;
+	return x <= globalX + width && x >= globalX &&
+		y <= globalY + height && y >= globalY;
+}
+

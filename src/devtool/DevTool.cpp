@@ -184,16 +184,5 @@ void DevTool::draw(AffineTransform &at){
 }
 
 bool DevTool::isHovered(DisplayObject *obj, SDL_Event event) {
-	if (obj->position.y <= 100) {
-		return event.motion.x - selectionArea->position.x <= obj->position.x+100 &&
-			event.motion.x - selectionArea->position.x >= obj->position.x &&
-			event.motion.y <= obj->position.y+100 &&
-			event.motion.y >= obj->position.y;
-	}
-	else {
-		return event.motion.x <= obj->position.x+100 &&
-			event.motion.x >= obj->position.x &&
-			event.motion.y <= obj->position.y+100 &&
-			event.motion.y >= obj->position.y;
-	}
+	return obj->isColliding(event.motion.x, event.motion.y);
 }
