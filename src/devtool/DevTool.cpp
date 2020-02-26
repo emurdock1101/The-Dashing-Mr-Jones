@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include "DevTool.h"
 #include <string>
 #include <ctime>
@@ -14,14 +15,10 @@
 
 using namespace std;
 namespace fs = std::experimental::filesystem;
+
 DevTool::DevTool() : Game(1200, 1000) {
 	scene = new Scene();
-	selected = new Sprite();
-	//selected->position = {50, 50};
-	//selected->width = 100;
-	//selected->height = 100;
-	//selected->pivot = {selected->width/2, selected->height/2};
-	//scene->addChild(selected);
+	selectBar = new Scene();
 
 	selectionArea = new Sprite("selection_area", 0, 0, 0);
 
@@ -31,14 +28,13 @@ DevTool::DevTool() : Game(1200, 1000) {
 
 	int count = 0;
 	for (string image : images){
-		//cout << image << endl;
-		Sprite* temp = new Sprite(to_string(count), image);
+		DisplayObject* temp = new DisplayObject(to_string(count), image);
 		spritesToDisplay.push_back(temp);
 		count++;
 	}
 
 	int x = 50;
-	for (Sprite* sprite : spritesToDisplay){
+	for (DisplayObject* sprite : spritesToDisplay){
 		sprite->position = {x, 0};
 		sprite->width = 100;
 		sprite->height = 100;
@@ -49,7 +45,6 @@ DevTool::DevTool() : Game(1200, 1000) {
 
 	Game::addChild(selectionArea);
 	Game::addChild(scene);
-
 }
 
 
@@ -83,28 +78,26 @@ void DevTool::start(){
 				quit = true;
 				break;
 			case SDL_MOUSEBUTTONDOWN:
-			count = 0;
-				for (Sprite* sprite : spritesToDisplay){
-					
-					if (event.motion.x - selectionArea->position.x <= sprite->position.x+100 && event.motion.x - selectionArea->position.x >= sprite->position.x && 
-						event.motion.y <= sprite->position.y+100 && event.motion.y >= sprite->position.y){
-						if (selectionArea->getChild(to_string(count)) != NULL){
-							selected = sprite;
-							scene->addChild(selected);
-							selectionArea->removeImmediateChild(sprite);
-							dragging = true;
-						}
-						else if (scene->getChild(to_string(count)) != NULL){
-							dragging = true;
-							selected = sprite;
-						}
+				count = 0;
+				for (DisplayObject *sprite: selectionArea->children) {
+					if (isHovered(sprite, event)) {
+						DisplayObject *tmp = new DisplayObject;
+						*tmp = *sprite;
+						selected = tmp;
+						scene->addChild(selected);
+						dragging = true;
 					}
-				count++;
 				}
+				for (DisplayObject *sprite: scene->children) {
+					if (isHovered(sprite, event)) {
+						dragging = true;
+						selected = sprite;
+					}
+				}
+				count++;
 				break;
 			case SDL_MOUSEBUTTONUP:
 				if (dragging){
-					
 					selected->position.x -= selected->position.x % scene->gridPixels;
 					selected->position.y -= selected->position.y % scene->gridPixels;
 					selected->pivot = {0,0};
@@ -113,18 +106,19 @@ void DevTool::start(){
 				break;
 			case SDL_MOUSEMOTION:
 				if (dragging) {
-					//cout << "MOVING" << endl
 					selected->position.x = event.motion.x;
 					selected->position.y = event.motion.y;
 					selected->pivot = {selected->width/2, selected->height/2};
 				}
+				break;
 			case SDL_KEYDOWN:
 				pressedKeys.insert(event.key.keysym.scancode);
+				singleUseKeys.insert(event.key.keysym.scancode);
 				break;
 			case SDL_KEYUP:
 				pressedKeys.erase(event.key.keysym.scancode);
+				singleUseKeys.erase(event.key.keysym.scancode);
 				break;
-
 		}
 	}
 }
@@ -150,18 +144,56 @@ vector<string>DevTool::getImagesFromFolder(string folderName){
 }
 
 void DevTool::update(set<SDL_Scancode> pressedKeys){
-	if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
-		selectionArea->position.x -= 5;
+	for (SDL_Scancode scancode: pressedKeys) {
+		switch(scancode) {
+			case SDL_SCANCODE_LEFT:
+				selectionArea->position.x -= 5;
+				break;
+			case SDL_SCANCODE_RIGHT:
+				if (selectionArea->position.x != 0) {
+					selectionArea->position.x += 5;
+				}
+				break;
+		}
 	}
-
-	if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()&& selectionArea->position.x != 0) {
-		selectionArea->position.x += 5;
+	for (SDL_Scancode scancode: singleUseKeys) {
+		switch(scancode) {
+			case SDL_SCANCODE_C:
+				// Copy
+				copied = new DisplayObject;
+				*copied = *selected;
+				break;
+			case SDL_SCANCODE_V:
+				// Paste
+				DisplayObject *tmp = new DisplayObject;
+				*tmp = *copied;
+				tmp->position.x += 50;
+				tmp->position.y += 50;
+				scene->addChild(tmp);
+				spritesToDisplay.push_back(tmp);
+				break;
+		}
 	}
+	singleUseKeys.clear();
 	Game::update(pressedKeys);
-	
 }
 
 void DevTool::draw(AffineTransform &at){
 	SDL_SetRenderDrawColor(Game::renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 	Game::draw(at);
+}
+
+bool DevTool::isHovered(DisplayObject *obj, SDL_Event event) {
+	if (obj->position.y <= 100) {
+		return event.motion.x - selectionArea->position.x <= obj->position.x+100 &&
+			event.motion.x - selectionArea->position.x >= obj->position.x &&
+			event.motion.y <= obj->position.y+100 &&
+			event.motion.y >= obj->position.y;
+	}
+	else {
+		return event.motion.x <= obj->position.x+100 &&
+			event.motion.x >= obj->position.x &&
+			event.motion.y <= obj->position.y+100 &&
+			event.motion.y >= obj->position.y;
+	}
 }

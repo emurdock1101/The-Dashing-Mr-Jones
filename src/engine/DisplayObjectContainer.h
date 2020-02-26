@@ -29,6 +29,8 @@ public:
 	virtual DisplayObject* getChild(int index);
 	virtual DisplayObject* getChild(string id);
 
+	virtual DisplayObjectContainer* copy();
+
 	virtual void update(set<SDL_Scancode> pressedKeys);
 	virtual void draw(AffineTransform &at);
 

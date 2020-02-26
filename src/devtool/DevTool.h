@@ -25,13 +25,18 @@ public:
 	vector<string> getImagesFromFolder(string folderName);
 
 private:
+
+	bool isHovered(DisplayObject *obj, SDL_Event event);
+
 	Scene *scene;
 	Scene *selectBar;
-	Sprite *selected;
+	DisplayObject *selected;
+	DisplayObject *copied;
 	Sprite *selectionArea;
 	bool dragging = false;
 
-	vector<Sprite*> spritesToDisplay;
+	vector<DisplayObject*> spritesToDisplay;
+	set<SDL_Scancode> singleUseKeys;
 };
 
 #endif

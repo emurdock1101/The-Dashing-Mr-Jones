@@ -24,6 +24,7 @@ public:
 	bool isRGB = false;
 
 	DisplayObject();
+	DisplayObject(const DisplayObject &obj);
 	DisplayObject(string id, string path);
 	DisplayObject(string id, int red, int green, int blue);
 	virtual ~DisplayObject();

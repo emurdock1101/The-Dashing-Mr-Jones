@@ -1,6 +1,7 @@
 #include "DisplayObjectContainer.h"
 #include "AffineTransform.h"
 #include <vector>
+#include <iostream>
 #include <string>
 
 using namespace std;
@@ -76,6 +77,11 @@ DisplayObject* DisplayObjectContainer::getChild(string id) {
         // check recursively?
     }
     return NULL;
+}
+
+DisplayObjectContainer* DisplayObjectContainer::copy() {
+	DisplayObjectContainer *tmp;
+	return tmp;
 }
 
 void DisplayObjectContainer::update(set<SDL_Scancode> pressedKeys) {
