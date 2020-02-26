@@ -8,6 +8,7 @@
 #include "Sprite.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <experimental/filesystem>
 #include <vector> 
@@ -21,7 +22,6 @@ DevTool::DevTool() : Game(1200, 1000) {
 	selectBar = new Scene();
 
 	selectionArea = new Sprite("selection_area", 0, 0, 0);
-
 
 	vector<string> images = getImagesFromFolder("./resources");
 	sort(images.begin(), images.end());
@@ -42,8 +42,22 @@ DevTool::DevTool() : Game(1200, 1000) {
 		x += 100;
 	}
 
+	menus = new DisplayObjectContainer();
+	menus->addChild(selectionArea);
 
-	Game::addChild(selectionArea);
+	TTF_Font* Sans = TTF_OpenFont("./resources/OpenSans-Regular.ttf", 24);
+	SDL_Color White = {255, 255, 255};
+	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "put your text here", White);
+	SDL_Texture* message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+
+	DisplayObject *text = new DisplayObject();
+	text->setTexture(message);
+	text->position = {800, 200};
+	text->height = 50;
+	text->width = 100;
+	menus->addChild(text);
+
+	Game::addChild(menus);
 	Game::addChild(scene);
 }
 
@@ -79,21 +93,29 @@ void DevTool::start(){
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 				count = 0;
-				for (DisplayObject *sprite: selectionArea->children) {
-					if (isHovered(sprite, event)) {
-						DisplayObject *tmp = new DisplayObject;
-						*tmp = *sprite;
-						selected = tmp;
-						scene->addChild(selected);
-						dragging = true;
+				if (!dragging) {
+					for (DisplayObject *sprite: selectionArea->children) {
+						if (isHovered(sprite, event)) {
+							DisplayObject *tmp = new DisplayObject();
+							*tmp = *sprite;
+							selected = tmp;
+							scene->addChild(selected);
+							dragging = true;
+							break;
+						}
+					}
+					for (DisplayObject *sprite: scene->children) {
+						if (isHovered(sprite, event)) {
+							dragging = true;
+							selected = sprite;
+							// Remove/add child so it's top of display tree
+							scene->removeImmediateChild(selected);
+							scene->addChild(selected);
+							break;
+						}
 					}
 				}
-				for (DisplayObject *sprite: scene->children) {
-					if (isHovered(sprite, event)) {
-						dragging = true;
-						selected = sprite;
-					}
-				}
+
 				count++;
 				break;
 			case SDL_MOUSEBUTTONUP:

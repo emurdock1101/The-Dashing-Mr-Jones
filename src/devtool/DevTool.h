@@ -30,6 +30,7 @@ private:
 
 	Scene *scene;
 	Scene *selectBar;
+	DisplayObjectContainer *menus;
 	DisplayObject *selected;
 	DisplayObject *copied;
 	Sprite *selectionArea;
