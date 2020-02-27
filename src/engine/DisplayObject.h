@@ -60,6 +60,10 @@ public:
 
 	virtual void writeSceneData(ostream &stream);
 
+	int getAbsoluteWidth();
+	int getAbsoluteHeight();
+	void applyParentTransformationsThenSelf(AffineTransform &at);
+
 private:
 	double distance(SDL_Point &p1, SDL_Point &p2);
 	double calculateRotation(SDL_Point &origin, SDL_Point &p);

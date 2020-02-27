@@ -116,8 +116,8 @@ bool DisplayObject::isColliding(int x, int y) {
 	}
 	globalX += position.x;
 	globalY += position.y;
-	return x <= globalX + width && x >= globalX &&
-		y <= globalY + height && y >= globalY;
+	return x <= globalX + getAbsoluteWidth() && x >= globalX &&
+		y <= globalY + getAbsoluteHeight() && y >= globalY;
 }
 
 int DisplayObject::getWidth() {
@@ -150,6 +150,29 @@ void DisplayObject::setPos(int a, int b){
 void DisplayObject::setPiv(int a, int b){
 	this->pivot.x = a;
 	this->pivot.y = b;
+}
+
+int DisplayObject::getAbsoluteWidth() {
+	AffineTransform at;
+	applyParentTransformationsThenSelf(at);
+	SDL_Point origin = at.transformPoint(0, 0);
+	SDL_Point upperRight = at.transformPoint(width, 0);
+	return (int)distance(origin, upperRight);
+}
+
+int DisplayObject::getAbsoluteHeight() {
+	AffineTransform at;
+	applyParentTransformationsThenSelf(at);
+	SDL_Point origin = at.transformPoint(0, 0);
+	SDL_Point bottomRight = at.transformPoint(0, height);
+	return (int)distance(origin, bottomRight);
+}
+
+void DisplayObject::applyParentTransformationsThenSelf(AffineTransform &at) {
+	if (parent != NULL) {
+		parent->applyParentTransformationsThenSelf(at);
+	}
+	applyTransformations(at);
 }
 
 void DisplayObject::writeSceneData(ostream &stream) {

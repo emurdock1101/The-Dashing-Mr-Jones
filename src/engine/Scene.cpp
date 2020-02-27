@@ -150,14 +150,8 @@ void Scene::saveScene(string sceneFilePath) {
 }
 
 void Scene::cleanScene(){
-    for(int i = inScene.size()-1; i >= 0; i --){
-        inScene.pop_back();
-    }
-    for(int i = children.size()-1; i >=0; i--){
-        DisplayObjectContainer* temp = (DisplayObjectContainer *)getChild(i);
-        children.pop_back();
-        delete temp;
-    }
+	inScene.clear();
+	children.clear();
 }
 void Scene::update(set<SDL_Scancode> pressedKeys){
 	DisplayObjectContainer::update(pressedKeys);

@@ -113,7 +113,7 @@ void DevTool::start(){
 				if (dragging){
 					selected->position.x -= selected->position.x % scene->gridPixels;
 					selected->position.y -= selected->position.y % scene->gridPixels;
-					selected->pivot = {0,0};
+					//selected->pivot = {0,0};
 					dragging = false;
 				}
 				break;
@@ -121,7 +121,7 @@ void DevTool::start(){
 				if (dragging) {
 					selected->position.x = event.motion.x;
 					selected->position.y = event.motion.y;
-					selected->pivot = {selected->width/2, selected->height/2};
+					//selected->pivot = {selected->width/2, selected->height/2};
 				}
 				break;
 			case SDL_KEYDOWN:
@@ -175,7 +175,7 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 			case SDL_SCANCODE_Q:
 				selectionArea->position.x -= 5;
 				break;
-			case SDL_SCANCODE_E:
+			case SDL_SCANCODE_W:
 				if (selectionArea->position.x != 0) {
 					selectionArea->position.x += 5;
 				}
@@ -189,6 +189,8 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 				cin >> filename;
 				cout << "Loading scene " << filename << endl;
 				scene->loadScene(filename);
+				selected = NULL;
+				copied = NULL;
 				cout << "Loaded scene " << filename << endl;
 				break;
 			case SDL_SCANCODE_S:
@@ -241,23 +243,23 @@ void DevTool::draw(AffineTransform &at){
 		SDL_RenderDrawLine(Game::renderer,
 				selected->position.x,
 				selected->position.y,
-				selected->position.x + selected->width,
+				selected->position.x + selected->getAbsoluteWidth(),
 				selected->position.y);
 		SDL_RenderDrawLine(Game::renderer,
 				selected->position.x,
 				selected->position.y,
 				selected->position.x,
-				selected->position.y + selected->height);
+				selected->position.y + selected->getAbsoluteHeight());
 		SDL_RenderDrawLine(Game::renderer,
 				selected->position.x,
-				selected->position.y + selected->height,
-				selected->position.x + selected->width,
-				selected->position.y + selected->height);
+				selected->position.y + selected->getAbsoluteHeight(),
+				selected->position.x + selected->getAbsoluteWidth(),
+				selected->position.y + selected->getAbsoluteHeight());
 		SDL_RenderDrawLine(Game::renderer,
-				selected->position.x + selected->width,
+				selected->position.x + selected->getAbsoluteWidth(),
 				selected->position.y,
-				selected->position.x + selected->width,
-				selected->position.y + selected->height);
+				selected->position.x + selected->getAbsoluteWidth(),
+				selected->position.y + selected->getAbsoluteHeight());
 	}
 	SDL_RenderPresent(Game::renderer);
 }

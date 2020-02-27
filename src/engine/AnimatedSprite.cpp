@@ -127,5 +127,4 @@ void AnimatedSprite::writeSceneData(ostream &stream) {
 		stream << animation->frameRate << " ";
 		stream << animation->loop << endl;
 	}
-	stream << "./resources/character/ Dead 30 1 true" << endl;
 }
