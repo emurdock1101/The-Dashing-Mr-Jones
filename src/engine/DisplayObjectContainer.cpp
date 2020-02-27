@@ -103,3 +103,10 @@ void DisplayObjectContainer::draw(AffineTransform &at) {
     at.translate(-pivot.x, -pivot.y);
     reverseTransformations(at);
 }
+
+void DisplayObjectContainer::writeSceneData(ostream &stream) {
+	DisplayObject::writeSceneData(stream);
+	for (DisplayObject *child : children) {
+		child->writeSceneData(stream);
+	}
+}

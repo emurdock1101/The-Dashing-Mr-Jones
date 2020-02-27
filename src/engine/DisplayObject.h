@@ -58,6 +58,8 @@ public:
 
 	bool isColliding(int x, int y);
 
+	virtual void writeSceneData(ostream &stream);
+
 private:
 	double distance(SDL_Point &p1, SDL_Point &p2);
 	double calculateRotation(SDL_Point &origin, SDL_Point &p);

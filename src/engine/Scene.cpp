@@ -139,6 +139,15 @@ void Scene::loadScene(string sceneFilePath){
     }
 }
 
+void Scene::saveScene(string sceneFilePath) {
+    ofstream sceneFile;
+    sceneFile.open(sceneFilePath, ofstream::out | ofstream::app);
+	for (DisplayObject *child: children) {
+		child->writeSceneData(sceneFile);
+	}
+	sceneFile.close();
+}
+
 void Scene::cleanScene(){
     for(int i = inScene.size()-1; i >= 0; i --){
         inScene.pop_back();
@@ -154,13 +163,4 @@ void Scene::update(set<SDL_Scancode> pressedKeys){
 }
 void Scene::draw(AffineTransform &at){
 	DisplayObjectContainer::draw(at);
-}
-
-DisplayObjectContainer* Scene::getObj(string id){
-    for(DisplayObjectContainer* x: inScene){
-        if(x->id.compare(id)==0){
-            return x;
-        }
-    }
-    return NULL;
 }

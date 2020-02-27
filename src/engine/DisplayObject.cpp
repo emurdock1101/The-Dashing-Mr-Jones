@@ -140,6 +140,8 @@ double DisplayObject::calculateRotation(SDL_Point &origin, SDL_Point &p) {
 void DisplayObject::setDim(int a, int b){
 	this->image->w = a;
 	this->image->h = b;
+	this->width = a;
+	this->height = b;
 }
 void DisplayObject::setPos(int a, int b){
 	this->position.x = a;
@@ -148,4 +150,24 @@ void DisplayObject::setPos(int a, int b){
 void DisplayObject::setPiv(int a, int b){
 	this->pivot.x = a;
 	this->pivot.y = b;
+}
+
+void DisplayObject::writeSceneData(ostream &stream) {
+	stream << type << " ";
+	stream << id << " ";
+	stream << imgPath << " ";
+	stream << position.x << " ";
+	stream << position.y << " ";
+	stream << pivot.x << " ";
+	stream << pivot.y << " ";
+	stream << scaleX << " ";
+	stream << scaleY << " ";
+	stream << rotation << " ";
+	stream << height << " ";
+	stream << width << " ";
+	stream << alpha;
+	if (parent != NULL && parent->type != "Scene") {
+		stream << " " << parent->id;
+	}
+	stream << endl;
 }

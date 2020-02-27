@@ -26,7 +26,6 @@ struct Animation {
 class AnimatedSprite : public Sprite{
 
 public:
-	
 	AnimatedSprite();
 	AnimatedSprite(string id);
 	~AnimatedSprite();

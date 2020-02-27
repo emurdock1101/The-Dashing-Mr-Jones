@@ -175,10 +175,16 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 			case SDL_SCANCODE_L:
 				cout << "Please enter a filepath to load a scene:" << endl;
 				cin >> filename;
+				cout << "Loading scene " << filename << endl;
 				scene->loadScene(filename);
-				for (DisplayObject* sprite: scene->drawable){
-					scene->addChild(sprite);
-				}
+				cout << "Loaded scene " << filename << endl;
+				break;
+			case SDL_SCANCODE_S:
+				cout << "Please enter a filepath to save the scene:" << endl;
+				cin >> filename;
+				cout << "Saving scene to " << filename << endl;
+				scene->saveScene(filename);
+				cout << "Saved scene to " << filename << endl;
 				break;
 			case SDL_SCANCODE_E:
 				cout << "Welcome to the Sprite Editor" << endl;

@@ -17,13 +17,12 @@ public:
 
 	/* Load scene from a file */
 	void loadScene(string sceneFilePath);
+	void saveScene(string sceneFilePath);
 
 	virtual void update(set<SDL_Scancode> pressedKeys);
 	virtual void draw(AffineTransform &at);
 	void cleanScene();
 	vector<DisplayObjectContainer*> inScene;
-	vector<DisplayObjectContainer*> drawable;
-	DisplayObjectContainer* getObj(string id);
 
 	int gridPixels = 50;
 

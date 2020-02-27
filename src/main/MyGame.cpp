@@ -24,7 +24,7 @@ MyGame::MyGame() : Game(1200, 600) {
 	instance->addChild(sc);
 	this->pivot.x = this->windowWidth/2;
 	this->pivot.y = this->windowHeight/2;
-	player = sc->getObj("player");
+	player = (DisplayObjectContainer *)sc->getChild("player");
 	sound->playMusic("./resources/sounds/boss.ogg");
 
 }
