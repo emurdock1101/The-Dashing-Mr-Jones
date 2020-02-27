@@ -160,10 +160,22 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 	string filename;
 	for (SDL_Scancode scancode: pressedKeys) {
 		switch(scancode) {
+			case SDL_SCANCODE_UP:
+				scene->camera->y -= 6;
+				break;
+			case SDL_SCANCODE_DOWN:
+				scene->camera->y += 6;
+				break;
 			case SDL_SCANCODE_LEFT:
-				selectionArea->position.x -= 5;
+				scene->camera->x -= 6;
 				break;
 			case SDL_SCANCODE_RIGHT:
+				scene->camera->x += 6;
+				break;
+			case SDL_SCANCODE_Q:
+				selectionArea->position.x -= 5;
+				break;
+			case SDL_SCANCODE_E:
 				if (selectionArea->position.x != 0) {
 					selectionArea->position.x += 5;
 				}
@@ -187,60 +199,8 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 				cout << "Saved scene to " << filename << endl;
 				break;
 			case SDL_SCANCODE_E:
-				cout << "Welcome to the Sprite Editor" << endl;
-				//id, imgpath, pos.x, pox.y, piv.x, piv.y, scaleX, scaleY, rotation, imgH, imgW, alpha, parents
-				if (selected->type == "DisplayObject" || selected->type == "DisplayObjectContainer" || selected->type == "Sprite"){
-					cout << "Editing " << selected->imgPath << endl;
-					cout << "Change Scale X from " << selected->scaleX << " to: ";
-					string scaleX;
-					cin >> scaleX;
-					if (!(scaleX == "n")){
-						selected->scaleX = stoi(scaleX);
-					}
-					cout << "Scale X is now " << selected->scaleX << endl;
-
-					cout << "__________________________________________________" << endl;
-
-					cout << "Change Scale Y from " << selected->scaleY << " to: ";
-					string scaleY;
-					cin >> scaleY;
-					if (!(scaleY == "n")){
-						selected->scaleY = stoi(scaleY);
-					}
-					cout << "Scale Y is now " << selected->scaleY << endl;
-
-					cout << "__________________________________________________" << endl;
-					cout << "Change Pivot X from " << selected->pivot.x << " to: ";
-					string pivX;
-					cin >> pivX;
-					if (!(pivX == "n")){
-						selected->pivot.x = stoi(pivX);
-					}
-					cout << "Pivot X is now " << selected->pivot.x << endl;
-
-					cout << "__________________________________________________" << endl;
-
-					cout << "Change Pivot Y from " << selected->pivot.y << " to: ";
-					string pivY;
-					cin >> pivY;
-					if (!(pivY == "n")){
-						selected->pivot.y = stoi(pivY);
-					}
-					cout << "Pivot Y is now " << selected->pivot.y << endl;
-
-					cout << "__________________________________________________" << endl;
-
-					cout << "Change Rotation from " << selected->rotation << " to: ";
-					string rot;
-					cin >> rot;
-					if (!(rot == "n")){
-						selected->rotation = stoi(rot);
-					}
-					cout << "Rotation is now " << selected->rotation << endl;
-
-					cout << "__________________________________________________" << endl;
-
-					
+				if (selected != NULL) {
+					editPrompt();
 				}
 				break;
 			case SDL_SCANCODE_C:
@@ -269,10 +229,10 @@ void DevTool::draw(AffineTransform &at){
 	DisplayObjectContainer::draw(at);
     SDL_SetRenderDrawColor(Game::renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 	for (int y = 0; y < 1000; y += gridPixels) {
-		SDL_RenderDrawLine(Game::renderer, 0, y, 1200, y);
+		SDL_RenderDrawLine(Game::renderer, 0, y, windowWidth, y);
 	}
 	for (int x = 0; x < 1200; x += gridPixels) {
-		SDL_RenderDrawLine(Game::renderer, x, 0, x, 1000);
+		SDL_RenderDrawLine(Game::renderer, x, 0, x, windowHeight);
 	}
 	// Draw red rectangle around selected sprite
 	// TODO: Draw box based on AffineTransform instead
@@ -301,6 +261,63 @@ void DevTool::draw(AffineTransform &at){
 	}
 	SDL_RenderPresent(Game::renderer);
 }
+
 bool DevTool::isHovered(DisplayObject *obj, SDL_Event event) {
 	return obj->isColliding(event.motion.x, event.motion.y);
+}
+
+void DevTool::editPrompt() {
+	cout << "Welcome to the Sprite Editor" << endl;
+	//id, imgpath, pos.x, pox.y, piv.x, piv.y, scaleX, scaleY, rotation, imgH, imgW, alpha, parents
+	if (selected->type == "DisplayObject" || selected->type == "DisplayObjectContainer" || selected->type == "Sprite"){
+		cout << "Editing " << selected->imgPath << endl;
+		cout << "Change Scale X from " << selected->scaleX << " to: ";
+		string scaleX;
+		cin >> scaleX;
+		if (!(scaleX == "n")){
+			selected->scaleX = stoi(scaleX);
+		}
+		cout << "Scale X is now " << selected->scaleX << endl;
+
+		cout << "__________________________________________________" << endl;
+
+		cout << "Change Scale Y from " << selected->scaleY << " to: ";
+		string scaleY;
+		cin >> scaleY;
+		if (!(scaleY == "n")){
+			selected->scaleY = stoi(scaleY);
+		}
+		cout << "Scale Y is now " << selected->scaleY << endl;
+
+		cout << "__________________________________________________" << endl;
+		cout << "Change Pivot X from " << selected->pivot.x << " to: ";
+		string pivX;
+		cin >> pivX;
+		if (!(pivX == "n")){
+			selected->pivot.x = stoi(pivX);
+		}
+		cout << "Pivot X is now " << selected->pivot.x << endl;
+
+		cout << "__________________________________________________" << endl;
+
+		cout << "Change Pivot Y from " << selected->pivot.y << " to: ";
+		string pivY;
+		cin >> pivY;
+		if (!(pivY == "n")){
+			selected->pivot.y = stoi(pivY);
+		}
+		cout << "Pivot Y is now " << selected->pivot.y << endl;
+
+		cout << "__________________________________________________" << endl;
+
+		cout << "Change Rotation from " << selected->rotation << " to: ";
+		string rot;
+		cin >> rot;
+		if (!(rot == "n")){
+			selected->rotation = stoi(rot);
+		}
+		cout << "Rotation is now " << selected->rotation << endl;
+
+		cout << "__________________________________________________" << endl;
+	}
 }

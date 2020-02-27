@@ -6,6 +6,7 @@
 #include <SDL2/SDL_ttf.h>
 #include "DisplayObjectContainer.h"
 #include "Game.h"
+#include "Camera.h"
 #include "Scene.h"
 #include "Sprite.h"
 #include <vector>
@@ -27,6 +28,7 @@ public:
 private:
 
 	bool isHovered(DisplayObject *obj, SDL_Event event);
+	void editPrompt();
 
 	int gridPixels = 50;
 	Scene *scene;

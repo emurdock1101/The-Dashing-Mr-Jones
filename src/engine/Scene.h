@@ -3,6 +3,7 @@
 
 #include "DisplayObjectContainer.h"
 #include "Sprite.h"
+#include "Camera.h"
 #include <string>
 #include <vector>
 #include <fstream>
@@ -13,6 +14,7 @@ using namespace std;
 class Scene : public DisplayObjectContainer{
 
 public:
+	Camera *camera;
 	Scene();
 
 	/* Load scene from a file */

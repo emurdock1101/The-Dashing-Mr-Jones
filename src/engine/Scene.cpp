@@ -15,6 +15,7 @@ using namespace std;
 
 Scene::Scene() : DisplayObjectContainer(){
   this->type = "Scene";
+  this->camera = new Camera();
 }
 
 void Scene::loadScene(string sceneFilePath){
@@ -162,5 +163,7 @@ void Scene::update(set<SDL_Scancode> pressedKeys){
 	DisplayObjectContainer::update(pressedKeys);
 }
 void Scene::draw(AffineTransform &at){
+	at.scale(camera->scaleX, camera->scaleY);
+	at.translate(camera->x, camera->y);
 	DisplayObjectContainer::draw(at);
 }
