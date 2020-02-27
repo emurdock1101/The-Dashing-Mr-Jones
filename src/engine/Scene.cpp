@@ -51,7 +51,7 @@ void Scene::loadScene(string sceneFilePath){
                 }
             }
             else{
-                drawable.push_back((DisplayObjectContainer*)temp);
+                addChild((DisplayObjectContainer*)temp);
             }
             inScene.push_back((DisplayObjectContainer*)temp);
         }
@@ -73,7 +73,7 @@ void Scene::loadScene(string sceneFilePath){
                 }
             }
             else{
-                drawable.push_back(temp);
+                addChild(temp);
             }
             inScene.push_back(temp);
         }
@@ -95,7 +95,7 @@ void Scene::loadScene(string sceneFilePath){
                 }
             }
             else{
-                drawable.push_back((DisplayObjectContainer*)temp);
+                addChild((DisplayObjectContainer*)temp);
             }
             inScene.push_back((DisplayObjectContainer*)temp);
         }
@@ -132,7 +132,7 @@ void Scene::loadScene(string sceneFilePath){
                 }
             }
             else{
-                drawable.push_back((DisplayObjectContainer*)temp);
+                addChild((DisplayObjectContainer*)temp);
             }
             inScene.push_back((DisplayObjectContainer*)temp);
         }
@@ -143,22 +143,17 @@ void Scene::cleanScene(){
     for(int i = inScene.size()-1; i >= 0; i --){
         inScene.pop_back();
     }
-    for(int i = drawable.size()-1; i >=0; i--){
-        DisplayObjectContainer* temp = drawable[i];
-        drawable.pop_back();
+    for(int i = children.size()-1; i >=0; i--){
+        DisplayObjectContainer* temp = (DisplayObjectContainer *)getChild(i);
+        children.pop_back();
         delete temp;
     }
 }
 void Scene::update(set<SDL_Scancode> pressedKeys){
-    for(DisplayObjectContainer* x: drawable){
-        x->update(pressedKeys);
-    }
+	DisplayObjectContainer::update(pressedKeys);
 }
 void Scene::draw(AffineTransform &at){
-  DisplayObjectContainer::draw(at);
-    for(DisplayObjectContainer* x: drawable){
-        x->draw(at);
-    }
+	DisplayObjectContainer::draw(at);
 }
 
 DisplayObjectContainer* Scene::getObj(string id){
