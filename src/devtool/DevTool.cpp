@@ -11,7 +11,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <experimental/filesystem>
-#include <vector> 
+#include <vector>
 #include <algorithm>
 
 using namespace std;
@@ -19,7 +19,6 @@ namespace fs = std::experimental::filesystem;
 
 DevTool::DevTool() : Game(1200, 1000) {
 	scene = new Scene();
-	selectBar = new Scene();
 
 	selectionArea = new Sprite("selection_area", 0, 0, 0);
 
@@ -63,7 +62,7 @@ DevTool::DevTool() : Game(1200, 1000) {
 
 
 DevTool::~DevTool() {
-	
+
 }
 
 void DevTool::start(){
@@ -166,6 +165,7 @@ vector<string>DevTool::getImagesFromFolder(string folderName){
 }
 
 void DevTool::update(set<SDL_Scancode> pressedKeys){
+	string filename;
 	for (SDL_Scancode scancode: pressedKeys) {
 		switch(scancode) {
 			case SDL_SCANCODE_LEFT:
@@ -180,6 +180,14 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 	}
 	for (SDL_Scancode scancode: singleUseKeys) {
 		switch(scancode) {
+			case SDL_SCANCODE_L:
+				cout << "Please enter a filepath to load a scene:" << endl;
+				cin >> filename;
+				scene->loadScene(filename);
+				for (DisplayObject* sprite: scene->drawable){
+					scene->addChild(sprite);
+				}
+				break;
 			case SDL_SCANCODE_C:
 				// Copy
 				copied = new DisplayObject;
@@ -204,7 +212,6 @@ void DevTool::draw(AffineTransform &at){
 	SDL_SetRenderDrawColor(Game::renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 	Game::draw(at);
 }
-
 bool DevTool::isHovered(DisplayObject *obj, SDL_Event event) {
 	return obj->isColliding(event.motion.x, event.motion.y);
 }

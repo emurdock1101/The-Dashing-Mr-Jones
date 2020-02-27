@@ -5,13 +5,12 @@
 #include <SDL2/SDL_image.h>
 #include <set>
 #include "AffineTransform.h"
-#include "EventDispatcher.h"
 #include <string>
 #include <fstream>
 
 using namespace std;
 
-class DisplayObject : public EventDispatcher {
+class DisplayObject{
 
 public:
 	string id = "DEFAULT_ID";
@@ -24,11 +23,10 @@ public:
 	bool isRGB = false;
 
 	DisplayObject();
-	DisplayObject(const DisplayObject &obj);
 	DisplayObject(string id, string path);
 	DisplayObject(string id, int red, int green, int blue);
 	virtual ~DisplayObject();
-	
+
 	virtual void update(set<SDL_Scancode> pressedKeys);
 	virtual void draw(AffineTransform &at);
 
@@ -42,8 +40,6 @@ public:
 	int getWidth();
 	int getHeight();
 
-	bool isColliding(int x, int y);
-
 	bool visible = true;
 	SDL_Point position = {0, 0};
 	int width = 100;
@@ -55,10 +51,17 @@ public:
 	int alpha = 255;
 	bool facingRight = true;
 
+
+	void setPos(int x, int y);
+	void setDim(int x, int y);
+	void setPiv(int x, int y);
+
+	bool isColliding(int x, int y);
+
 private:
 	double distance(SDL_Point &p1, SDL_Point &p2);
 	double calculateRotation(SDL_Point &origin, SDL_Point &p);
-	
+
 	SDL_Texture* texture = NULL;
 	SDL_Surface* image = NULL;
 

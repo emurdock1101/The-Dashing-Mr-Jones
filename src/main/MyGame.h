@@ -7,8 +7,9 @@
 #include "Game.h"
 #include "Sprite.h"
 #include "AnimatedSprite.h"
-#include "QuestManager.h"
-
+#include "Scene.h"
+#include "Sound.h"
+#include "Camera.h"
 
 using namespace std;
 
@@ -20,13 +21,14 @@ public:
 
 	virtual void update(set<SDL_Scancode> pressedKeys);
 	virtual void draw(AffineTransform &at);
+	bool t = true;
 
 private:
 	
-	Sprite *character;
-	Sprite *coin;
-
-	QuestManager *questManager;
+	Scene* sc;
+	Sound* sound;
+	Camera* cammy;
+	DisplayObjectContainer* player;
 
 	// DisplayObject* character;
 };

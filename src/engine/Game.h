@@ -28,7 +28,7 @@ public:
 
 	Game(int windowWidth, int windowHeight);
 	virtual ~Game();
-	virtual void start();
+	void start();
 
 	virtual void update(set<SDL_Scancode> pressedKeys);
 	virtual void draw(AffineTransform &at);
@@ -38,6 +38,7 @@ private:
 
 	void initSDL();
 	void quitSDL();
+	
 	
 };
 

@@ -28,8 +28,9 @@ private:
 
 	bool isHovered(DisplayObject *obj, SDL_Event event);
 
+	int gridPixels = 50;
 	Scene *scene;
-	Scene *selectBar;
+
 	DisplayObjectContainer *menus;
 	DisplayObject *selected;
 	DisplayObject *copied;

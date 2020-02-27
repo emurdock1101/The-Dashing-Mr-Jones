@@ -20,7 +20,7 @@ INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 CPPFLAGS ?= $(INC_FLAGS) -MMD -MP -std=c++11 -lstdc++fs -g
 
 #LINKER_FLAGS specifies the libraries we're linking against
-LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -lstdc++fs
+LDFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -lstdc++fs -lSDL2_mixer
 
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 	$(CXX) $(OBJS) -o $@ $(LDFLAGS)
