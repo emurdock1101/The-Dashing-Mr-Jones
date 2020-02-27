@@ -36,6 +36,7 @@ void Scene::loadScene(string sceneFilePath){
         if(object.compare("DisplayObject") == 0){
             //id, imgpath, pos.x, pox.y, piv.x, piv.y, scaleX, scaleY, rotation, imgH, imgW, alpha, parents
             DisplayObject* temp = new DisplayObject(args[0],args[1]);
+            temp->type = object;
             temp->setPos(stoi(args[2]),stoi(args[3]));
             temp->setPiv(stoi(args[4]),stoi(args[5]));
             temp->scaleX = stoi(args[6]);
@@ -57,6 +58,7 @@ void Scene::loadScene(string sceneFilePath){
         else if(object.compare("DisplayObjectContainer") == 0){
             //id, imgpath, pos.x, pox.y, piv.x, piv.y, scaleX, scaleY, rotation, imgH, imgW, alpha, parents
             DisplayObjectContainer* temp = new DisplayObjectContainer(args[0],args[1]);
+            temp->type = object;
             temp->setPos(stoi(args[2]),stoi(args[3]));
             temp->setPiv(stoi(args[4]),stoi(args[5]));
             temp->scaleX = stoi(args[6]);
@@ -78,6 +80,7 @@ void Scene::loadScene(string sceneFilePath){
         else if(object.compare("Sprite") == 0){
             //id, imgpath, pos.x, pox.y, piv.x, piv.y, scaleX, scaleY, rotation, imgH, imgW, alpha, parents
             Sprite* temp = new Sprite(args[0],args[1]);
+            temp->type = object;
             temp->setPos(stoi(args[2]),stoi(args[3]));
             temp->setPiv(stoi(args[4]),stoi(args[5]));
             temp->scaleX = stoi(args[6]);
@@ -99,6 +102,7 @@ void Scene::loadScene(string sceneFilePath){
         else if(object.compare("AnimatedSprite") == 0){
             //id, pos.x, pox.y, piv.x, piv.y, scaleX, scaleY, rotation, imgH, imgW, alpha, numAnim, parent
             AnimatedSprite* temp = new AnimatedSprite(args[0]);
+            temp->type = object;
             temp->setPos(stoi(args[1]),stoi(args[2]));
             temp->setPiv(stoi(args[3]),stoi(args[4]));
             temp->scaleX = stoi(args[5]);

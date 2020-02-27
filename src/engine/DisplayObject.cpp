@@ -71,6 +71,7 @@ void DisplayObject::draw(AffineTransform &at){
 		SDL_Point corner = {0, 0};
 
 		int w = (int)distance(origin, upperRight);
+		
 		int h = (int)distance(upperRight, lowerRight);
 
 		SDL_Rect dstrect = { origin.x, origin.y, w, h };

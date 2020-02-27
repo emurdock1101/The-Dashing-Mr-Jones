@@ -35,6 +35,7 @@ private:
 	DisplayObject *selected;
 	DisplayObject *copied;
 	Sprite *selectionArea;
+	Sprite* blueBar;
 	bool dragging = false;
 
 	vector<DisplayObject*> spritesToDisplay;

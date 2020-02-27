@@ -21,6 +21,9 @@ DevTool::DevTool() : Game(1200, 1000) {
 	scene = new Scene();
 
 	selectionArea = new Sprite("selection_area", 0, 0, 0);
+	blueBar = new Sprite("blue_bar", 0,0,255);
+	blueBar->height = 100;
+	blueBar->width = 1200;
 
 	vector<string> images = getImagesFromFolder("./resources");
 	sort(images.begin(), images.end());
@@ -56,8 +59,10 @@ DevTool::DevTool() : Game(1200, 1000) {
 	text->width = 100;
 	menus->addChild(text);
 
+	Game::addChild(blueBar);
 	Game::addChild(menus);
 	Game::addChild(scene);
+	
 }
 
 
@@ -188,6 +193,63 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 					scene->addChild(sprite);
 				}
 				break;
+			case SDL_SCANCODE_E:
+				cout << "Welcome to the Sprite Editor" << endl;
+				//id, imgpath, pos.x, pox.y, piv.x, piv.y, scaleX, scaleY, rotation, imgH, imgW, alpha, parents
+				if (selected->type == "DisplayObject" || selected->type == "DisplayObjectContainer" || selected->type == "Sprite"){
+					cout << "Editing " << selected->imgPath << endl;
+					cout << "Change Scale X from " << selected->scaleX << " to: ";
+					string scaleX;
+					cin >> scaleX;
+					if (!(scaleX == "n")){
+						selected->scaleX = stoi(scaleX);
+					}
+					cout << "Scale X is now " << selected->scaleX << endl;
+
+					cout << "__________________________________________________" << endl;
+
+					cout << "Change Scale Y from " << selected->scaleY << " to: ";
+					string scaleY;
+					cin >> scaleY;
+					if (!(scaleY == "n")){
+						selected->scaleY = stoi(scaleY);
+					}
+					cout << "Scale Y is now " << selected->scaleY << endl;
+
+					cout << "__________________________________________________" << endl;
+					cout << "Change Pivot X from " << selected->pivot.x << " to: ";
+					string pivX;
+					cin >> pivX;
+					if (!(pivX == "n")){
+						selected->pivot.x = stoi(pivX);
+					}
+					cout << "Pivot X is now " << selected->pivot.x << endl;
+
+					cout << "__________________________________________________" << endl;
+
+					cout << "Change Pivot Y from " << selected->pivot.y << " to: ";
+					string pivY;
+					cin >> pivY;
+					if (!(pivY == "n")){
+						selected->pivot.y = stoi(pivY);
+					}
+					cout << "Pivot Y is now " << selected->pivot.y << endl;
+
+					cout << "__________________________________________________" << endl;
+
+					cout << "Change Rotation from " << selected->rotation << " to: ";
+					string rot;
+					cin >> rot;
+					if (!(rot == "n")){
+						selected->rotation = stoi(rot);
+					}
+					cout << "Rotation is now " << selected->rotation << endl;
+
+					cout << "__________________________________________________" << endl;
+
+					
+				}
+				break;
 			case SDL_SCANCODE_C:
 				// Copy
 				copied = new DisplayObject;
@@ -211,6 +273,7 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 void DevTool::draw(AffineTransform &at){
 	SDL_SetRenderDrawColor(Game::renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 	Game::draw(at);
+	
 }
 bool DevTool::isHovered(DisplayObject *obj, SDL_Event event) {
 	return obj->isColliding(event.motion.x, event.motion.y);
