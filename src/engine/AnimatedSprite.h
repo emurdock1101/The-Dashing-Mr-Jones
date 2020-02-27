@@ -16,6 +16,7 @@ struct Frame {
 
 struct Animation {
 	Frame** frames;
+	string basepath;
 	string animName;
 	int numFrames;
 	int frameRate;
@@ -39,6 +40,7 @@ public:
 
 	virtual void update(set<SDL_Scancode> pressedKeys);
 	virtual void draw(AffineTransform &at);
+	virtual void writeSceneData(ostream &stream);
 
 	bool playing = false;
 

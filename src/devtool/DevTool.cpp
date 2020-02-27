@@ -274,6 +274,31 @@ void DevTool::draw(AffineTransform &at){
 	for (int x = 0; x < 1200; x += gridPixels) {
 		SDL_RenderDrawLine(Game::renderer, x, 0, x, 1000);
 	}
+	// Draw red rectangle around selected sprite
+	// TODO: Draw box based on AffineTransform instead
+    SDL_SetRenderDrawColor(Game::renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
+	if (selected != NULL) {
+		SDL_RenderDrawLine(Game::renderer,
+				selected->position.x,
+				selected->position.y,
+				selected->position.x + selected->width,
+				selected->position.y);
+		SDL_RenderDrawLine(Game::renderer,
+				selected->position.x,
+				selected->position.y,
+				selected->position.x,
+				selected->position.y + selected->height);
+		SDL_RenderDrawLine(Game::renderer,
+				selected->position.x,
+				selected->position.y + selected->height,
+				selected->position.x + selected->width,
+				selected->position.y + selected->height);
+		SDL_RenderDrawLine(Game::renderer,
+				selected->position.x + selected->width,
+				selected->position.y,
+				selected->position.x + selected->width,
+				selected->position.y + selected->height);
+	}
 	SDL_RenderPresent(Game::renderer);
 }
 bool DevTool::isHovered(DisplayObject *obj, SDL_Event event) {
