@@ -138,6 +138,7 @@ void Scene::loadScene(string sceneFilePath){
         }
     }
 }
+
 void Scene::cleanScene(){
     for(int i = inScene.size()-1; i >= 0; i --){
         inScene.pop_back();
@@ -158,13 +159,6 @@ void Scene::draw(AffineTransform &at){
     for(DisplayObjectContainer* x: drawable){
         x->draw(at);
     }
-  SDL_SetRenderDrawColor(Game::renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-	for (int y = 0; y < 1000; y += gridPixels) {
-		SDL_RenderDrawLine(Game::renderer, 0, y, 1200, y);
-	}
-	for (int x = 0; x < 1200; x += gridPixels) {
-		SDL_RenderDrawLine(Game::renderer, x, 0, x, 1000);
-	}
 }
 
 DisplayObjectContainer* Scene::getObj(string id){

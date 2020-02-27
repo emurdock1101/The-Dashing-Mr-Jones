@@ -47,22 +47,9 @@ DevTool::DevTool() : Game(1200, 1000) {
 	menus = new DisplayObjectContainer();
 	menus->addChild(selectionArea);
 
-	TTF_Font* Sans = TTF_OpenFont("./resources/OpenSans-Regular.ttf", 24);
-	SDL_Color White = {255, 255, 255};
-	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "put your text here", White);
-	SDL_Texture* message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-
-	DisplayObject *text = new DisplayObject();
-	text->setTexture(message);
-	text->position = {800, 200};
-	text->height = 50;
-	text->width = 100;
-	menus->addChild(text);
-
 	Game::addChild(blueBar);
 	Game::addChild(menus);
 	Game::addChild(scene);
-	
 }
 
 
@@ -272,8 +259,16 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 
 void DevTool::draw(AffineTransform &at){
 	SDL_SetRenderDrawColor(Game::renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-	Game::draw(at);
-	
+	SDL_RenderClear(Game::renderer);
+	DisplayObjectContainer::draw(at);
+    SDL_SetRenderDrawColor(Game::renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+	for (int y = 0; y < 1000; y += gridPixels) {
+		SDL_RenderDrawLine(Game::renderer, 0, y, 1200, y);
+	}
+	for (int x = 0; x < 1200; x += gridPixels) {
+		SDL_RenderDrawLine(Game::renderer, x, 0, x, 1000);
+	}
+	SDL_RenderPresent(Game::renderer);
 }
 bool DevTool::isHovered(DisplayObject *obj, SDL_Event event) {
 	return obj->isColliding(event.motion.x, event.motion.y);
