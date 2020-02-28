@@ -48,9 +48,9 @@ DevTool::DevTool() : Game(1200, 1000) {
 	menus = new DisplayObjectContainer();
 	menus->addChild(selectionArea);
 
+	Game::addChild(scene);
 	Game::addChild(blueBar);
 	Game::addChild(menus);
-	Game::addChild(scene);
 }
 
 
@@ -101,6 +101,8 @@ void DevTool::start(){
 						if (isHovered(sprite, event) && makeChild == true){
 							cout << sprite->imgPath << " is now a child of " << selected->imgPath << endl;
 							selected->addChild(sprite);
+							sprite->position.x -= selected->position.x;
+							sprite->position.y -= selected->position.y;
 							scene->removeImmediateChild(sprite);
 							makeChild = false;
 						}
@@ -122,16 +124,17 @@ void DevTool::start(){
 				break;
 			case SDL_MOUSEBUTTONUP:
 				if (dragging){
-					selected->position.x -= selected->position.x % scene->gridPixels;
-					selected->position.y -= selected->position.y % scene->gridPixels;
+					selected->position.x -= selected->position.x % gridPixels;
+					selected->position.y -= selected->position.y % gridPixels;
 					//selected->pivot = {0,0};
 					dragging = false;
 				}
 				break;
 			case SDL_MOUSEMOTION:
 				if (dragging) {
-					selected->position.x = event.motion.x;
-					selected->position.y = event.motion.y;
+					SDL_Point absolutePos = selected->getTopLeft();
+					selected->position.x = event.motion.x - (absolutePos.x - selected->position.x) - scene->camera->x;
+					selected->position.y = event.motion.y - (absolutePos.y - selected->position.y) - scene->camera->y;
 					//selected->pivot = {selected->width/2, selected->height/2};
 				}
 				break;
@@ -186,16 +189,16 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 	for (SDL_Scancode scancode: pressedKeys) {
 		switch(scancode) {
 			case SDL_SCANCODE_UP:
-				scene->camera->y -= 6;
-				break;
-			case SDL_SCANCODE_DOWN:
 				scene->camera->y += 6;
 				break;
+			case SDL_SCANCODE_DOWN:
+				scene->camera->y -= 6;
+				break;
 			case SDL_SCANCODE_LEFT:
-				scene->camera->x -= 6;
+				scene->camera->x += 6;
 				break;
 			case SDL_SCANCODE_RIGHT:
-				scene->camera->x += 6;
+				scene->camera->x -= 6;
 				break;
 			case SDL_SCANCODE_Q:
 				selectionArea->position.x -= 5;
@@ -236,6 +239,26 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 					editPrompt();
 				}
 				break;
+			/*
+			// Gridpixels changing code
+			case SDL_SCANCODE_H:
+				gridPixels += 5;
+				scene->camera->scaleX += 0.1;
+				scene->camera->scaleY += 0.1;
+				if (selected != NULL) {
+					selected->position.x -= selected->position.x % gridPixels;
+					selected->position.y -= selected->position.y % gridPixels;
+				}
+				break;
+			case SDL_SCANCODE_J:
+				gridPixels -= 5;
+				scene->camera->scaleX -= 0.1;
+				scene->camera->scaleY -= 0.1;
+				if (selected != NULL) {
+					selected->position.x = selected->position.x - (selected->position.x % gridPixels) + gridPixels;
+					selected->position.y = selected->position.y - (selected->position.y % gridPixels) + gridPixels;
+				}
+				break;*/
 			case SDL_SCANCODE_C:
 				// Copy
 				copied = new DisplayObjectContainer;
@@ -263,42 +286,53 @@ void DevTool::draw(AffineTransform &at){
 	SDL_RenderClear(Game::renderer);
 	DisplayObjectContainer::draw(at);
     SDL_SetRenderDrawColor(Game::renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-	for (int y = 0; y < 1000; y += gridPixels) {
+	for (int y = scene->camera->y % gridPixels; y < 1000; y += gridPixels) {
 		SDL_RenderDrawLine(Game::renderer, 0, y, windowWidth, y);
 	}
-	for (int x = 0; x < 1200; x += gridPixels) {
+	for (int x = scene->camera->x % gridPixels; x < 1200; x += gridPixels) {
 		SDL_RenderDrawLine(Game::renderer, x, 0, x, windowHeight);
 	}
 	// Draw red rectangle around selected sprite
-	// TODO: Draw box based on AffineTransform instead
     SDL_SetRenderDrawColor(Game::renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
 	if (selected != NULL) {
+		SDL_Point topLeft = selected->getTopLeft();
+		SDL_Point topRight = selected->getTopRight();
+		SDL_Point bottomLeft = selected->getBottomLeft();
+		SDL_Point bottomRight = selected->getBottomRight();
+		topLeft.x += scene->camera->x;
+		topLeft.y += scene->camera->y;
+		topRight.x += scene->camera->x;
+		topRight.y += scene->camera->y;
+		bottomLeft.x += scene->camera->x;
+		bottomLeft.y += scene->camera->y;
+		bottomRight.x += scene->camera->x;
+		bottomRight.y += scene->camera->y;
 		SDL_RenderDrawLine(Game::renderer,
-				selected->position.x,
-				selected->position.y,
-				selected->position.x + selected->getAbsoluteWidth(),
-				selected->position.y);
+				topLeft.x,
+				topLeft.y,
+				topRight.x,
+				topRight.y);
 		SDL_RenderDrawLine(Game::renderer,
-				selected->position.x,
-				selected->position.y,
-				selected->position.x,
-				selected->position.y + selected->getAbsoluteHeight());
+				topLeft.x,
+				topLeft.y,
+				bottomLeft.x,
+				bottomLeft.y);
 		SDL_RenderDrawLine(Game::renderer,
-				selected->position.x,
-				selected->position.y + selected->getAbsoluteHeight(),
-				selected->position.x + selected->getAbsoluteWidth(),
-				selected->position.y + selected->getAbsoluteHeight());
+				topRight.x,
+				topRight.y,
+				bottomRight.x,
+				bottomRight.y);
 		SDL_RenderDrawLine(Game::renderer,
-				selected->position.x + selected->getAbsoluteWidth(),
-				selected->position.y,
-				selected->position.x + selected->getAbsoluteWidth(),
-				selected->position.y + selected->getAbsoluteHeight());
+				bottomLeft.x,
+				bottomLeft.y,
+				bottomRight.x,
+				bottomRight.y);
 	}
 	SDL_RenderPresent(Game::renderer);
 }
 
 bool DevTool::isHovered(DisplayObject *obj, SDL_Event event) {
-	return obj->isColliding(event.motion.x, event.motion.y);
+	return obj->isColliding(scene->camera, event.motion.x, event.motion.y);
 }
 
 void DevTool::editPrompt() {

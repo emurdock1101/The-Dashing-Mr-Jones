@@ -160,4 +160,6 @@ void Scene::draw(AffineTransform &at){
 	at.scale(camera->scaleX, camera->scaleY);
 	at.translate(camera->x, camera->y);
 	DisplayObjectContainer::draw(at);
+	at.translate(-camera->x, -camera->y);
+	at.scale(1.0/camera->scaleX, 1.0/camera->scaleY);
 }

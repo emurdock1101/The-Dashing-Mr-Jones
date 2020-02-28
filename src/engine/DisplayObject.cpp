@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "Game.h"
+#include "Camera.h"
 #include <iostream>
 #include <algorithm>
 #include <cmath>
@@ -105,7 +106,7 @@ void DisplayObject::reverseTransformations(AffineTransform &at) {
 	at.translate(-position.x, -position.y);
 }
 
-bool DisplayObject::isColliding(int x, int y) {
+bool DisplayObject::isColliding(Camera *camera, int x, int y) {
 	int globalX = 0;
 	int globalY = 0;
 	DisplayObject *currentParent = parent;
@@ -114,10 +115,48 @@ bool DisplayObject::isColliding(int x, int y) {
 		globalY += currentParent->position.y;
 		currentParent = currentParent->parent;
 	}
-	globalX += position.x;
-	globalY += position.y;
-	return x <= globalX + getAbsoluteWidth() && x >= globalX &&
-		y <= globalY + getAbsoluteHeight() && y >= globalY;
+	SDL_Point topLeft = getTopLeft();
+	SDL_Point topRight = getTopRight();
+	SDL_Point bottomLeft = getBottomLeft();
+	SDL_Point bottomRight = getBottomRight();
+
+	// Add the camera
+	topLeft.x += camera->x;
+	topLeft.y += camera->y;
+	topRight.x += camera->x;
+	topRight.y += camera->y;
+	bottomLeft.x += camera->x;
+	bottomLeft.y += camera->y;
+	bottomRight.x += camera->x;
+	bottomRight.y += camera->y;
+
+	/* Now calculate if point is in this rectangle or not.
+	 * To deal with rotation etc. this uses the area method.
+	 * Namely, the area of the 4 triangles that could be made with
+	 * the point should add up to the area of the rectangle if it's
+	 * within it. This is necessary because the rectangle
+	 * could be rotated.
+	 */
+
+	double A = area(topLeft.x, topLeft.y, topRight.x, topRight.y,
+					bottomRight.x, bottomRight.y) +
+              area(topLeft.x, topLeft.y, bottomLeft.x, bottomLeft.y,
+					  bottomRight.x, bottomRight.y);
+
+    /* Calculate area of triangle PAB */
+    double A1 = area(x, y, topLeft.x, topLeft.y, topRight.x, topRight.y);
+
+    /* Calculate area of triangle PBC */
+    double A2 = area(x, y, topRight.x, topRight.y, bottomRight.x, bottomRight.y);
+
+    /* Calculate area of triangle PCD */
+    double A3 = area(x, y, bottomRight.x, bottomRight.y, bottomLeft.x, bottomLeft.y);
+
+    /* Calculate area of triangle PAD */
+    double A4 = area(x, y, topLeft.x, topLeft.y, bottomLeft.x, bottomLeft.y);
+
+	// Do float comparison just in case
+	return (abs(A - (A1 + A2 + A3 + A4)) < 0.000005);
 }
 
 int DisplayObject::getWidth() {
@@ -152,6 +191,22 @@ void DisplayObject::setPiv(int a, int b){
 	this->pivot.y = b;
 }
 
+SDL_Point DisplayObject::getTopLeft() {
+	return translatePoint(0, 0);
+}
+
+SDL_Point DisplayObject::getTopRight() {
+	return translatePoint(width, 0);
+}
+
+SDL_Point DisplayObject::getBottomLeft() {
+	return translatePoint(0, height);
+}
+
+SDL_Point DisplayObject::getBottomRight() {
+	return translatePoint(width, height);
+}
+
 int DisplayObject::getAbsoluteWidth() {
 	AffineTransform at;
 	applyParentTransformationsThenSelf(at);
@@ -166,6 +221,12 @@ int DisplayObject::getAbsoluteHeight() {
 	SDL_Point origin = at.transformPoint(0, 0);
 	SDL_Point bottomRight = at.transformPoint(0, height);
 	return (int)distance(origin, bottomRight);
+}
+
+SDL_Point DisplayObject::translatePoint(int x, int y) {
+	AffineTransform at;
+	applyParentTransformationsThenSelf(at);
+	return at.transformPoint(x, y);
 }
 
 void DisplayObject::applyParentTransformationsThenSelf(AffineTransform &at) {
@@ -193,4 +254,10 @@ void DisplayObject::writeSceneData(ostream &stream) {
 		stream << " " << parent->id;
 	}
 	stream << endl;
+}
+
+/* Used for area in area selection detection */
+float DisplayObject::area(int x1, int y1, int x2, int y2, int x3, int y3) {
+    return abs((x1 * (y2 - y3) + x2 * (y3 - y1) +
+                x3 * (y1 - y2)) / 2.0);
 }
