@@ -56,8 +56,6 @@ DevTool::DevTool() : Game(1200, 1000) {
 
 
 DevTool::~DevTool() {
-	if (copied == NULL && copied->parent == NULL) delete copied;
-	if (selected == NULL && selected->parent == NULL) delete selected;
 }
 
 void DevTool::start(){
@@ -93,6 +91,7 @@ void DevTool::start(){
 							DisplayObjectContainer *tmp = new DisplayObjectContainer();
 							*tmp = *sprite;
 							selected = tmp;
+							selected->loadTexture(selected->imgPath);
 							scene->addChild(selected);
 							onScreen.push_back(selected);
 							dragging = true;
@@ -171,7 +170,6 @@ vector<string>DevTool::getImagesFromFolder(string folderName){
           }
           if (!((file.find(".") != std::string::npos))){
             //cout << directory -> d_name << endl;
-            cout << "getting images from" + folderName + "/" + directory->d_name << endl;
           	getImagesFromFolder(folderName + "/" + directory->d_name);
 		}
        }
