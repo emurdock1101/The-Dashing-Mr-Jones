@@ -3,47 +3,29 @@
 #include <iostream>
 #include "Sprite.h"
 #include "MyGame.h"
+#include "Scene.h"
+#include "Camera.h"
+#include "Sound.h"
+
 
 using namespace std;
 
-MyGame::MyGame() : Game(1200, 1000) {
+MyGame::MyGame() : Game(1200, 600) {
 	instance = this;
 
-	allSprites = new DisplayObjectContainer();
-	// move that point to the middle
-	allSprites->position = {600, 500};
-	instance->addChild(allSprites);
+	sound = new Sound();
+	sc = new Scene();
+	sc->camera->scaleX = 3;
+	sc->camera->scaleY = 3;
+	sc->camera->x = -50;
+	sc->camera->y = -50;
+	sc->loadScene("./resources/scenes/DemoScene.txt");
+	instance->addChild(sc);
+	this->pivot.x = this->windowWidth/2;
+	this->pivot.y = this->windowHeight/2;
+	player = (DisplayObjectContainer *)sc->getChild("player");
+	sound->playMusic("./resources/sounds/boss.ogg");
 
-	sun = new AnimatedSprite("sun");
-	sun->addAnimation("./resources/solarSystem/", "Sun", 4, 2, true);
-	sun->play("Sun");
-	// cout << sun->getWidth() << sun->getHeight();
-	sun->position = {0, 0};
-	sun->width = sun->height = 100;
-	sun->pivot = {50, 50};
-	allSprites->addChild(sun);
-
-	p1container = new DisplayObjectContainer();
-	p2container = new DisplayObjectContainer();
-	sun->addChild(p1container);
-	sun->addChild(p2container);
-
-	planet1 = new Sprite("planet1","./resources/solarSystem/Planet.png");
-	planet1->position = {200, 0};
-	planet1->width = planet1->height = 30;
-	planet1->pivot = {15, 15};
-	p1container->addChild(planet1);
-
-	planet2 = new Sprite("planet2","./resources/solarSystem/Planet.png");
-	planet2->position = {300, 0};
-	planet2->width = planet2->height = 30;
-	planet2->pivot = {15, 15};
-	p2container->addChild(planet2);
-
-	moon1_1 = new Sprite("moon1_1", "./resources/solarSystem/Moon.png");
-	moon1_1->position = {50, 0};
-	moon1_1->width = moon1_1->height = 15;
-	planet1->addChild(moon1_1);
 }
 
 MyGame::~MyGame(){
@@ -52,50 +34,105 @@ MyGame::~MyGame(){
 
 void MyGame::update(set<SDL_Scancode> pressedKeys){
 	if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
-		sun->position.x += 2;
+		if (player->position.y < 600) {
+			if (player->position.x < 100) {
+				player->position.x += 6;
+				sc->camera->x -= 6;
+			}
+			else {
+				sound->playSFX("./resources/sounds/TORYAH.wav");
+				//player->position.x = 99;
+				//sc->camera->x += 6;
+			}
+		}
+		else {
+			if (player->position.x < 500) {
+				player->position.x += 6;
+				sc->camera->x -= 6;
+			}
+			else {
+				sound->playSFX("./resources/sounds/TORYAH.wav");
+				//player->position.x = 99;
+				//sc->camera->x += 6;
+			}
+		}
 	}
 	if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
-		sun->position.x -= 2;
+		if (player->position.x > -100) {
+			player->position.x -= 6;
+			sc->camera->x += 6;
+		}
+		else {
+			sound->playSFX("./resources/sounds/TORYAH.wav");
+			//player->position.x = -99;
+			//sc->camera->x -= 6;
+		}
 	}
 	if (pressedKeys.find(SDL_SCANCODE_DOWN) != pressedKeys.end()) {
-		sun->position.y += 2;
+		if (player->position.y < 800) {
+			player->position.y += 6;
+			sc->camera->y -= 6;
+		}
+		else {
+			sound->playSFX("./resources/sounds/TORYAH.wav");
+			//player->position.y = 1;
+			//sc->camera->y += 6;
+		}
 	}
 	if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end()) {
-		sun->position.y -= 2;
-	}
-	if (pressedKeys.find(SDL_SCANCODE_A) != pressedKeys.end()) {
-		// sun->rotation += 0.01;
-		p1container->rotation += 0.05;
-		p2container->rotation += 0.03;
-		planet1->rotation += 0.1;
-		p1container->position.x = 100*sin(p1container->rotation);
-		p2container->position.x = 100*sin(p2container->rotation);
-	}
-	if (pressedKeys.find(SDL_SCANCODE_S) != pressedKeys.end()) {
-		// sun->rotation -= 0.01;
-		p1container->rotation -= 0.05;
-		p2container->rotation -= 0.03;
-		planet1->rotation -= 0.1;
-		p1container->position.x = 100*sin(p1container->rotation);
-		p2container->position.x = 100*sin(p2container->rotation);
+		if (player->position.x < 150) {
+			if (player->position.y > -200) {
+				player->position.y -= 6;
+				sc->camera->y += 6;
+			}
+			else {
+				sound->playSFX("./resources/sounds/TORYAH.wav");
+				//player->position.y = 499;
+				//sc->camera->y -= 6;
+			}
+		}
+		else {
+			if (player->position.y > 700) {
+				player->position.y -= 6;
+				sc->camera->y += 6;
+			}
+			else {
+				sound->playSFX("./resources/sounds/TORYAH.wav");
+			}
+		}
 	}
 	if (pressedKeys.find(SDL_SCANCODE_Q) != pressedKeys.end()) {
-		allSprites->scaleX *= 1.05;
-		allSprites->scaleY *= 1.05;
+		sc->camera->scaleX += .05;
+		sc->camera->scaleY += .05;
 	}
 	if (pressedKeys.find(SDL_SCANCODE_W) != pressedKeys.end()) {
-		allSprites->scaleX *= 1/1.05;
-		allSprites->scaleY *= 1/1.05;
+		if (sc->camera->scaleX > 3 && sc->camera->scaleY > 3) {
+			sc->camera->scaleX -= .05;
+			sc->camera->scaleY -= .05;
+		}
 	}
 	if (pressedKeys.find(SDL_SCANCODE_P) != pressedKeys.end()) {
-		sun->play("Sun");
+		if(t){
+			sc->loadScene("./resources/scenes/Scene2.txt");
+			t = false;
+		}
+		else{
+			sc->loadScene("./resources/scenes/Scene1.txt");
+			t = true;
+		}
 	}
-	if (pressedKeys.find(SDL_SCANCODE_L) != pressedKeys.end()) {
-		sun->stop();
+	if (player->position.y <= 100) { 
+		sc->camera->scaleX = 4;
+		sc->camera->scaleY = 4;
+	}
+	if (player->position.y > 100) {
+		sc->camera->scaleY = 3;
+		sc->camera->scaleX = 3;
 	}
 	Game::update(pressedKeys);
 }
 
 void MyGame::draw(AffineTransform &at){
+	at.translate(this->pivot.x, this->pivot.y);
 	Game::draw(at);
 }

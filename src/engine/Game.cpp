@@ -5,6 +5,7 @@
 #include "DisplayObject.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 #include <iostream>
 
 using namespace std;
@@ -39,9 +40,12 @@ void Game::quitSDL(){
 void Game::initSDL(){
 	SDL_Init(SDL_INIT_VIDEO);
 	IMG_Init(IMG_INIT_PNG);
+	SDL_Init(SDL_INIT_AUDIO);
 
 	window = SDL_CreateWindow("myGame",
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, this->windowWidth, this->windowHeight, 0);
+
+	Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 );
 
 	SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
 

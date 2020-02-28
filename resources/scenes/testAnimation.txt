@@ -1,0 +1,2 @@
+AnimatedSprite test 550 600 0 0 1 1 0 100 100 255 1
+./resources/character/ Dead 20 10 1
