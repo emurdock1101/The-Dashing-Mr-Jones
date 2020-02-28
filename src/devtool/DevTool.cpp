@@ -56,7 +56,8 @@ DevTool::DevTool() : Game(1200, 1000) {
 
 
 DevTool::~DevTool() {
-
+	if (copied == NULL && copied->parent == NULL) delete copied;
+	if (selected == NULL && selected->parent == NULL) delete selected;
 }
 
 void DevTool::start(){
@@ -88,7 +89,7 @@ void DevTool::start(){
 				count = 0;
 				if (!dragging) {
 					for (DisplayObjectContainer *sprite: selectionArea->children) {
-						if (isHovered(sprite, event)) {
+						if (isHoveredSelectBar(sprite, event)) {
 							DisplayObjectContainer *tmp = new DisplayObjectContainer();
 							*tmp = *sprite;
 							selected = tmp;
@@ -99,7 +100,7 @@ void DevTool::start(){
 						}
 					}
 					for (DisplayObjectContainer *sprite: this->onScreen) {
-						if (isHovered(sprite, event) && makeChild == true){
+						if (isHoveredScene(sprite, event) && makeChild == true){
 							cout << sprite->imgPath << " is now a child of " << selected->imgPath << endl;
 							selected->addChild(sprite);
 							sprite->position.x -= selected->position.x;
@@ -107,7 +108,7 @@ void DevTool::start(){
 							scene->removeImmediateChild(sprite);
 							makeChild = false;
 						}
-						if (isHovered(sprite, event)) {
+						if (isHoveredScene(sprite, event)) {
 							dragging = true;
 							selected = sprite;
 							// Remove/add child so it's top of display tree (if it's a direct child of scene)
@@ -190,16 +191,16 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 	for (SDL_Scancode scancode: pressedKeys) {
 		switch(scancode) {
 			case SDL_SCANCODE_UP:
-				scene->camera->y += 6;
+				scene->camera->y += 3;
 				break;
 			case SDL_SCANCODE_DOWN:
-				scene->camera->y -= 6;
+				scene->camera->y -= 3;
 				break;
 			case SDL_SCANCODE_LEFT:
-				scene->camera->x += 6;
+				scene->camera->x += 3;
 				break;
 			case SDL_SCANCODE_RIGHT:
-				scene->camera->x -= 6;
+				scene->camera->x -= 3;
 				break;
 			case SDL_SCANCODE_Q:
 				selectionArea->position.x -= 5;
@@ -310,6 +311,29 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 					selected->position.y = selected->position.y - (selected->position.y % gridPixels) + gridPixels;
 				}
 				break;*/
+			/*
+			// Delete
+			case SDL_SCANCODE_BACKSPACE:
+				// Delete
+				if (selected != NULL) {
+					cout << "Deleting " << selected->id << endl;
+					cout << "Parent " << selected->parent->id << endl;
+					selected->removeThis();
+					// Delete from onScreen
+					for (int i = 0; i < onScreen.size(); i++) {
+						if (onScreen[i] == selected) {
+							cout << "DELETING from on screen" << selected->id << endl;
+							onScreen.erase(onScreen.begin() + i);
+							cout << "Deleted from on screen" << selected->id << endl;
+							break;
+						}
+					}
+					delete selected;
+					cout << "SETTING NULL" << endl;
+					selected = NULL;
+					cout << "BREAKING" << endl;
+					break;
+				}*/
 			case SDL_SCANCODE_C:
 				// Copy
 				copied = new DisplayObjectContainer;
@@ -325,7 +349,6 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 				onScreen.push_back(tmp); 
 				spritesToDisplay.push_back(tmp);
 				break;
-
 		}
 	}
 	singleUseKeys.clear();
@@ -382,7 +405,11 @@ void DevTool::draw(AffineTransform &at){
 	SDL_RenderPresent(Game::renderer);
 }
 
-bool DevTool::isHovered(DisplayObject *obj, SDL_Event event) {
+bool DevTool::isHoveredSelectBar(DisplayObject *obj, SDL_Event event) {
+	return obj->isColliding(NULL, event.motion.x, event.motion.y);
+}
+
+bool DevTool::isHoveredScene(DisplayObject *obj, SDL_Event event) {
 	return obj->isColliding(scene->camera, event.motion.x, event.motion.y);
 }
 

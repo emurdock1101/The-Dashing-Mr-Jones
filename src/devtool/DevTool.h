@@ -27,7 +27,8 @@ public:
 
 private:
 
-	bool isHovered(DisplayObject *obj, SDL_Event event);
+	bool isHoveredSelectBar(DisplayObject *obj, SDL_Event event);
+	bool isHoveredScene(DisplayObject *obj, SDL_Event event);
 	void editPrompt();
 
 	int gridPixels = 50;

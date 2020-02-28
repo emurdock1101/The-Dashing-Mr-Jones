@@ -20,7 +20,7 @@ DisplayObjectContainer::DisplayObjectContainer(string id, int red, int green, in
 }
 
 DisplayObjectContainer::~DisplayObjectContainer() {
-    for (int i = 0; i < children.size(); i++ ) {
+    for (int i = children.size()-1; i >= 0; i-- ) {
         delete children[i];
     }
 }

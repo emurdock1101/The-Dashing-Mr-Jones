@@ -121,14 +121,16 @@ bool DisplayObject::isColliding(Camera *camera, int x, int y) {
 	SDL_Point bottomRight = getBottomRight();
 
 	// Add the camera
-	topLeft.x += camera->x;
-	topLeft.y += camera->y;
-	topRight.x += camera->x;
-	topRight.y += camera->y;
-	bottomLeft.x += camera->x;
-	bottomLeft.y += camera->y;
-	bottomRight.x += camera->x;
-	bottomRight.y += camera->y;
+	if (camera != NULL) {
+		topLeft.x += camera->x;
+		topLeft.y += camera->y;
+		topRight.x += camera->x;
+		topRight.y += camera->y;
+		bottomLeft.x += camera->x;
+		bottomLeft.y += camera->y;
+		bottomRight.x += camera->x;
+		bottomRight.y += camera->y;
+	}
 
 	/* Now calculate if point is in this rectangle or not.
 	 * To deal with rotation etc. this uses the area method.
