@@ -5,13 +5,14 @@
 #include <SDL2/SDL_image.h>
 #include <set>
 #include "AffineTransform.h"
+#include "EventDispatcher.h"
 #include "Camera.h"
 #include <string>
 #include <fstream>
 
 using namespace std;
 
-class DisplayObject{
+class DisplayObject : public EventDispatcher {
 
 public:
 	string id = "DEFAULT_ID";
