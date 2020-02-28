@@ -13,6 +13,7 @@
 #include <dirent.h> 
 #include <vector>
 #include <algorithm>
+#include "AnimatedSprite.h"
 
 using namespace std;
 vector<string> images;
@@ -239,6 +240,56 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 					editPrompt();
 				}
 				break;
+			case SDL_SCANCODE_A:
+			{
+
+				cout << "Animated Sprite Creator:" << endl << "Fill out the following fields:" << endl;
+				cout << "Enter the id: ";
+				string id;
+				cin >> id; 
+				AnimatedSprite* temp = new AnimatedSprite(id);
+				temp->position.x = 100;
+				temp->position.y = 100;
+				scene->addChild(temp);
+				onScreen.push_back(temp);
+
+				//Add animations
+				cout << "Add Your Animations:" << endl;
+				bool animationAdder = true;
+				while(animationAdder == true){
+					cout << "Enter the basepath: ";
+					string basepath;
+					cin >> basepath;
+					cout << "Enter the name of the Animation: ";
+					string animName;
+					cin >> animName;
+					cout << "Enter the number of frames: ";
+					string numFrames;
+					cin >> numFrames;
+					cout << "Enter the framerate: ";
+					string frameRate;
+					cin >> frameRate;
+					temp->addAnimation(basepath, animName, stoi(numFrames), stoi(frameRate), true); 
+					temp->position.x = 100;
+					temp->position.y = 100;
+					temp->play(animName);
+					cout << "Would you like to add another animation? y/n" << endl;
+					string yesno;
+					cin >> yesno;
+					if (yesno == "n"){
+						animationAdder = false;
+					}
+				}
+				
+				/*AnimatedSprite* temp = new AnimatedSprite("test");
+				temp->addAnimation("./resources/character/", "Idle", 20, 100, true);
+				temp->play("Idle");
+				temp->position.x = 100;
+				temp->position.y = 100;
+				scene->addChild(temp);
+				onScreen.push_back(temp);*/
+				break;
+			}
 			/*
 			// Gridpixels changing code
 			case SDL_SCANCODE_H:
@@ -338,55 +389,89 @@ bool DevTool::isHovered(DisplayObject *obj, SDL_Event event) {
 void DevTool::editPrompt() {
 	cout << "Welcome to the Sprite Editor" << endl;
 	//id, imgpath, pos.x, pox.y, piv.x, piv.y, scaleX, scaleY, rotation, imgH, imgW, alpha, parents
-	if (selected->type == "DisplayObject" || selected->type == "DisplayObjectContainer" || selected->type == "Sprite"){
-		cout << "Editing " << selected->imgPath << endl;
-		cout << "Change Scale X from " << selected->scaleX << " to: ";
-		string scaleX;
-		cin >> scaleX;
-		if (!(scaleX == "n")){
-			selected->scaleX = stoi(scaleX);
+	cout << "Editing " << selected->imgPath << endl;
+	cout << "Change Scale X from " << selected->scaleX << " to: ";
+	string scaleX;
+	cin >> scaleX;
+	if (!(scaleX == "n")){
+		selected->scaleX = stoi(scaleX);
+	}
+	cout << "Scale X is now " << selected->scaleX << endl;
+
+	cout << "__________________________________________________" << endl;
+
+	cout << "Change Scale Y from " << selected->scaleY << " to: ";
+	string scaleY;
+	cin >> scaleY;
+	if (!(scaleY == "n")){
+		selected->scaleY = stoi(scaleY);
+	}
+	cout << "Scale Y is now " << selected->scaleY << endl;
+
+	cout << "__________________________________________________" << endl;
+	cout << "Change Pivot X from " << selected->pivot.x << " to: ";
+	string pivX;
+	cin >> pivX;
+	if (!(pivX == "n")){
+		selected->pivot.x = stoi(pivX);
+	}
+	cout << "Pivot X is now " << selected->pivot.x << endl;
+
+	cout << "__________________________________________________" << endl;
+
+	cout << "Change Pivot Y from " << selected->pivot.y << " to: ";
+	string pivY;
+	cin >> pivY;
+	if (!(pivY == "n")){
+		selected->pivot.y = stoi(pivY);
+	}
+	cout << "Pivot Y is now " << selected->pivot.y << endl;
+
+	cout << "__________________________________________________" << endl;
+
+	cout << "Change Rotation from " << selected->rotation << " to: ";
+	string rot;
+	cin >> rot;
+	if (!(rot == "n")){
+		selected->rotation = stoi(rot);
+	}
+	cout << "Rotation is now " << selected->rotation << endl;
+
+	cout << "__________________________________________________" << endl;
+
+	cout << "Change id from " << selected->rotation << " to: ";
+	string id;
+	cin >> id;
+	if (!(id == "n")){
+		selected->id = id;
+	}
+	cout << "Rotation is now " << selected->id << endl;
+
+	cout << "__________________________________________________" << endl;
+
+	if (selected->type == "AnimatedSprite"){
+		cout << "Change sprite animation to: ";
+		string newAnim; 
+		cin >> newAnim; 
+		if (newAnim != "n"){
+			((AnimatedSprite*)selected)->play(newAnim);
 		}
-		cout << "Scale X is now " << selected->scaleX << endl;
-
-		cout << "__________________________________________________" << endl;
-
-		cout << "Change Scale Y from " << selected->scaleY << " to: ";
-		string scaleY;
-		cin >> scaleY;
-		if (!(scaleY == "n")){
-			selected->scaleY = stoi(scaleY);
+		
+		cout << "Play or Stop animation? (Enter p or s)" << endl;
+		string playstop;
+		cin >> playstop;
+		if (playstop != "n"){
+			if (playstop == "p"){
+				((AnimatedSprite*)selected)->playing = true;
+				((AnimatedSprite*)selected)->replay();
+			}
+			if (playstop == "s"){
+				((AnimatedSprite*)selected)->playing = false;
+				((AnimatedSprite*)selected)->stop();
+			}
 		}
-		cout << "Scale Y is now " << selected->scaleY << endl;
-
-		cout << "__________________________________________________" << endl;
-		cout << "Change Pivot X from " << selected->pivot.x << " to: ";
-		string pivX;
-		cin >> pivX;
-		if (!(pivX == "n")){
-			selected->pivot.x = stoi(pivX);
-		}
-		cout << "Pivot X is now " << selected->pivot.x << endl;
-
-		cout << "__________________________________________________" << endl;
-
-		cout << "Change Pivot Y from " << selected->pivot.y << " to: ";
-		string pivY;
-		cin >> pivY;
-		if (!(pivY == "n")){
-			selected->pivot.y = stoi(pivY);
-		}
-		cout << "Pivot Y is now " << selected->pivot.y << endl;
-
-		cout << "__________________________________________________" << endl;
-
-		cout << "Change Rotation from " << selected->rotation << " to: ";
-		string rot;
-		cin >> rot;
-		if (!(rot == "n")){
-			selected->rotation = stoi(rot);
-		}
-		cout << "Rotation is now " << selected->rotation << endl;
-
-		cout << "__________________________________________________" << endl;
 	}
 }
+		
+
+

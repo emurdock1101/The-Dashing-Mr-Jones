@@ -42,6 +42,7 @@ public:
 	virtual void draw(AffineTransform &at);
 	virtual void writeSceneData(ostream &stream);
 
+
 	bool playing = false;
 
 private:
