@@ -10,12 +10,12 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
-#include <experimental/filesystem>
+#include <dirent.h> 
 #include <vector>
 #include <algorithm>
 
 using namespace std;
-namespace fs = std::experimental::filesystem;
+vector<string> images;
 
 DevTool::DevTool() : Game(1200, 1000) {
 	scene = new Scene();
@@ -25,7 +25,8 @@ DevTool::DevTool() : Game(1200, 1000) {
 	blueBar->height = 100;
 	blueBar->width = 1400;
 
-	vector<string> images = getImagesFromFolder("./resources");
+	images = getImagesFromFolder("./resources");
+	
 	sort(images.begin(), images.end());
 
 	int count = 0;
@@ -145,25 +146,38 @@ void DevTool::start(){
 		}
 	}
 }
-////https://stackoverflow.com/questions/612097/how-can-i-get-the-list-of-files-in-a-directory-using-c-or-c
+//http://www.martinbroadhurst.com/list-the-files-in-a-directory-in-c.html
 vector<string>DevTool::getImagesFromFolder(string folderName){
-	vector<string> images = {};
-	for (const auto &file: fs::directory_iterator(folderName)){
-		string temp = file.path();
-		if (temp.find(".png") != std::string::npos){ //find each image in the main directory
-			images.push_back(file.path());
+	vector<string> temp; 
+	
+	struct dirent *directory;
+
+	DIR* dirp;
+	dirp = opendir(folderName.c_str());
+
+	   if (dirp) {
+        while ((directory = readdir(dirp)) != NULL){
+          //cout << directory->d_name << endl;
+          string file = string(directory->d_name);
+          if ((file.find(".png") != std::string::npos)){
+          	//cout << directory->d_name << endl;
+          	temp.push_back(folderName + "/" + directory->d_name);
+          }
+          if (!((file.find(".") != std::string::npos))){
+            //cout << directory -> d_name << endl;
+            cout << "getting images from" + folderName + "/" + directory->d_name << endl;
+          	getImagesFromFolder(folderName + "/" + directory->d_name);
 		}
-		//Go through each sub-directory and find those images too
-		else if (!(temp.substr(1).find(".") != std::string::npos)){
-			for (const auto &fileInSubFolder : fs::directory_iterator(temp)){
-				string temp = fileInSubFolder.path();
-				if (temp.find(".png") != std::string::npos){
-					images.push_back(fileInSubFolder.path());
-				}
-			}
-		}
-	}
-	return images;
+       }
+        closedir(dirp);
+    }
+
+    for (string image: temp){
+    	images.push_back(image);
+    }
+
+
+    return images;
 }
 
 void DevTool::update(set<SDL_Scancode> pressedKeys){
@@ -230,7 +244,7 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 				tmp->position.x += 50;
 				tmp->position.y += 50;
 				scene->addChild(tmp);
-				onScreen.push_back(tmp);
+				onScreen.push_back(tmp); 
 				spritesToDisplay.push_back(tmp);
 				break;
 
