@@ -34,14 +34,17 @@ private:
 	Scene *scene;
 
 	DisplayObjectContainer *menus;
-	DisplayObject *selected;
-	DisplayObject *copied;
+	DisplayObjectContainer *selected;
+	DisplayObjectContainer *copied;
 	Sprite *selectionArea;
 	Sprite* blueBar;
 	bool dragging = false;
+	bool makeChild = false;
 
-	vector<DisplayObject*> spritesToDisplay;
+	vector<DisplayObjectContainer*> spritesToDisplay;
+	vector<DisplayObjectContainer*> onScreen;
 	set<SDL_Scancode> singleUseKeys;
+
 };
 
 #endif

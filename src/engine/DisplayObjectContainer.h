@@ -18,8 +18,8 @@ public:
 	DisplayObjectContainer(string id, int red, int green, int blue);
 	virtual ~DisplayObjectContainer();
 
-	void addChild(DisplayObject* child);
-	void removeImmediateChild(DisplayObject* child);
+	void addChild(DisplayObjectContainer* child);
+	void removeImmediateChild(DisplayObjectContainer* child);
 	void removeImmediateChild(string id);
 	void removeChild(int index);
 	void removeThis();
@@ -34,7 +34,7 @@ public:
 
 	virtual void writeSceneData(ostream &stream);
 
-	vector<DisplayObject*> children;
+	vector<DisplayObjectContainer*> children;
 private:
 
 

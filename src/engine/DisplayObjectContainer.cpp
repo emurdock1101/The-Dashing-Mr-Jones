@@ -25,12 +25,12 @@ DisplayObjectContainer::~DisplayObjectContainer() {
     }
 }
 
-void DisplayObjectContainer::addChild(DisplayObject* child) {
+void DisplayObjectContainer::addChild(DisplayObjectContainer* child) {
     children.push_back(child);
     child->parent = this; // make sure to include reverse reference also
 }
 
-void DisplayObjectContainer::removeImmediateChild(DisplayObject* child) {
+void DisplayObjectContainer::removeImmediateChild(DisplayObjectContainer* child) {
     for (int i = 0; i < children.size(); i++) {
         if (children[i] == child) {
             children.erase(children.begin() + i);

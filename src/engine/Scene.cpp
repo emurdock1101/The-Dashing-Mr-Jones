@@ -36,7 +36,7 @@ void Scene::loadScene(string sceneFilePath){
         }
         if(object.compare("DisplayObject") == 0){
             //id, imgpath, pos.x, pox.y, piv.x, piv.y, scaleX, scaleY, rotation, imgH, imgW, alpha, parents
-            DisplayObject* temp = new DisplayObject(args[0],args[1]);
+            DisplayObjectContainer* temp = new DisplayObjectContainer(args[0],args[1]);
             temp->type = object;
             temp->setPos(stoi(args[2]),stoi(args[3]));
             temp->setPiv(stoi(args[4]),stoi(args[5]));

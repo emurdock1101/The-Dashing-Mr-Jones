@@ -23,20 +23,20 @@ DevTool::DevTool() : Game(1200, 1000) {
 	selectionArea = new Sprite("selection_area", 0, 0, 0);
 	blueBar = new Sprite("blue_bar", 0,0,255);
 	blueBar->height = 100;
-	blueBar->width = 1200;
+	blueBar->width = 1400;
 
 	vector<string> images = getImagesFromFolder("./resources");
 	sort(images.begin(), images.end());
 
 	int count = 0;
 	for (string image : images){
-		DisplayObject* temp = new DisplayObject(to_string(count), image);
+		DisplayObjectContainer* temp = new DisplayObjectContainer(to_string(count), image);
 		spritesToDisplay.push_back(temp);
 		count++;
 	}
 
 	int x = 50;
-	for (DisplayObject* sprite : spritesToDisplay){
+	for (DisplayObjectContainer* sprite : spritesToDisplay){
 		sprite->position = {x, 0};
 		sprite->width = 100;
 		sprite->height = 100;
@@ -85,28 +85,38 @@ void DevTool::start(){
 			case SDL_MOUSEBUTTONDOWN:
 				count = 0;
 				if (!dragging) {
-					for (DisplayObject *sprite: selectionArea->children) {
+					for (DisplayObjectContainer *sprite: selectionArea->children) {
 						if (isHovered(sprite, event)) {
-							DisplayObject *tmp = new DisplayObject();
+							DisplayObjectContainer *tmp = new DisplayObjectContainer();
 							*tmp = *sprite;
 							selected = tmp;
 							scene->addChild(selected);
+							onScreen.push_back(selected);
 							dragging = true;
 							break;
 						}
 					}
-					for (DisplayObject *sprite: scene->children) {
+					for (DisplayObjectContainer *sprite: this->onScreen) {
+						if (isHovered(sprite, event) && makeChild == true){
+							cout << sprite->imgPath << " is now a child of " << selected->imgPath << endl;
+							selected->addChild(sprite);
+							scene->removeImmediateChild(sprite);
+							makeChild = false;
+						}
 						if (isHovered(sprite, event)) {
 							dragging = true;
 							selected = sprite;
-							// Remove/add child so it's top of display tree
-							scene->removeImmediateChild(selected);
-							scene->addChild(selected);
+							// Remove/add child so it's top of display tree (if it's a direct child of scene)
+							if (find(scene->children.begin(), scene->children.end(), sprite) != scene->children.end()){
+								scene->removeImmediateChild(selected);
+								scene->addChild(selected);
+							}
 							break;
 						}
+			
 					}
 				}
-
+				
 				count++;
 				break;
 			case SDL_MOUSEBUTTONUP:
@@ -184,6 +194,9 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 	}
 	for (SDL_Scancode scancode: singleUseKeys) {
 		switch(scancode) {
+			case SDL_SCANCODE_LCTRL:
+				makeChild = true;
+				break;
 			case SDL_SCANCODE_L:
 				cout << "Please enter a filepath to load a scene:" << endl;
 				cin >> filename;
@@ -207,18 +220,20 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 				break;
 			case SDL_SCANCODE_C:
 				// Copy
-				copied = new DisplayObject;
+				copied = new DisplayObjectContainer;
 				*copied = *selected;
 				break;
 			case SDL_SCANCODE_V:
 				// Paste
-				DisplayObject *tmp = new DisplayObject;
+				DisplayObjectContainer *tmp = new DisplayObjectContainer;
 				*tmp = *copied;
 				tmp->position.x += 50;
 				tmp->position.y += 50;
 				scene->addChild(tmp);
+				onScreen.push_back(tmp);
 				spritesToDisplay.push_back(tmp);
 				break;
+
 		}
 	}
 	singleUseKeys.clear();
