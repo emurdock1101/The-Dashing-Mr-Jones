@@ -146,6 +146,7 @@ void DevTool::start(){
 		}
 	}
 }
+//Helpful source: 
 //http://www.martinbroadhurst.com/list-the-files-in-a-directory-in-c.html
 vector<string>DevTool::getImagesFromFolder(string folderName){
 	vector<string> temp; 
@@ -216,6 +217,9 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 				cin >> filename;
 				cout << "Loading scene " << filename << endl;
 				scene->loadScene(filename);
+				for (DisplayObjectContainer* child : scene->children){
+					onScreen.push_back(child);
+				}
 				selected = NULL;
 				copied = NULL;
 				cout << "Loaded scene " << filename << endl;
