@@ -74,8 +74,8 @@ void AnimatedSprite::stop() {
     this->playing = false;
 }
 
-void AnimatedSprite::update(set<SDL_Scancode> pressedKeys) {
-    Sprite::update(pressedKeys);
+void AnimatedSprite::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates) {
+    Sprite::update(pressedKeys, controllerStates);
     if (playing) {
         frameCount++;
         if (frameCount % current->frameRate == 0) {

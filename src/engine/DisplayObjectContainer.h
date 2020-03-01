@@ -29,7 +29,7 @@ public:
 	virtual DisplayObject* getChild(int index);
 	virtual DisplayObject* getChild(string id);
 
-	virtual void update(set<SDL_Scancode> pressedKeys);
+	virtual void update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates);
 	virtual void draw(AffineTransform &at);
 
 	virtual void writeSceneData(ostream &stream);

@@ -14,8 +14,8 @@ Sprite::Sprite(string id, int red, int green, int blue) : DisplayObjectContainer
     this->type = "Sprite";
 }
 
-void Sprite::update(set<SDL_Scancode> pressedKeys) {
-    DisplayObjectContainer::update(pressedKeys);
+void Sprite::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates) {
+    DisplayObjectContainer::update(pressedKeys, controllerStates);
 }
 
 void Sprite::draw(AffineTransform &at) {

@@ -7,6 +7,7 @@
 #include "AffineTransform.h"
 #include "EventDispatcher.h"
 #include "Camera.h"
+#include "ControllerState.h"
 #include <string>
 #include <fstream>
 
@@ -29,7 +30,7 @@ public:
 	DisplayObject(string id, int red, int green, int blue);
 	virtual ~DisplayObject();
 
-	virtual void update(set<SDL_Scancode> pressedKeys);
+	virtual void update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates);
 	virtual void draw(AffineTransform &at);
 
 	void loadTexture(string filepath);

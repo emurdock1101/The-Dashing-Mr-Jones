@@ -38,7 +38,7 @@ public:
 	void replay();
 	void stop();
 
-	virtual void update(set<SDL_Scancode> pressedKeys);
+	virtual void update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates);
 	virtual void draw(AffineTransform &at);
 	virtual void writeSceneData(ostream &stream);
 
