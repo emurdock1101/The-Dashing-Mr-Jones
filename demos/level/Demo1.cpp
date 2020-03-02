@@ -1,6 +1,5 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_mixer.h>
 #include <iostream>
 #include "Sprite.h"
 #include "MyGame.h"
@@ -31,6 +30,7 @@ MyGame::MyGame() : Game(1200, 600) {
 
 MyGame::~MyGame(){
 }
+
 
 void MyGame::update(set<SDL_Scancode> pressedKeys){
 	if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
@@ -129,7 +129,6 @@ void MyGame::update(set<SDL_Scancode> pressedKeys){
 		sc->camera->scaleY = 3;
 		sc->camera->scaleX = 3;
 	}
-
 	Game::update(pressedKeys);
 }
 

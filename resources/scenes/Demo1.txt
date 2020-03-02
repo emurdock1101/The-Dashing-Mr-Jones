@@ -1,0 +1,4 @@
+DisplayObject rec1  ./resources/objects/rectangle.png 400 -100 0 0 6 10 0 200 500 255
+DisplayObject rec2  ./resources/objects/rectangle.png 400 600 0 0 10 6 0 300 200 255
+AnimatedSprite girl 600 100 0 0 1 1 0 150 150 255 1
+./resources/character/ Run 20 2 true

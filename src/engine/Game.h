@@ -32,12 +32,13 @@ public:
 
 	virtual void update(set<SDL_Scancode> pressedKeys);
 	virtual void draw(AffineTransform &at);
+	set<SDL_Scancode> pressedKeys;
 
 private:
 
 	void initSDL();
 	void quitSDL();
-	set<SDL_Scancode> pressedKeys;
+	
 	
 };
 
