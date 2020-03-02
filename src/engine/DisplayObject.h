@@ -57,11 +57,6 @@ public:
 	void setDim(int x, int y);
 	void setPiv(int x, int y);
 
-
-	void setPos(int x, int y);
-	void setDim(int x, int y);
-	void setPiv(int x, int y);
-
 	bool isColliding(Camera *camera, int x, int y);
 
 	virtual void writeSceneData(ostream &stream);
