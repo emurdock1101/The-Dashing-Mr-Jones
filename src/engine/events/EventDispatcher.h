@@ -20,15 +20,15 @@ public:
 	EventDispatcher();
 	virtual ~EventDispatcher();
 	
-	void addEventListener(EventListener* l, string eventType);
-	void removeEventListener(EventListener* l, string eventType);
-	bool hasEventListener(EventListener* l, string eventType);
+	void addEventListener(EventListener* l, int eventType);
+	void removeEventListener(EventListener* l, int eventType);
+	bool hasEventListener(EventListener* l, int eventType);
 	void dispatchEvent(Event *e);
 
 private:
 	
 	/* List of listeners */
-    std::unordered_map<std::string, std::vector<EventListener*>*> *listeners;
+    std::unordered_map<int, std::vector<EventListener*>*> *listeners;
 
 
 };

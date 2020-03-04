@@ -16,6 +16,7 @@ struct Frame {
 
 struct Animation {
 	Frame** frames;
+	string basepath;
 	string animName;
 	int numFrames;
 	int frameRate;
@@ -26,7 +27,6 @@ struct Animation {
 class AnimatedSprite : public Sprite{
 
 public:
-	
 	AnimatedSprite();
 	AnimatedSprite(string id);
 	~AnimatedSprite();
@@ -40,6 +40,8 @@ public:
 
 	virtual void update(set<SDL_Scancode> pressedKeys);
 	virtual void draw(AffineTransform &at);
+	virtual void writeSceneData(ostream &stream);
+
 
 	bool playing = false;
 

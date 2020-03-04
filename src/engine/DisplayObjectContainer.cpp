@@ -1,6 +1,7 @@
 #include "DisplayObjectContainer.h"
 #include "AffineTransform.h"
 #include <vector>
+#include <iostream>
 #include <string>
 
 using namespace std;
@@ -19,20 +20,19 @@ DisplayObjectContainer::DisplayObjectContainer(string id, int red, int green, in
 }
 
 DisplayObjectContainer::~DisplayObjectContainer() {
-    for (int i = 0; i < children.size(); i++ ) {
+    for (int i = children.size()-1; i >= 0; i-- ) {
         delete children[i];
     }
 }
 
-void DisplayObjectContainer::addChild(DisplayObject* child) {
+void DisplayObjectContainer::addChild(DisplayObjectContainer* child) {
     children.push_back(child);
     child->parent = this; // make sure to include reverse reference also
 }
 
-void DisplayObjectContainer::removeImmediateChild(DisplayObject* child) {
+void DisplayObjectContainer::removeImmediateChild(DisplayObjectContainer* child) {
     for (int i = 0; i < children.size(); i++) {
         if (children[i] == child) {
-            delete child;
             children.erase(children.begin() + i);
         }
     }
@@ -41,8 +41,6 @@ void DisplayObjectContainer::removeImmediateChild(DisplayObject* child) {
 void DisplayObjectContainer::removeImmediateChild(string id) {
     for (int i = 0; i < children.size(); i++) {
         if (children[i]->id == id) {
-            // delete the child
-            delete children[i];
             children.erase(children.begin() + i);
         }
     }
@@ -50,7 +48,6 @@ void DisplayObjectContainer::removeImmediateChild(string id) {
 
 void DisplayObjectContainer::removeChild(int index) {
     if (index < children.size()) {
-        delete children[index];
         children.erase(children.begin() + index);
     }
 }
@@ -82,6 +79,11 @@ DisplayObject* DisplayObjectContainer::getChild(string id) {
     return NULL;
 }
 
+DisplayObjectContainer* DisplayObjectContainer::copy() {
+	DisplayObjectContainer *tmp;
+	return tmp;
+}
+
 void DisplayObjectContainer::update(set<SDL_Scancode> pressedKeys) {
     DisplayObject::update(pressedKeys);
     for (int i = 0; i < children.size(); i++) {
@@ -100,4 +102,11 @@ void DisplayObjectContainer::draw(AffineTransform &at) {
     // redo the parent's pivot
     at.translate(-pivot.x, -pivot.y);
     reverseTransformations(at);
+}
+
+void DisplayObjectContainer::writeSceneData(ostream &stream) {
+	DisplayObject::writeSceneData(stream);
+	for (DisplayObject *child : children) {
+		child->writeSceneData(stream);
+	}
 }

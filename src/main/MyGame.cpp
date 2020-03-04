@@ -13,19 +13,19 @@ using namespace std;
 MyGame::MyGame() : Game(1200, 600) {
 	instance = this;
 
-	cammy = new Camera();
+	sound = new Sound();
+	sc = new Scene();
+	cammy = sc->camera;
 	cammy->scaleX = 3;
 	cammy->scaleY = 3;
 	cammy->x = -50;
 	cammy->y = -50;
-	sound = new Sound();
-	sc = new Scene();
-	sc->loadScene("./resources/scenes/Demo2.txt");
+	sc->loadScene("./resources/scenes/Demo1.txt");
 	instance->addChild(sc);
 	this->pivot.x = this->windowWidth/2;
 	this->pivot.y = this->windowHeight/2;
-	player = sc->getObj("player");
-	sound->playMusic("./resources/sounds/boss.ogg");
+	player = (DisplayObjectContainer *)sc->getChild("player");
+	//sound->playMusic("./resources/sounds/boss.ogg");
 }
 
 MyGame::~MyGame(){
@@ -65,7 +65,5 @@ void MyGame::update(set<SDL_Scancode> pressedKeys){
 
 void MyGame::draw(AffineTransform &at){
 	at.translate(this->pivot.x, this->pivot.y);
-	at.scale(cammy->scaleX, cammy->scaleY);
-	at.translate(cammy->x, cammy->y);
 	Game::draw(at);
 }

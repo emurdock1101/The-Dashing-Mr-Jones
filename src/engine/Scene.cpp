@@ -2,12 +2,20 @@
 #include <iostream>
 #include "Sprite.h"
 #include "AnimatedSprite.h"
+#include "Game.h"
+#include "DisplayObjectContainer.h"
+#include "AffineTransform.h"
+#include <vector>
+#include <string>
+
+
 
 using namespace std;
 //using namespace rapidjason;
 
 Scene::Scene() : DisplayObjectContainer(){
-
+  this->type = "Scene";
+  this->camera = new Camera();
 }
 
 void Scene::loadScene(string sceneFilePath){
@@ -28,7 +36,8 @@ void Scene::loadScene(string sceneFilePath){
         }
         if(object.compare("DisplayObject") == 0){
             //id, imgpath, pos.x, pox.y, piv.x, piv.y, scaleX, scaleY, rotation, imgH, imgW, alpha, parents
-            DisplayObject* temp = new DisplayObject(args[0],args[1]);
+            DisplayObjectContainer* temp = new DisplayObjectContainer(args[0],args[1]);
+            temp->type = object;
             temp->setPos(stoi(args[2]),stoi(args[3]));
             temp->setPiv(stoi(args[4]),stoi(args[5]));
             temp->scaleX = stoi(args[6]);
@@ -43,13 +52,14 @@ void Scene::loadScene(string sceneFilePath){
                 }
             }
             else{
-                drawable.push_back((DisplayObjectContainer*)temp);
+                addChild((DisplayObjectContainer*)temp);
             }
             inScene.push_back((DisplayObjectContainer*)temp);
         }
         else if(object.compare("DisplayObjectContainer") == 0){
             //id, imgpath, pos.x, pox.y, piv.x, piv.y, scaleX, scaleY, rotation, imgH, imgW, alpha, parents
             DisplayObjectContainer* temp = new DisplayObjectContainer(args[0],args[1]);
+            temp->type = object;
             temp->setPos(stoi(args[2]),stoi(args[3]));
             temp->setPiv(stoi(args[4]),stoi(args[5]));
             temp->scaleX = stoi(args[6]);
@@ -64,13 +74,14 @@ void Scene::loadScene(string sceneFilePath){
                 }
             }
             else{
-                drawable.push_back(temp);
+                addChild(temp);
             }
             inScene.push_back(temp);
         }
         else if(object.compare("Sprite") == 0){
             //id, imgpath, pos.x, pox.y, piv.x, piv.y, scaleX, scaleY, rotation, imgH, imgW, alpha, parents
             Sprite* temp = new Sprite(args[0],args[1]);
+            temp->type = object;
             temp->setPos(stoi(args[2]),stoi(args[3]));
             temp->setPiv(stoi(args[4]),stoi(args[5]));
             temp->scaleX = stoi(args[6]);
@@ -85,13 +96,14 @@ void Scene::loadScene(string sceneFilePath){
                 }
             }
             else{
-                drawable.push_back((DisplayObjectContainer*)temp);
+                addChild((DisplayObjectContainer*)temp);
             }
             inScene.push_back((DisplayObjectContainer*)temp);
         }
         else if(object.compare("AnimatedSprite") == 0){
             //id, pos.x, pox.y, piv.x, piv.y, scaleX, scaleY, rotation, imgH, imgW, alpha, numAnim, parent
             AnimatedSprite* temp = new AnimatedSprite(args[0]);
+            temp->type = object;
             temp->setPos(stoi(args[1]),stoi(args[2]));
             temp->setPiv(stoi(args[3]),stoi(args[4]));
             temp->scaleX = stoi(args[5]);
@@ -121,37 +133,33 @@ void Scene::loadScene(string sceneFilePath){
                 }
             }
             else{
-                drawable.push_back((DisplayObjectContainer*)temp);
+                addChild((DisplayObjectContainer*)temp);
             }
             inScene.push_back((DisplayObjectContainer*)temp);
         }
     }
 }
-void Scene::cleanScene(){
-    for(int i = inScene.size()-1; i >= 0; i --){
-        inScene.pop_back();
-    }
-    for(int i = drawable.size()-1; i >=0; i--){
-        DisplayObjectContainer* temp = drawable[i];
-        drawable.pop_back();
-        delete temp;
-    }
-}
-void Scene::update(set<SDL_Scancode> pressedKeys){
-    for(DisplayObjectContainer* x: drawable){
-        x->update(pressedKeys);
-    }
-}
-void Scene::draw(AffineTransform &at){
-    for(DisplayObjectContainer* x: drawable){
-        x->draw(at);
-    }
+
+void Scene::saveScene(string sceneFilePath) {
+    ofstream sceneFile;
+    sceneFile.open(sceneFilePath, ofstream::out | ofstream::app);
+	for (DisplayObject *child: children) {
+		child->writeSceneData(sceneFile);
+	}
+	sceneFile.close();
 }
 
-DisplayObjectContainer* Scene::getObj(string id){
-    for(DisplayObjectContainer* x: inScene){
-        if(x->id.compare(id)==0){
-            return x;
-        }
-    }
+void Scene::cleanScene(){
+	inScene.clear();
+	children.clear();
+}
+void Scene::update(set<SDL_Scancode> pressedKeys){
+	DisplayObjectContainer::update(pressedKeys);
+}
+void Scene::draw(AffineTransform &at){
+	at.scale(camera->scaleX, camera->scaleY);
+	at.translate(camera->x, camera->y);
+	DisplayObjectContainer::draw(at);
+	at.translate(-camera->x, -camera->y);
+	at.scale(1.0/camera->scaleX, 1.0/camera->scaleY);
 }

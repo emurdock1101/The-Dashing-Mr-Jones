@@ -26,6 +26,7 @@ AnimatedSprite::~AnimatedSprite() {
 
 void AnimatedSprite::addAnimation(string basepath, string animName, int numFrames, int frameRate, bool loop) {
     Animation* anim = new Animation();
+    anim->basepath = basepath;
     anim->animName = animName;
     anim->numFrames = numFrames;
     anim->frameRate = frameRate;
@@ -98,4 +99,32 @@ void AnimatedSprite::update(set<SDL_Scancode> pressedKeys) {
 
 void AnimatedSprite::draw(AffineTransform &at) {
     Sprite::draw(at);
+}
+
+void AnimatedSprite::writeSceneData(ostream &stream) {
+	stream << type << " ";
+	stream << id << " ";
+	stream << position.x << " ";
+	stream << position.y << " ";
+	stream << pivot.x << " ";
+	stream << pivot.y << " ";
+	stream << scaleX << " ";
+	stream << scaleY << " ";
+	stream << rotation << " ";
+	stream << height << " ";
+	stream << width << " ";
+	stream << alpha << " ";
+	stream << animations.size();
+	// Animation args
+	if (parent != NULL && parent->type != "Scene") {
+		stream << " " << parent->id;
+	}
+	stream << endl;
+	for (Animation * animation : animations) {
+		stream << animation->basepath << " ";
+		stream << animation->animName << " ";
+		stream << animation->numFrames << " ";
+		stream << animation->frameRate << " ";
+		stream << animation->loop << endl;
+	}
 }
