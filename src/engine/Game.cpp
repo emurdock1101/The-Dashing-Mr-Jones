@@ -44,18 +44,12 @@ void Game::initSDL(){
 	IMG_Init(IMG_INIT_PNG);
 	SDL_JoystickEventState(SDL_ENABLE);
 	if (SDL_GameControllerAddMappingsFromFile("./resources/gamecontrollerdb.txt") == -1) {
-		std::cout << "COULD NOT LOAD MAPPINGS" << std::endl;
 	}
 
 	window = SDL_CreateWindow("myGame",
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, this->windowWidth, this->windowHeight, 0);
 
 	Mix_OpenAudio( 22050, MIX_DEFAULT_FORMAT, 2, 4096 );
-
-	// Open all controllers and add to vector
-	for (int i = 0; i < SDL_NumJoysticks(); ++i) {
-		addController(i);
-	}
 
 	SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
 
@@ -124,31 +118,24 @@ void Game::start(){
 				if (controllerState != NULL) {
 					if(event.jaxis.value < -JOYSTICK_DEAD_ZONE) {
 						joyState = JoystickState::NEGATIVE;
-						std::cout << "NEGATIVE" << std::endl;
 					}
 					else if(event.jaxis.value > JOYSTICK_DEAD_ZONE) {
 						joyState = JoystickState::POSITIVE;
-						std::cout << "POSITIVE" << std::endl;
 					}
 					else {
 						joyState = JoystickState::NEUTRAL;
-						std::cout << "NEUTRAL" << std::endl;
 					}
 
 					if(event.jaxis.axis == SDL_CONTROLLER_AXIS_LEFTX) {
-						std::cout << "LEFT X" << std::endl;
 						controllerState->joyLeftX = joyState;
 					}
 					else if(event.jaxis.axis == SDL_CONTROLLER_AXIS_LEFTY) {
-						std::cout << "LEFT Y" << std::endl;
 						controllerState->joyLeftY = joyState;
 					}
 					if(event.jaxis.axis == SDL_CONTROLLER_AXIS_RIGHTX) {
-						std::cout << "RIGHT X" << std::endl;
 						controllerState->joyRightX = joyState;
 					}
 					if(event.jaxis.axis == SDL_CONTROLLER_AXIS_RIGHTY) {
-						std::cout << "RIGHT Y" << std::endl;
 						controllerState->joyRightY = joyState;
 					}
 				}
@@ -173,10 +160,9 @@ bool Game::addController(int controllerId) {
 		SDL_GameController *controller =
 			SDL_GameControllerOpen(controllerId);
 		if (controller) {
-			std::cout << "Added controller " << controller << std::endl;
 			controllers.push_back(controller);
 			controllerStates.push_back(new ControllerState);
-			controllerStates.back()->id = controllerId;
+			controllerStates.back()->id = SDL_JoystickInstanceID(SDL_GameControllerGetJoystick(controller));
 			controllerStates.back()->joyLeftX = JoystickState::NEUTRAL;
 			controllerStates.back()->joyLeftY = JoystickState::NEUTRAL;
 			controllerStates.back()->joyRightX = JoystickState::NEUTRAL;
@@ -191,21 +177,18 @@ bool Game::addController(int controllerId) {
 }
 
 bool Game::removeController(int controllerId) {
-	if (SDL_IsGameController(controllerId)) {
-		SDL_GameController *controller = findController(controllerId);
-		if (controller == NULL) {
-			return false;
-		}
-		std::cout << "Removing controller " << controllerId << std::endl;
-		SDL_GameControllerClose(controller);
-		for (int i = 0; i < controllers.size(); i++) {
-			if (isControllerRelatedToId(controller, controllerId)) {
-				controllers.erase(controllers.begin() + i);
-				controllerStates.erase(controllerStates.begin() + i);
-				return true;
-			}
+	SDL_GameController *controller = findController(controllerId);
+	if (controller == NULL) {
+		return false;
+	}
+	for (int i = 0; i < controllers.size(); i++) {
+		if (isControllerRelatedToId(controller, controllerId)) {
+			controllers.erase(controllers.begin() + i);
+			controllerStates.erase(controllerStates.begin() + i);
+			return true;
 		}
 	}
+	SDL_GameControllerClose(controller);
 	return false;
 }
 

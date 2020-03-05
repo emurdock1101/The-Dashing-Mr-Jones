@@ -33,9 +33,9 @@ MyGame::~MyGame(){
 
 
 void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){
-	for (ControllerState *controllerState: controllerStates) {
-		// Saying controller id 0 == player 1
-		if (controllerState->id == 0) {
+	for (int i=0; i < controllerStates.size(); i++) {
+		ControllerState *controllerState = controllerStates.at(i);
+		if (i == 0) {
 			if (controllerState->joyLeftX == JoystickState::POSITIVE) {
 				character->position.x += 6;
 			}
