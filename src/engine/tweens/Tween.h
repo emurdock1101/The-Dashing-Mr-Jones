@@ -2,10 +2,12 @@
 #define TWEEN_H
 
 #include "TweenableParams.h"
+#include "TweenParam.h"
 #include "TweenTransitions.h"
 #include "../DisplayObject.h"
 #include <string>
 #include <fstream>
+#include <vector>
 
 using namespace std;
 
@@ -21,6 +23,7 @@ public:
 private:
     DisplayObject object;
     TweenTransitions transitions;
+    vector<TweenParam*> paramList;
 };
 
 #endif

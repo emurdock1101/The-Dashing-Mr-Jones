@@ -11,11 +11,11 @@ Tween::Tween(DisplayObject object, TweenTransitions transitions) {
 }
 
 void Tween::animate(TweenableParams fieldToAnimate, double startVal, double endVal, double time) {
-
+    this->paramList.push_back(new TweenParam(fieldToAnimate, startVal, endVal, time));
 }
 
 void Tween::update() {
-
+    
 }
 
 bool Tween::isComplete() {

@@ -9,9 +9,8 @@ using namespace std;
 class TweenableParams {
 
 public:
-    TweenableParams();
-    static const string X;
-    static const string Y;
+    static const double X;
+    static const double Y;
     static const string X_SCALE;
     static const string Y_SCALE;
 

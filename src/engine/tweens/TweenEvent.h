@@ -8,15 +8,16 @@
 
 using namespace std;
 
+
 class TweenEvent : public Event {
 
 public:
     static const string TWEEN_COMPLETE_EVENT;
-    TweenEvent(string eventType, Tween foo);
+    TweenEvent(string eventType, Tween* tween);
     Tween getTween();
 
 private:
-    //Tween tween;
+    Tween* tween;
 };
 
 #endif

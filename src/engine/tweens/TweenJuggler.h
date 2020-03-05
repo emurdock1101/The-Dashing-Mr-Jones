@@ -4,17 +4,22 @@
 #include "Tween.h"
 #include <string>
 #include <fstream>
+#include <queue> 
 
 using namespace std;
 
 class TweenJuggler {
 
 public:
+    
     TweenJuggler();
-    void add(Tween tween);
+    static TweenJuggler* getInstance();
+    void add(Tween* tween);
     void nextFrame();
 private:
-
+    static TweenJuggler* instance;
+    queue<Tween*> tweenList; 
 };
 
 #endif
+
