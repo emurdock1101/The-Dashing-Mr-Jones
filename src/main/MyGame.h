@@ -24,6 +24,9 @@ public:
 
 private:
 	AnimatedSprite* character;
+	AnimatedSprite* character2;
+	Sprite* character3;
+	AnimatedSprite* character4;
 };
 
 #endif

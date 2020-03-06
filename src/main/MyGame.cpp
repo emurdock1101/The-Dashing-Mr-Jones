@@ -10,12 +10,15 @@
 
 
 using namespace std;
+bool idle = false;
+bool paused = false;
 
 MyGame::MyGame() : Game(1200, 600) {
 	instance = this;
 
 	character = new AnimatedSprite("character");
-	character->position = {0, 0};
+	//character = new AnimatedSprite("character", spritesheet, xml);
+	character->position = {100, 100};
 	character->width = 200;
 	character->height = 200;
 	character->addAnimation("./resources/character/", "Idle", 16, 2, true);
@@ -26,9 +29,21 @@ MyGame::MyGame() : Game(1200, 600) {
 	character->pivot = {character->width/2, character->height/2};
 	Game::addChild(character);
 	character->play("Idle");
+
+	character2 = new AnimatedSprite("test", "./resources/spritesheets/idle_run.png", "./resources/spritesheets/idle_run.xml");
+	character2->position = {400, 400};
+	character2->width = 200;
+	character2->height = 200;
+	character2->addAnimationFromSpriteSheet("./resources/spritesheets/idle_run.png", "Run", 20, 2, true);
+	character2->addAnimationFromSpriteSheet("./resources/spritesheets/idle_run.png", "Idle", 16, 2, true);
+	character2->facingRight = true;
+	
+	Game::addChild(character2);
+	character2->play("Idle"); 
 }
 
 MyGame::~MyGame(){
+	
 }
 
 
@@ -68,6 +83,38 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 						break;
 				}
 			}
+		}
+	}
+	if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
+		character2->position.x += 2;
+	}
+	if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
+		character2->position.x -= 2;
+	}
+	if (pressedKeys.find(SDL_SCANCODE_DOWN) != pressedKeys.end()) {
+		character2->position.y += 2;
+	}
+	if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end()) {
+		character2->position.y -= 2;
+	}
+	if (pressedKeys.find(SDL_SCANCODE_P) != pressedKeys.end()){
+		if (idle == true){
+			character2->play("Idle");
+			idle = false;
+		}
+		else{
+			character2->play("Run");
+			idle = true;
+		}
+	}
+	if (pressedKeys.find(SDL_SCANCODE_O) != pressedKeys.end()){
+		if (paused == false){
+			character2->stop();
+			paused = true;
+		}
+		else{
+			character2->replay();
+			paused=false;
 		}
 	}
 	Game::update(pressedKeys, controllerStates);
