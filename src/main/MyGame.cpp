@@ -15,7 +15,6 @@ bool paused = false;
 
 MyGame::MyGame() : Game(1200, 600) {
 	instance = this;
-
 	character = new AnimatedSprite("character");
 	//character = new AnimatedSprite("character", spritesheet, xml);
 	character->position = {100, 100};
@@ -30,20 +29,25 @@ MyGame::MyGame() : Game(1200, 600) {
 	Game::addChild(character);
 	character->play("Idle");
 
-	character2 = new AnimatedSprite("test", "./resources/spritesheets/idle_run.png", "./resources/spritesheets/idle_run.xml");
+
+	character2 = new AnimatedSprite("test", "./resources/spritesheets/sayu.png", "./resources/spritesheets/sayu.xml");
 	character2->position = {400, 400};
 	character2->width = 200;
 	character2->height = 200;
-	character2->addAnimationFromSpriteSheet("./resources/spritesheets/idle_run.png", "Run", 20, 2, true);
-	character2->addAnimationFromSpriteSheet("./resources/spritesheets/idle_run.png", "Idle", 16, 2, true);
+	//character2->addAnimationFromSpriteSheet("./resources/spritesheets/test.png", "Run", 20, 2, true);
+	character2->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Idle", 10, 2, true);
+	character2->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Dead", 10, 2, true);
+	character2->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Jump", 10, 2, true);
+	character2->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Walk", 10, 2, true);
+	character2->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Run", 10, 2, true);
 	character2->facingRight = true;
-	
+
 	Game::addChild(character2);
-	character2->play("Idle"); 
+	character2->play("Idle");
 }
 
 MyGame::~MyGame(){
-	
+
 }
 
 
@@ -97,15 +101,20 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 	if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end()) {
 		character2->position.y -= 2;
 	}
-	if (pressedKeys.find(SDL_SCANCODE_P) != pressedKeys.end()){
-		if (idle == true){
-			character2->play("Idle");
-			idle = false;
-		}
-		else{
-			character2->play("Run");
-			idle = true;
-		}
+	if (pressedKeys.find(SDL_SCANCODE_W) != pressedKeys.end()){
+		character2->play("Walk");
+	}
+	if (pressedKeys.find(SDL_SCANCODE_J) != pressedKeys.end()){
+		character2->play("Jump");
+	}
+	if (pressedKeys.find(SDL_SCANCODE_R) != pressedKeys.end()){
+		character2->play("Run");
+	}
+	if (pressedKeys.find(SDL_SCANCODE_D) != pressedKeys.end()){
+		character2->play("Dead");
+	}
+	if (pressedKeys.find(SDL_SCANCODE_I) != pressedKeys.end()){
+		character2->play("Idle");
 	}
 	if (pressedKeys.find(SDL_SCANCODE_O) != pressedKeys.end()){
 		if (paused == false){
