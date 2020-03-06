@@ -68,9 +68,18 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 					case SDL_CONTROLLER_BUTTON_Y:
 						character->play("Walk");
 						break;
-					case SDL_CONTROLLER_BUTTON_START:
+					case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
 						character->play("Idle");
 						break;
+					case SDL_CONTROLLER_BUTTON_START:
+						if (paused == false){
+							character->stop();
+							paused = true;
+						}
+						else{
+							character->replay();
+							paused=false;
+						}
 				}
 			}
 		}
