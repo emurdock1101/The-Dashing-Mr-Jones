@@ -15,35 +15,21 @@ bool paused = false;
 
 MyGame::MyGame() : Game(1200, 600) {
 	instance = this;
-	character = new AnimatedSprite("character");
-	//character = new AnimatedSprite("character", spritesheet, xml);
-	character->position = {100, 100};
+
+	character = new AnimatedSprite("test", "./resources/spritesheets/sayu.png", "./resources/spritesheets/sayu.xml");
+	character->position = {400, 400};
 	character->width = 200;
 	character->height = 200;
-	character->addAnimation("./resources/character/", "Idle", 16, 2, true);
-	character->addAnimation("./resources/character/", "Dead", 30, 2, true);
-	character->addAnimation("./resources/character/", "Jump", 30, 2, true);
-	character->addAnimation("./resources/character/", "Run", 20, 2, true);
-	character->addAnimation("./resources/character/", "Walk", 20, 2, true);
-	character->pivot = {character->width/2, character->height/2};
+	//character2->addAnimationFromSpriteSheet("./resources/spritesheets/test.png", "Run", 20, 2, true);
+	character->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Idle", 10, 2, true);
+	character->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Dead", 10, 2, true);
+	character->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Jump", 10, 2, true);
+	character->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Walk", 10, 2, true);
+	character->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Run", 10, 2, true);
+	character->facingRight = true;
+
 	Game::addChild(character);
 	character->play("Idle");
-
-
-	character2 = new AnimatedSprite("test", "./resources/spritesheets/sayu.png", "./resources/spritesheets/sayu.xml");
-	character2->position = {400, 400};
-	character2->width = 200;
-	character2->height = 200;
-	//character2->addAnimationFromSpriteSheet("./resources/spritesheets/test.png", "Run", 20, 2, true);
-	character2->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Idle", 10, 2, true);
-	character2->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Dead", 10, 2, true);
-	character2->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Jump", 10, 2, true);
-	character2->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Walk", 10, 2, true);
-	character2->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Run", 10, 2, true);
-	character2->facingRight = true;
-
-	Game::addChild(character2);
-	character2->play("Idle");
 }
 
 MyGame::~MyGame(){
@@ -87,43 +73,6 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 						break;
 				}
 			}
-		}
-	}
-	if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
-		character2->position.x += 2;
-	}
-	if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
-		character2->position.x -= 2;
-	}
-	if (pressedKeys.find(SDL_SCANCODE_DOWN) != pressedKeys.end()) {
-		character2->position.y += 2;
-	}
-	if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end()) {
-		character2->position.y -= 2;
-	}
-	if (pressedKeys.find(SDL_SCANCODE_W) != pressedKeys.end()){
-		character2->play("Walk");
-	}
-	if (pressedKeys.find(SDL_SCANCODE_J) != pressedKeys.end()){
-		character2->play("Jump");
-	}
-	if (pressedKeys.find(SDL_SCANCODE_R) != pressedKeys.end()){
-		character2->play("Run");
-	}
-	if (pressedKeys.find(SDL_SCANCODE_D) != pressedKeys.end()){
-		character2->play("Dead");
-	}
-	if (pressedKeys.find(SDL_SCANCODE_I) != pressedKeys.end()){
-		character2->play("Idle");
-	}
-	if (pressedKeys.find(SDL_SCANCODE_O) != pressedKeys.end()){
-		if (paused == false){
-			character2->stop();
-			paused = true;
-		}
-		else{
-			character2->replay();
-			paused=false;
 		}
 	}
 	Game::update(pressedKeys, controllerStates);
