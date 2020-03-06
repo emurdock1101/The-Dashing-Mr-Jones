@@ -19,12 +19,16 @@ void Tween::animate(string fieldToAnimate, double startVal, double endVal, doubl
 //if all of the Tween's params have finished updating.
 void Tween::update() {
     for (int i = 0; i < paramList.size(); i++) {
-       this->complete = paramList[i]->updateParam(this->object) && this->complete;
+       paramList[i]->updateParam(this->object);
     }
 }
 
 bool Tween::isComplete() {
-    return this->complete;
+    bool check = true;
+    for (int i = 0; i < paramList.size(); i++) {
+       check = check && paramList[i]->isComplete();
+    }
+    return check;
 }
 
 void Tween::setValue(TweenableParams param, double value) {

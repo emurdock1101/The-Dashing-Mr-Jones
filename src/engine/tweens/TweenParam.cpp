@@ -7,16 +7,18 @@ TweenParam::TweenParam(string paramToTween, double startVal, double endVal, doub
     this->endVal = endVal;
     this->time = time;
     this->curVal = 0;
+    this->complete = false;
 }
 
 double TweenParam::getFrameChangeAmt() {
     return (this->startVal + this->endVal) / this->time;
 }
 
-bool TweenParam::updateParam(DisplayObject object) {
+void TweenParam::updateParam(DisplayObject object) {
 
     if (this->curVal == this->endVal) {
-        return true;
+        this->complete = true;
+        return;
     }
 
     //if param is X, change object's X position
@@ -35,7 +37,7 @@ bool TweenParam::updateParam(DisplayObject object) {
     if (this->param.compare(TweenableParams::X_SCALE) == 0) {
         object.scaleX += this->getFrameChangeAmt();
         this->curVal = object.scaleX;
-    
+    }
 
     //if param is Y_SCALE, change object's Y scale
     if (this->param.compare(TweenableParams::Y_SCALE) == 0) {
@@ -48,17 +50,14 @@ bool TweenParam::updateParam(DisplayObject object) {
         object.alpha += this->getFrameChangeAmt();
         this->curVal = object.alpha;
     }
-
-    return false;
 }
 
 // bool TweenParam::updateParam(DisplayObject object, TweenTransitions* transitions) {
 //     //Calls one argument version if no transitions specified
 //     if (transitions == NULL) {
-//         return updateParam(object);
+//         updateParam(object);
 //     }
-
-//     return false;
+//
 // }
 
 string TweenParam::getParam() {return this->param;}
@@ -66,3 +65,4 @@ double TweenParam::getStartVal() {return this->startVal;}
 double TweenParam::getEndVal() {return this->endVal;}
 double TweenParam::getTweenTime() {return this->time;}
 double TweenParam::getCurVal() {return this->curVal;}
+bool TweenParam::isComplete() {return this->complete;}

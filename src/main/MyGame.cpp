@@ -7,7 +7,6 @@
 #include "Camera.h"
 #include "Sound.h"
 
-
 using namespace std;
 
 MyGame::MyGame() : Game(1200, 600) {
@@ -16,16 +15,22 @@ MyGame::MyGame() : Game(1200, 600) {
 	sound = new Sound();
 	sc = new Scene();
 	cammy = sc->camera;
-	cammy->scaleX = 3;
-	cammy->scaleY = 3;
+	cammy->scaleX = 1;
+	cammy->scaleY = 1;
 	cammy->x = -50;
 	cammy->y = -50;
-	sc->loadScene("./resources/scenes/Demo1.txt");
+	sc->loadScene("./resources/scenes/DemoTween.txt");
 	instance->addChild(sc);
 	this->pivot.x = this->windowWidth/2;
 	this->pivot.y = this->windowHeight/2;
 	player = (DisplayObjectContainer *)sc->getChild("player");
 	//sound->playMusic("./resources/sounds/boss.ogg");
+
+	//Commented out code for Tween demo -- causing seg fault
+	//player->alpha = 0;
+	//fadeIn = new Tween(*player);
+	//fadeIn->animate(TweenableParams::ALPHA, player->alpha, 255, 180);
+	//juggler->add(fadeIn);
 }
 
 MyGame::~MyGame(){
@@ -33,6 +38,13 @@ MyGame::~MyGame(){
 
 
 void MyGame::update(set<SDL_Scancode> pressedKeys){
+
+	//juggler->nextFrame();
+
+	if (pressedKeys.find(SDL_SCANCODE_K) != pressedKeys.end()) {
+		player->alpha +=5;
+	}
+
 	if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
 		player->position.x += 6;
 		cammy->x -= 6;

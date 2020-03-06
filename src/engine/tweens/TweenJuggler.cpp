@@ -1,6 +1,7 @@
 #include "TweenJuggler.h"
 #include "Tween.h"
 
+
 TweenJuggler* TweenJuggler::instance = NULL;
 
 TweenJuggler::TweenJuggler() {}
@@ -23,10 +24,12 @@ void TweenJuggler::add(Tween* tween) {
 void TweenJuggler::nextFrame() {
     for (int i = 0; i < tweenList.size(); i++) {
         if (tweenList[i]->isComplete()) {
-            tweenList.erase(tweenList.begin() + i);
+            cout << "hey\n";
+            //tweenList.erase(tweenList.begin() + i);
         }
         else {
-            tweenList[i]->update();
+            cout << "second\n";
+            //tweenList[i]->update();
         }
     }
 }

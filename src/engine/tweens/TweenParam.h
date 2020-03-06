@@ -20,14 +20,16 @@ public:
     double getEndVal();
     double getTweenTime();
     double getFrameChangeAmt();
-    bool updateParam(DisplayObject object);
-    //bool updateParam(DisplayObject object, TweenTransitions* transitions);
+    bool isComplete();
+    void updateParam(DisplayObject object);
+    //void updateParam(DisplayObject object, TweenTransitions* transitions);
 private:
     string param;
     double startVal;
     double endVal;
     double time;
     double curVal;
+    bool complete;
 };
 
 #endif
