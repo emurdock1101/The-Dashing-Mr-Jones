@@ -28,7 +28,25 @@ bool TweenParam::updateParam(DisplayObject object) {
     //if param is Y, change object's Y position
     if (this->param.compare(TweenableParams::Y) == 0) {
         object.position.y += this->getFrameChangeAmt();
-        this->curVal = object.position.x;
+        this->curVal = object.position.y;
+    }
+
+    //if param is X_SCALE, change object's X scale
+    if (this->param.compare(TweenableParams::X_SCALE) == 0) {
+        object.scaleX += this->getFrameChangeAmt();
+        this->curVal = object.scaleX;
+    
+
+    //if param is Y_SCALE, change object's Y scale
+    if (this->param.compare(TweenableParams::Y_SCALE) == 0) {
+        object.scaleY += this->getFrameChangeAmt();
+        this->curVal = object.scaleY;
+    }
+
+    //if param is ALPHA, change object's alpha level
+    if (this->param.compare(TweenableParams::ALPHA) == 0) {
+        object.alpha += this->getFrameChangeAmt();
+        this->curVal = object.alpha;
     }
 
     return false;
