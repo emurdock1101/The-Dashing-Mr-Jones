@@ -23,7 +23,9 @@ public:
 	virtual void draw(AffineTransform &at);
 
 private:
-	AnimatedSprite* character;
+	Sprite* character1;
+	Sprite* character2;
+	Sprite* character3;
 };
 
 #endif

@@ -69,6 +69,7 @@ public:
 	SDL_Point getBottomRight();
 	int getAbsoluteWidth();
 	int getAbsoluteHeight();
+	void displayHitbox();
 	void applyParentTransformationsThenSelf(AffineTransform &at);
 
 private:

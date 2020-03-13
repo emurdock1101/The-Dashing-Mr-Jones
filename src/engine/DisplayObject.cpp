@@ -228,6 +228,8 @@ int DisplayObject::getAbsoluteHeight() {
 SDL_Point DisplayObject::translatePoint(int x, int y) {
 	AffineTransform at;
 	applyParentTransformationsThenSelf(at);
+	// Only apply this one's pivot
+	at.translate(-pivot.x, -pivot.y);
 	return at.transformPoint(x, y);
 }
 
@@ -236,6 +238,8 @@ void DisplayObject::applyParentTransformationsThenSelf(AffineTransform &at) {
 		parent->applyParentTransformationsThenSelf(at);
 	}
 	applyTransformations(at);
+	// Unapply pivot
+	at.translate(pivot.x, pivot.y);
 }
 
 void DisplayObject::writeSceneData(ostream &stream) {
@@ -258,8 +262,39 @@ void DisplayObject::writeSceneData(ostream &stream) {
 	stream << endl;
 }
 
+void DisplayObject::displayHitbox() {
+    SDL_SetRenderDrawColor(Game::renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
+	SDL_Point topLeft = getTopLeft();
+	SDL_Point topRight = getTopRight();
+	SDL_Point bottomLeft = getBottomLeft();
+	SDL_Point bottomRight = getBottomRight();
+	SDL_RenderDrawLine(Game::renderer,
+			topLeft.x,
+			topLeft.y,
+			topRight.x,
+			topRight.y);
+	SDL_RenderDrawLine(Game::renderer,
+			topLeft.x,
+			topLeft.y,
+			bottomLeft.x,
+			bottomLeft.y);
+	SDL_RenderDrawLine(Game::renderer,
+			topRight.x,
+			topRight.y,
+			bottomRight.x,
+			bottomRight.y);
+	SDL_RenderDrawLine(Game::renderer,
+			bottomLeft.x,
+			bottomLeft.y,
+			bottomRight.x,
+			bottomRight.y);
+	SDL_SetRenderDrawColor(Game::renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+	SDL_RenderPresent(Game::renderer);
+}
+
 /* Used for area in area selection detection */
 float DisplayObject::area(int x1, int y1, int x2, int y2, int x3, int y3) {
     return abs((x1 * (y2 - y3) + x2 * (y3 - y1) +
                 x3 * (y1 - y2)) / 2.0);
 }
+
