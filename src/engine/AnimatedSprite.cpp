@@ -1,6 +1,10 @@
 #include "AnimatedSprite.h"
 #include "Game.h"
 #include <string>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
 
 using namespace std;
 
@@ -11,6 +15,39 @@ AnimatedSprite::AnimatedSprite() : Sprite() {
 AnimatedSprite::AnimatedSprite(string id) : Sprite(id, 0, 0, 0) {
     this->type = "AnimatedSprite";
 }
+
+AnimatedSprite::AnimatedSprite(string id, string spritesheet, string xml){
+   vector<string> lines;
+   std::ifstream infile(xml);
+   string line;
+    while (getline(infile, line)){
+        istringstream iss(line);
+        lines.push_back(line);
+        //cout << "Adding line to vector " << endl;
+    }
+    cout << "Parsing XML...This may take a minute." << endl;
+    for (int i = 22; i < lines.size()-1; i++){
+       // cout << lines[i]<<endl;
+        istringstream in(lines[i]);
+        vector<string> temp;
+        string t;
+        while (in >> t) {
+            temp.push_back(t);
+        }
+        split.push_back(temp); //Vector of vectors representing the parsed xml data.
+    }
+    /*FORMAT OF THE XML DATA:
+    Vector of vectors -> each vector is a line from the xml document
+
+    The x position is at position 2
+    The y position is at position 3
+    The width is at position 4
+    The height is at position 5
+
+    Each sub-vector represents a new frame in the animation.  */
+}
+
+
 
 AnimatedSprite::~AnimatedSprite() {
     for (Animation* an : animations) {
@@ -43,9 +80,66 @@ void AnimatedSprite::addAnimation(string basepath, string animName, int numFrame
     animations.push_back(anim);
 }
 
+void AnimatedSprite::addAnimationFromSpriteSheet(string texture, string animName, int numFrames, int frameRate, bool loop){
+    //for each sprite in the spritesheet:
+        //new frame
+        //no need for a path, just need the location of the image
+        //f->image is the render copy of that location of the sprite sheet
+        //f->texture is the render copy of that entire spritesheet
+
+        Animation* anim = new Animation();
+        anim->basepath = texture;
+        anim->animName = animName;
+        anim->numFrames = numFrames;
+        anim->frameRate = frameRate;
+        anim->loop = loop;
+        anim->curFrame = 0;
+        anim->frames = new Frame*[numFrames];
+        SDL_RendererFlip flip;
+
+        int startPos = getAnimationPosition(anim->animName);
+
+        for (int i = startPos; i < numFrames+startPos; i++){
+            Frame* f = new Frame();
+            string name = split[i][1];
+            //cout << name << endl;
+            f->image = IMG_Load(anim->basepath.c_str());
+            f->texture = SDL_CreateTextureFromSurface(Game::renderer, f->image);
+            int xVal = stoi(split[i][2].substr(3).substr(0, split[i][2].substr(3).length()-1));
+            int yVal = stoi(split[i][3].substr(3).substr(0, split[i][3].substr(3).length()-1));
+            int wVal = stoi(split[i][4].substr(3).substr(0, split[i][4].substr(3).length()-1));
+            int hVal = stoi(split[i][5].substr(3).substr(0, split[i][5].substr(3).length()-3));
+
+            SDL_Texture* result = SDL_CreateTexture(Game::renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, wVal, hVal);
+            SDL_SetRenderTarget(Game::renderer, result);
+            SDL_Rect srcrect = { xVal, yVal, wVal, hVal };
+            SDL_RenderCopy(Game::renderer, f->texture, &srcrect, NULL);
+            f->texture = result;
+            SDL_SetRenderTarget(Game::renderer, NULL);
+
+            anim->frames[i-startPos] = f;
+
+        }
+        animations.push_back(anim);
+        cout << "Animation \"" << anim->animName << "\" Added" << endl;
+
+}
+
+int AnimatedSprite::getAnimationPosition(string animName){
+    for (int i = 0; i < split.size(); i++){
+        if (split[i][1].find(animName) != std::string::npos){
+            //cout << "Starting position is" << i;
+            return i;
+        }
+    }
+    return -1;
+}
+
+
 Animation* AnimatedSprite::getAnimation(string animName) {
     for (int i = 0; i < animations.size(); i++) {
         if (animations[i]->animName == animName) {
+            //cout << animations[i]->animName;
             return animations[i];
         }
     }
@@ -59,6 +153,7 @@ void AnimatedSprite::play(string animName) {
         this->current->curFrame = 0;
         frameCount = 0;
         playing = true;
+        //cout << "playing" << endl;
     }
 }
 
@@ -74,8 +169,8 @@ void AnimatedSprite::stop() {
     this->playing = false;
 }
 
-void AnimatedSprite::update(set<SDL_Scancode> pressedKeys) {
-    Sprite::update(pressedKeys);
+void AnimatedSprite::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates) {
+    Sprite::update(pressedKeys, controllerStates);
     if (playing) {
         frameCount++;
         if (frameCount % current->frameRate == 0) {
@@ -90,11 +185,12 @@ void AnimatedSprite::update(set<SDL_Scancode> pressedKeys) {
                     stop();
                 }
             }
+            //cout << "Setting texture" << endl;
             DisplayObject::setTexture(current->frames[current->curFrame]->texture);
         }
 
     }
-    
+
 }
 
 void AnimatedSprite::draw(AffineTransform &at) {

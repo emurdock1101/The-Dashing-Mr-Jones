@@ -153,8 +153,8 @@ void Scene::cleanScene(){
 	inScene.clear();
 	children.clear();
 }
-void Scene::update(set<SDL_Scancode> pressedKeys){
-	DisplayObjectContainer::update(pressedKeys);
+void Scene::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){
+	DisplayObjectContainer::update(pressedKeys, controllerStates);
 }
 void Scene::draw(AffineTransform &at){
 	at.scale(camera->scaleX, camera->scaleY);

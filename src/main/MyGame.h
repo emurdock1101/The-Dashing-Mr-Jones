@@ -19,18 +19,11 @@ public:
 	MyGame();
 	virtual ~MyGame();
 
-	virtual void update(set<SDL_Scancode> pressedKeys);
+	virtual void update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates);
 	virtual void draw(AffineTransform &at);
-	bool t = true;
 
 private:
-	
-	Scene* sc;
-	Sound* sound;
-	Camera* cammy;
-	DisplayObjectContainer* player;
-
-	// DisplayObject* character;
+	AnimatedSprite* character;
 };
 
 #endif

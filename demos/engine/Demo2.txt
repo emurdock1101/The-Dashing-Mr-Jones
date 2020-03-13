@@ -1,0 +1,15 @@
+README: Spritesheets and Controller Suppport.
+
+Compile with make, and run using ./bin/myGame.
+
+**Controller Support**
+
+You can use normal directional movement to move the character around, and use the A, B, X, Y, and the right shoulder button (RB, not RT) to change the animation.
+
+Animations can be paused and restarted by pressing start.
+
+**Spritesheet Support**
+
+Some sample spritesheets and associated xml data files can be found in ./resources/spritesheets.
+
+Spritesheets and xml data files must be created using TexturePacker, as our xml parser depends on the data files being in the format created through this tool.
