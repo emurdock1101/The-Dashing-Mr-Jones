@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 #include <iostream>
 #include "Sprite.h"
 #include "ControllerState.h"
@@ -7,7 +8,6 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "Sound.h"
-
 
 using namespace std;
 bool idle = false;
@@ -35,7 +35,6 @@ MyGame::MyGame() : Game(1200, 600) {
 MyGame::~MyGame(){
 
 }
-
 
 void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){
 	for (int i=0; i < controllerStates.size(); i++) {
