@@ -64,6 +64,9 @@ void DisplayObject::update(set<SDL_Scancode> pressedKeys, vector<ControllerState
 
 void DisplayObject::draw(AffineTransform &at){
 	applyTransformations(at);
+	if (showHitbox) {
+		displayHitbox();
+	}
 
 	if(curTexture != NULL && visible) {
 		SDL_Point origin = at.transformPoint(0, 0);
@@ -289,7 +292,6 @@ void DisplayObject::displayHitbox() {
 			bottomRight.x,
 			bottomRight.y);
 	SDL_SetRenderDrawColor(Game::renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-	SDL_RenderPresent(Game::renderer);
 }
 
 /* Used for area in area selection detection */

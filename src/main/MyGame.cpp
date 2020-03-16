@@ -21,6 +21,7 @@ MyGame::MyGame() : Game(1200, 600) {
 	character1->width = 200;
 	character1->height = 200;
 	character1->pivot = {character1->width/2, character1->height/2};
+	character1->showHitbox = true;
 	Game::addChild(character1);
 
 	character2 = new Sprite("character2","./resources/sprites_unsorted/5 Boy/Boy.png");
@@ -28,6 +29,7 @@ MyGame::MyGame() : Game(1200, 600) {
 	character2->width = 100;
 	character2->height = 100;
 	character2->pivot = {character2->width/2, character2->height/2};
+	character2->showHitbox = true;
 	character1->addChild(character2);
 
 	character3 = new Sprite("character3","./resources/sprites_unsorted/6 Girl/Girl.png");
@@ -35,6 +37,7 @@ MyGame::MyGame() : Game(1200, 600) {
 	character3->width = 100;
 	character3->height = 100;
 	character3->pivot = {character3->width/2, character3->height/2};
+	character3->showHitbox = true;
 	character1->addChild(character3);
 }
 
@@ -134,7 +137,4 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 
 void MyGame::draw(AffineTransform &at){
 	Game::draw(at);
-	character1->displayHitbox();
-	character2->displayHitbox();
-	character3->displayHitbox();
 }

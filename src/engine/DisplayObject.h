@@ -53,6 +53,7 @@ public:
 	double rotation = 0.0; // in radians
 	int alpha = 255;
 	bool facingRight = true;
+	bool showHitbox = false;
 	
 	void setPos(int x, int y);
 	void setDim(int x, int y);
