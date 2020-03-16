@@ -8,6 +8,7 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "Sound.h"
+#include "CollisionSystem.h"
 
 using namespace std;
 bool idle = false;
