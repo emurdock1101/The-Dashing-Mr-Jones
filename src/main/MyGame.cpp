@@ -17,6 +17,9 @@ bool paused = false;
 MyGame::MyGame() : Game(1200, 600) {
 	instance = this;
 
+	// MAKE SURE COLLISION SYSTEM DECLARED BEFORE ADDING ANYTHING TO TREE
+	collisionSystem = new CollisionSystem();
+
 	character1 = new Sprite("character1","./resources/sprites_unsorted/1 Old_man/Old_man.png");
 	character1->position = {0, 0};
 	character1->width = 200;
@@ -26,7 +29,7 @@ MyGame::MyGame() : Game(1200, 600) {
 	Game::addChild(character1);
 
 	character2 = new Sprite("character2","./resources/sprites_unsorted/5 Boy/Boy.png");
-	character2->position = {200, 200};
+	character2->position = {0, 200};
 	character2->width = 100;
 	character2->height = 100;
 	character2->pivot = {character2->width/2, character2->height/2};
@@ -40,10 +43,12 @@ MyGame::MyGame() : Game(1200, 600) {
 	character3->pivot = {character3->width/2, character3->height/2};
 	character3->showHitbox = true;
 	character1->addChild(character3);
+
+	collisionSystem->watchForCollisions("character1", "character2");
 }
 
 MyGame::~MyGame(){
-
+	delete collisionSystem;
 }
 
 void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){
@@ -133,6 +138,7 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 		character3->scaleX -= 0.05;
 		character3->scaleY -= 0.05;
 	}
+	collisionSystem->update();
 	Game::update(pressedKeys, controllerStates);
 }
 

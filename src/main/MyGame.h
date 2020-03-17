@@ -10,6 +10,7 @@
 #include "Scene.h"
 #include "Sound.h"
 #include "Camera.h"
+#include "CollisionSystem.h"
 
 using namespace std;
 
@@ -26,6 +27,7 @@ private:
 	Sprite* character1;
 	Sprite* character2;
 	Sprite* character3;
+	CollisionSystem *collisionSystem;
 };
 
 #endif

@@ -6,6 +6,8 @@
 #include "Sprite.h"
 #include "EventListener.h"
 #include "Event.h"
+#include <map>
+#include <vector>
 
 using namespace std;
 
@@ -37,10 +39,13 @@ public:
 	//xDelta1 and yDelta1 are the amount d moved before causing the collision.
 	//xDelta2 and yDelta2 are the amount other moved before causing the collision.
 	void resolveCollision(DisplayObject* d, DisplayObject* other, int xDelta1, int yDelta1, int xDelta2, int yDelta2);
-	
-private:
 
-	
+private:
+	// Id to vector of DisplayObjects with that id
+	map<string, vector<DisplayObject *> *> knownIds;
+	// Pairs of ids that are watched for collisions
+	// Does not check for double adds - so may trigger twice if not careful
+	vector<pair<string, string>> watchedIds;
 };
 
 #endif
