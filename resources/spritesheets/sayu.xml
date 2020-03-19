@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker https://www.codeandweb.com/texturepacker -->
+<!-- $TexturePacker:SmartUpdate:8685857d76de416d7ecef1d7792f34df:2db8653b790ec3fed1aa8cfc33d79ede:89ccdfcc05578ee7da73e4718c0ab5e3$ -->
+<!--Format:
+n  => name of the sprite
+x  => sprite x pos in texture
+y  => sprite y pos in texture
+w  => sprite width (may be trimmed)
+h  => sprite height (may be trimmed)
+pX => x pos of the pivot point (relative to sprite width)
+pY => y pos of the pivot point (relative to sprite height)
+oX => sprite's x-corner offset (only available if trimmed)
+oY => sprite's y-corner offset (only available if trimmed)
+oW => sprite's original width (only available if trimmed)
+oH => sprite's original height (only available if trimmed)
+r => 'y' only set if sprite is rotated
+with polygon mode enabled:
+vertices   => points in sprite coordinate system (x0,y0,x1,y1,x2,y2, ...)
+verticesUV => points in sheet coordinate system (x0,y0,x1,y1,x2,y2, ...)
+triangles  => sprite triangulation, 3 vertex indices per triangle
+-->
+<TextureAtlas imagePath="sayu.png" width="4068" height="2820">
+    <sprite n="Dead_11.png" x="0" y="0" w="601" h="502"/>
+    <sprite n="Dead_12.png" x="601" y="0" w="601" h="502"/>
+    <sprite n="Dead_13.png" x="1202" y="0" w="601" h="502"/>
+    <sprite n="Dead_14.png" x="1803" y="0" w="601" h="502"/>
+    <sprite n="Dead_15.png" x="2404" y="0" w="601" h="502"/>
+    <sprite n="Dead_16.png" x="3005" y="0" w="601" h="502"/>
+    <sprite n="Dead_17.png" x="0" y="502" w="601" h="502"/>
+    <sprite n="Dead_18.png" x="601" y="502" w="601" h="502"/>
+    <sprite n="Dead_19.png" x="1202" y="502" w="601" h="502"/>
+    <sprite n="Dead_20.png" x="1803" y="502" w="601" h="502"/>
+    <sprite n="Idle_1.png" x="2404" y="502" w="416" h="454"/>
+    <sprite n="Idle_2.png" x="2820" y="502" w="416" h="454"/>
+    <sprite n="Idle_3.png" x="3236" y="502" w="416" h="454"/>
+    <sprite n="Idle_4.png" x="3652" y="502" w="416" h="454"/>
+    <sprite n="Idle_5.png" x="0" y="1004" w="416" h="454"/>
+    <sprite n="Idle_6.png" x="416" y="1004" w="416" h="454"/>
+    <sprite n="Idle_7.png" x="832" y="1004" w="416" h="454"/>
+    <sprite n="Idle_8.png" x="1248" y="1004" w="416" h="454"/>
+    <sprite n="Idle_9.png" x="1664" y="1004" w="416" h="454"/>
+    <sprite n="Idle_10.png" x="2080" y="1004" w="416" h="454"/>
+    <sprite n="Jump_5.png" x="2496" y="1004" w="416" h="454"/>
+    <sprite n="Jump_6.png" x="2912" y="1004" w="416" h="454"/>
+    <sprite n="Jump_7.png" x="3328" y="1004" w="416" h="454"/>
+    <sprite n="Jump_8.png" x="0" y="1458" w="416" h="454"/>
+    <sprite n="Jump_9.png" x="416" y="1458" w="416" h="454"/>
+    <sprite n="Jump_10.png" x="832" y="1458" w="416" h="454"/>
+    <sprite n="Jump_11.png" x="1248" y="1458" w="416" h="454"/>
+    <sprite n="Jump_12.png" x="1664" y="1458" w="416" h="454"/>
+    <sprite n="Jump_13.png" x="2080" y="1458" w="416" h="454"/>
+    <sprite n="Jump_14.png" x="2496" y="1458" w="416" h="454"/>
+    <sprite n="Run_5.png" x="2912" y="1458" w="416" h="454"/>
+    <sprite n="Run_6.png" x="3328" y="1458" w="416" h="454"/>
+    <sprite n="Run_7.png" x="0" y="1912" w="416" h="454"/>
+    <sprite n="Run_8.png" x="416" y="1912" w="416" h="454"/>
+    <sprite n="Run_9.png" x="832" y="1912" w="416" h="454"/>
+    <sprite n="Run_10.png" x="1248" y="1912" w="416" h="454"/>
+    <sprite n="Run_11.png" x="1664" y="1912" w="416" h="454"/>
+    <sprite n="Run_12.png" x="2080" y="1912" w="416" h="454"/>
+    <sprite n="Run_13.png" x="2496" y="1912" w="416" h="454"/>
+    <sprite n="Run_14.png" x="2912" y="1912" w="416" h="454"/>
+    <sprite n="Walk_10.png" x="3328" y="1912" w="416" h="454"/>
+    <sprite n="Walk_11.png" x="0" y="2366" w="416" h="454"/>
+    <sprite n="Walk_12.png" x="416" y="2366" w="416" h="454"/>
+    <sprite n="Walk_13.png" x="832" y="2366" w="416" h="454"/>
+    <sprite n="Walk_14.png" x="1248" y="2366" w="416" h="454"/>
+    <sprite n="Walk_15.png" x="1664" y="2366" w="416" h="454"/>
+    <sprite n="Walk_16.png" x="2080" y="2366" w="416" h="454"/>
+    <sprite n="Walk_17.png" x="2496" y="2366" w="416" h="454"/>
+    <sprite n="Walk_18.png" x="2912" y="2366" w="416" h="454"/>
+    <sprite n="Walk_19.png" x="3328" y="2366" w="416" h="454"/>
+</TextureAtlas>

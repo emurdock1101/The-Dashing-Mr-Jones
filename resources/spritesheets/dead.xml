@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker https://www.codeandweb.com/texturepacker -->
+<!-- $TexturePacker:SmartUpdate:42fc423478e9b0e84ea8faf94975b2e3:fb7e0d4f1e46745326c78ebbbfb8edcd:0898e1f752470cde566c9e2f79945fac$ -->
+<!--Format:
+n  => name of the sprite
+x  => sprite x pos in texture
+y  => sprite y pos in texture
+w  => sprite width (may be trimmed)
+h  => sprite height (may be trimmed)
+pX => x pos of the pivot point (relative to sprite width)
+pY => y pos of the pivot point (relative to sprite height)
+oX => sprite's x-corner offset (only available if trimmed)
+oY => sprite's y-corner offset (only available if trimmed)
+oW => sprite's original width (only available if trimmed)
+oH => sprite's original height (only available if trimmed)
+r => 'y' only set if sprite is rotated
+with polygon mode enabled:
+vertices   => points in sprite coordinate system (x0,y0,x1,y1,x2,y2, ...)
+verticesUV => points in sheet coordinate system (x0,y0,x1,y1,x2,y2, ...)
+triangles  => sprite triangulation, 3 vertex indices per triangle
+-->
+<TextureAtlas imagePath="texture.png" width="3606" height="2510">
+    <sprite n="Dead_1.png" x="0" y="0" w="601" h="502"/>
+    <sprite n="Dead_2.png" x="601" y="0" w="601" h="502"/>
+    <sprite n="Dead_3.png" x="1202" y="0" w="601" h="502"/>
+    <sprite n="Dead_4.png" x="1803" y="0" w="601" h="502"/>
+    <sprite n="Dead_5.png" x="2404" y="0" w="601" h="502"/>
+    <sprite n="Dead_6.png" x="3005" y="0" w="601" h="502"/>
+    <sprite n="Dead_7.png" x="0" y="502" w="601" h="502"/>
+    <sprite n="Dead_8.png" x="601" y="502" w="601" h="502"/>
+    <sprite n="Dead_9.png" x="1202" y="502" w="601" h="502"/>
+    <sprite n="Dead_10.png" x="1803" y="502" w="601" h="502"/>
+    <sprite n="Dead_11.png" x="2404" y="502" w="601" h="502"/>
+    <sprite n="Dead_12.png" x="3005" y="502" w="601" h="502"/>
+    <sprite n="Dead_13.png" x="0" y="1004" w="601" h="502"/>
+    <sprite n="Dead_14.png" x="601" y="1004" w="601" h="502"/>
+    <sprite n="Dead_15.png" x="1202" y="1004" w="601" h="502"/>
+    <sprite n="Dead_16.png" x="1803" y="1004" w="601" h="502"/>
+    <sprite n="Dead_17.png" x="2404" y="1004" w="601" h="502"/>
+    <sprite n="Dead_18.png" x="3005" y="1004" w="601" h="502"/>
+    <sprite n="Dead_19.png" x="0" y="1506" w="601" h="502"/>
+    <sprite n="Dead_20.png" x="601" y="1506" w="601" h="502"/>
+    <sprite n="Dead_21.png" x="1202" y="1506" w="601" h="502"/>
+    <sprite n="Dead_22.png" x="1803" y="1506" w="601" h="502"/>
+    <sprite n="Dead_23.png" x="2404" y="1506" w="601" h="502"/>
+    <sprite n="Dead_24.png" x="3005" y="1506" w="601" h="502"/>
+    <sprite n="Dead_25.png" x="0" y="2008" w="601" h="502"/>
+    <sprite n="Dead_26.png" x="601" y="2008" w="601" h="502"/>
+    <sprite n="Dead_27.png" x="1202" y="2008" w="601" h="502"/>
+    <sprite n="Dead_28.png" x="1803" y="2008" w="601" h="502"/>
+    <sprite n="Dead_29.png" x="2404" y="2008" w="601" h="502"/>
+    <sprite n="Dead_30.png" x="3005" y="2008" w="601" h="502"/>
+</TextureAtlas>
