@@ -44,7 +44,7 @@ MyGame::MyGame() : Game(1200, 600) {
 	character3->showHitbox = true;
 	character1->addChild(character3);
 
-	collisionSystem->watchForCollisions("character1", "character2");
+	collisionSystem->watchForCollisions("character1", "character3");
 }
 
 MyGame::~MyGame(){

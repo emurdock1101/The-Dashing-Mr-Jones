@@ -41,6 +41,12 @@ public:
 	void resolveCollision(DisplayObject* d, DisplayObject* other, int xDelta1, int yDelta1, int xDelta2, int yDelta2);
 
 private:
+	bool lineSegmentsIntersect(SDL_Point a, SDL_Point b, SDL_Point c, SDL_Point d);
+	// 1 means clockwise (1st slope larger)
+	// 0 means colinear
+	// -1 means counterclockwise (2nd slope larger)
+	int getOrientation(SDL_Point a, SDL_Point b, SDL_Point c);
+
 	// Id to vector of DisplayObjects with that id
 	map<string, vector<DisplayObject *> *> knownIds;
 	// Pairs of ids that are watched for collisions

@@ -70,11 +70,87 @@ void CollisionSystem::watchForCollisions(string type1, string type2) {
 //returns true iff obj1 hitbox and obj2 hitbox overlap. Uses the following method from DO:
 //	SDL_Point* DisplayObject::getGlobalHitbox();
 bool CollisionSystem::collidesWith(DisplayObject* obj1, DisplayObject* obj2) {
-	bool collides = false;
-	// TODO: do a better collision detection
-	if (obj1->position.x == obj2->position.x) {
+	// TODO change to hitbox top left
+	// Get points for obj1
+	SDL_Point topLeft1 = obj1->getTopLeft();
+	SDL_Point topRight1 = obj1->getTopRight();
+	SDL_Point bottomLeft1 = obj1->getBottomLeft();
+	SDL_Point bottomRight1 = obj1->getBottomRight();
+
+	// Get points for obj2
+	SDL_Point topLeft2 = obj2->getTopLeft();
+	SDL_Point topRight2 = obj2->getTopRight();
+	SDL_Point bottomLeft2 = obj2->getBottomLeft();
+	SDL_Point bottomRight2 = obj2->getBottomRight();
+
+	// Test each possible line segment, not looping so here's to big blocks
+	// 16 checks incoming!!
+
+	// top left -> top right against obj2
+	if (lineSegmentsIntersect(topLeft1, topRight1, topLeft2, topRight2)) {
 		return true;
 	}
+	if (lineSegmentsIntersect(topLeft1, topRight1, topRight2, bottomRight2)) {
+		return true;
+	}
+	if (lineSegmentsIntersect(topLeft1, topRight1, bottomRight2, bottomLeft2)) {
+		return true;
+	}
+	if (lineSegmentsIntersect(topLeft1, topRight1, bottomLeft2, topLeft2)) {
+		return true;
+	}
+
+	// top right -> bottom right against obj2
+	if (lineSegmentsIntersect(topRight1, bottomRight1, topLeft2, topRight2)) {
+		return true;
+	}
+	if (lineSegmentsIntersect(topRight1, bottomRight1, topRight2, bottomRight2)) {
+		return true;
+	}
+	if (lineSegmentsIntersect(topRight1, bottomRight1, bottomRight2, bottomLeft2)) {
+		return true;
+	}
+	if (lineSegmentsIntersect(topRight1, bottomRight1, bottomLeft2, topLeft2)) {
+		return true;
+	}
+
+	// bottom right -> bottom left against obj2
+	if (lineSegmentsIntersect(bottomRight1, bottomLeft1, topLeft2, topRight2)) {
+		return true;
+	}
+	if (lineSegmentsIntersect(bottomRight1, bottomLeft1, topRight2, bottomRight2)) {
+		return true;
+	}
+	if (lineSegmentsIntersect(bottomRight1, bottomLeft1, bottomRight2, bottomLeft2)) {
+		return true;
+	}
+	if (lineSegmentsIntersect(bottomRight1, bottomLeft1, bottomLeft2, topLeft2)) {
+		return true;
+	}
+
+	// bottom left -> top left against obj2
+	if (lineSegmentsIntersect(bottomLeft1, topLeft1, topLeft2, topRight2)) {
+		return true;
+	}
+	if (lineSegmentsIntersect(bottomLeft1, topLeft1, topRight2, bottomRight2)) {
+		return true;
+	}
+	if (lineSegmentsIntersect(bottomLeft1, topLeft1, bottomRight2, bottomLeft2)) {
+		return true;
+	}
+	if (lineSegmentsIntersect(bottomLeft1, topLeft1, bottomLeft2, topLeft2)) {
+		return true;
+	}
+
+	// Edge case, object completely inside another
+	if (obj1->isColliding(NULL, topLeft2.x, topLeft2.y)) {
+		return true;
+	}
+	if (obj2->isColliding(NULL, topLeft1.x, topLeft1.y)) {
+		return true;
+	}
+
+	// Else we gucci, no collision
 	return false;
 }
 
@@ -87,3 +163,52 @@ void CollisionSystem::resolveCollision(DisplayObject* d, DisplayObject* other,
 	// Maybe find deltas through a custom Event with those parameters?
 }
 
+
+bool CollisionSystem::lineSegmentsIntersect(SDL_Point a, SDL_Point b, SDL_Point c, SDL_Point d) {
+	// Get orientations for each
+	int o1 = getOrientation(a, b, c);
+	int o2 = getOrientation(a, b, d);
+	int o3 = getOrientation(c, d, a);
+	int o4 = getOrientation(c, d, b);
+
+	// Orientations not equal, they intersect
+	if ((o1 != o2) && (o3 != o4)) {
+		return true;
+	}
+
+	// Check special case (colinear)
+	if (o1 == 0) {
+		if ((b.x > c.x && a.x < c.x) || (b.x < c.x && a.x > c.x)) {
+			return true;
+		}
+	}
+	if (o2 == 0) {
+		if ((b.x > d.x && a.x < d.x) || (b.x < d.x && a.x > d.x)) {
+			return true;
+		}
+	}
+	if (o3 == 0) {
+		if ((d.x > a.x && c.x < a.x) || (d.x < a.x && c.x > a.x)) {
+			return true;
+		}
+	}
+	if (o4 == 0) {
+		if ((d.x > b.x && c.x < b.x) || (d.x < b.x && c.x > b.x)) {
+			return true;
+		}
+	}
+
+	// Otherwise they don't collide
+	return false;
+}
+
+int CollisionSystem::getOrientation(SDL_Point a, SDL_Point b, SDL_Point c) {
+	// I have no idea why, but my slope calculation before must've been wrong
+	// Got this from here and it worked great, must've been weird bug
+	// https://www.geeksforgeeks.org/orientation-3-ordered-points/
+	int val = (b.y - a.y) * (c.x - b.x) - (b.x - a.x) * (c.y - b.y);
+
+    if (val == 0) return 0;  // colinear
+
+    return (val > 0)? 1: -1; // clock or counterclock wise
+}
