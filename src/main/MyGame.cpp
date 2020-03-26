@@ -22,7 +22,7 @@ MyGame::MyGame() : Game(1200, 600) {
 	cammy->scaleY = camScale;
 	cammy->x = -50;
 	cammy->y = -50;
-	sc->loadScene("./resources/scenes/area1_room1.txt");
+	sc->loadScene("./resources/scenes/area1_room2.txt");
 	instance->addChild(sc);
 	this->pivot.x = this->windowWidth/2;
 	this->pivot.y = this->windowHeight/2;
