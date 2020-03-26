@@ -21,7 +21,7 @@ public:
 	void loadScene(string sceneFilePath);
 	void saveScene(string sceneFilePath);
 
-	virtual void update(set<SDL_Scancode> pressedKeys);
+	virtual void update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates);
 	virtual void draw(AffineTransform &at);
 	void cleanScene();
 	vector<DisplayObjectContainer*> inScene;

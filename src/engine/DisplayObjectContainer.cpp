@@ -84,10 +84,10 @@ DisplayObjectContainer* DisplayObjectContainer::copy() {
 	return tmp;
 }
 
-void DisplayObjectContainer::update(set<SDL_Scancode> pressedKeys) {
-    DisplayObject::update(pressedKeys);
+void DisplayObjectContainer::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates) {
+    DisplayObject::update(pressedKeys, controllerStates);
     for (int i = 0; i < children.size(); i++) {
-        children[i]->update(pressedKeys);
+        children[i]->update(pressedKeys, controllerStates);
     }
 }
 

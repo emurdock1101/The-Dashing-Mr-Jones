@@ -350,7 +350,7 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 		}
 	}
 	singleUseKeys.clear();
-	Game::update(pressedKeys);
+	Game::update(pressedKeys, controllerStates);
 }
 
 void DevTool::draw(AffineTransform &at){
