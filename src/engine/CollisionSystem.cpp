@@ -70,18 +70,17 @@ void CollisionSystem::watchForCollisions(string type1, string type2) {
 //returns true iff obj1 hitbox and obj2 hitbox overlap. Uses the following method from DO:
 //	SDL_Point* DisplayObject::getGlobalHitbox();
 bool CollisionSystem::collidesWith(DisplayObject* obj1, DisplayObject* obj2) {
-	// TODO change to hitbox top left
 	// Get points for obj1
-	SDL_Point topLeft1 = obj1->getTopLeft();
-	SDL_Point topRight1 = obj1->getTopRight();
-	SDL_Point bottomLeft1 = obj1->getBottomLeft();
-	SDL_Point bottomRight1 = obj1->getBottomRight();
+	SDL_Point topLeft1 = obj1->getTopLeftHitbox();
+	SDL_Point topRight1 = obj1->getTopRightHitbox();
+	SDL_Point bottomLeft1 = obj1->getBottomLeftHitbox();
+	SDL_Point bottomRight1 = obj1->getBottomRightHitbox();
 
 	// Get points for obj2
-	SDL_Point topLeft2 = obj2->getTopLeft();
-	SDL_Point topRight2 = obj2->getTopRight();
-	SDL_Point bottomLeft2 = obj2->getBottomLeft();
-	SDL_Point bottomRight2 = obj2->getBottomRight();
+	SDL_Point topLeft2 = obj2->getTopLeftHitbox();
+	SDL_Point topRight2 = obj2->getTopRightHitbox();
+	SDL_Point bottomLeft2 = obj2->getBottomLeftHitbox();
+	SDL_Point bottomRight2 = obj2->getBottomRightHitbox();
 
 	// Test each possible line segment, not looping so here's to big blocks
 	// 16 checks incoming!!
@@ -143,10 +142,10 @@ bool CollisionSystem::collidesWith(DisplayObject* obj1, DisplayObject* obj2) {
 	}
 
 	// Edge case, object completely inside another
-	if (obj1->isColliding(NULL, topLeft2.x, topLeft2.y)) {
+	if (obj1->isCollidingHitbox(NULL, topLeft2.x, topLeft2.y)) {
 		return true;
 	}
-	if (obj2->isColliding(NULL, topLeft1.x, topLeft1.y)) {
+	if (obj2->isCollidingHitbox(NULL, topLeft1.x, topLeft1.y)) {
 		return true;
 	}
 

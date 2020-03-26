@@ -164,6 +164,62 @@ bool DisplayObject::isColliding(Camera *camera, int x, int y) {
 	return (abs(A - (A1 + A2 + A3 + A4)) < 0.000005);
 }
 
+bool DisplayObject::isCollidingHitbox(Camera *camera, int x, int y) {
+	int globalX = 0;
+	int globalY = 0;
+	DisplayObject *currentParent = parent;
+	while (currentParent != NULL) {
+		globalX += currentParent->position.x;
+		globalY += currentParent->position.y;
+		currentParent = currentParent->parent;
+	}
+	SDL_Point topLeft = getTopLeftHitbox();
+	SDL_Point topRight = getTopRightHitbox();
+	SDL_Point bottomLeft = getBottomLeftHitbox();
+	SDL_Point bottomRight = getBottomRightHitbox();
+
+	// Add the camera
+	if (camera != NULL) {
+		topLeft.x += camera->x;
+		topLeft.y += camera->y;
+		topRight.x += camera->x;
+		topRight.y += camera->y;
+		bottomLeft.x += camera->x;
+		bottomLeft.y += camera->y;
+		bottomRight.x += camera->x;
+		bottomRight.y += camera->y;
+	}
+
+	/* Now calculate if point is in this rectangle or not.
+	 * To deal with rotation etc. this uses the area method.
+	 * Namely, the area of the 4 triangles that could be made with
+	 * the point should add up to the area of the rectangle if it's
+	 * within it. This is necessary because the rectangle
+	 * could be rotated.
+	 */
+
+	double A = area(topLeft.x, topLeft.y, topRight.x, topRight.y,
+					bottomRight.x, bottomRight.y) +
+              area(topLeft.x, topLeft.y, bottomLeft.x, bottomLeft.y,
+					  bottomRight.x, bottomRight.y);
+
+    /* Calculate area of triangle PAB */
+    double A1 = area(x, y, topLeft.x, topLeft.y, topRight.x, topRight.y);
+
+    /* Calculate area of triangle PBC */
+    double A2 = area(x, y, topRight.x, topRight.y, bottomRight.x, bottomRight.y);
+
+    /* Calculate area of triangle PCD */
+    double A3 = area(x, y, bottomRight.x, bottomRight.y, bottomLeft.x, bottomLeft.y);
+
+    /* Calculate area of triangle PAD */
+    double A4 = area(x, y, topLeft.x, topLeft.y, bottomLeft.x, bottomLeft.y);
+
+	// Do float comparison just in case
+	return (abs(A - (A1 + A2 + A3 + A4)) < 0.000005);
+}
+
+
 int DisplayObject::getWidth() {
 	return this->image->w;
 }
@@ -210,6 +266,34 @@ SDL_Point DisplayObject::getBottomLeft() {
 
 SDL_Point DisplayObject::getBottomRight() {
 	return translatePoint(width, height);
+}
+
+SDL_Point DisplayObject::getTopLeftHitbox() {
+	SDL_Point toReturn = getTopLeft();
+	toReturn.y += hitboxUpOffset;
+	toReturn.x += hitboxLeftOffset;
+	return toReturn;
+}
+
+SDL_Point DisplayObject::getTopRightHitbox() {
+	SDL_Point toReturn = getTopRight();
+	toReturn.y += hitboxUpOffset;
+	toReturn.x -= hitboxRightOffset;
+	return toReturn;
+}
+
+SDL_Point DisplayObject::getBottomLeftHitbox() {
+	SDL_Point toReturn = getBottomLeft();
+	toReturn.y -= hitboxDownOffset;
+	toReturn.x += hitboxLeftOffset;
+	return toReturn;
+}
+
+SDL_Point DisplayObject::getBottomRightHitbox() {
+	SDL_Point toReturn = getBottomRight();
+	toReturn.y -= hitboxDownOffset;
+	toReturn.x -= hitboxRightOffset;
+	return toReturn;
 }
 
 int DisplayObject::getAbsoluteWidth() {
@@ -267,10 +351,10 @@ void DisplayObject::writeSceneData(ostream &stream) {
 
 void DisplayObject::displayHitbox() {
     SDL_SetRenderDrawColor(Game::renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
-	SDL_Point topLeft = getTopLeft();
-	SDL_Point topRight = getTopRight();
-	SDL_Point bottomLeft = getBottomLeft();
-	SDL_Point bottomRight = getBottomRight();
+	SDL_Point topLeft = getTopLeftHitbox();
+	SDL_Point topRight = getTopRightHitbox();
+	SDL_Point bottomLeft = getBottomLeftHitbox();
+	SDL_Point bottomRight = getBottomRightHitbox();
 	SDL_RenderDrawLine(Game::renderer,
 			topLeft.x,
 			topLeft.y,
