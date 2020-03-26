@@ -37,7 +37,12 @@ void CollisionSystem::update() {
 			for (DisplayObject *object2 : *object2Vec) {
 				if (collidesWith(object1, object2)) {
 					// TODO: Enter correct values
-					resolveCollision(object1, object2, 0, 0, 0, 0);
+					//cout << "Collision Detected" << endl;
+					double xDelta1 = object1->position.x - object1->prevPos.x;
+					double xDelta2 = object2->position.x - object2->prevPos.x;
+					double yDelta1 = object1->position.y - object1->prevPos.y;
+					double yDelta2 = object2->position.y - object2->prevPos.y;
+					resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
 				}
 			}
 		}
@@ -158,8 +163,15 @@ bool CollisionSystem::collidesWith(DisplayObject* obj1, DisplayObject* obj2) {
 //xDelta2 and yDelta2 are the amount other moved before causing the collision.
 void CollisionSystem::resolveCollision(DisplayObject* d, DisplayObject* other,
 		int xDelta1, int yDelta1, int xDelta2, int yDelta2) {
+	
+	d->position.x -= xDelta1;
+	other->position.x -= xDelta2;
+	d->position.y -= yDelta1;
+	other->position.y -= yDelta2;
 	// TODO: Implement resolve
-	// Maybe find deltas through a custom Event with those parameters?
+	// Maybe find deltas through a custom Event with those parameters	
+
+	
 }
 
 

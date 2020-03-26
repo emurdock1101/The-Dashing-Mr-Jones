@@ -22,6 +22,7 @@ MyGame::MyGame() : Game(1200, 600) {
 
 	character1 = new Sprite("character1","./resources/sprites_unsorted/1 Old_man/Old_man.png");
 	character1->position = {0, 0};
+	character1->prevPos = {0, 0};
 	character1->width = 200;
 	character1->height = 200;
 	character1->pivot = {character1->width/2, character1->height/2};
@@ -34,6 +35,7 @@ MyGame::MyGame() : Game(1200, 600) {
 
 	character2 = new Sprite("character2","./resources/sprites_unsorted/5 Boy/Boy.png");
 	character2->position = {0, 200};
+	character2->prevPos = {0, 200};
 	character2->width = 100;
 	character2->height = 100;
 	character2->pivot = {character2->width/2, character2->height/2};
@@ -46,6 +48,7 @@ MyGame::MyGame() : Game(1200, 600) {
 
 	character3 = new Sprite("character3","./resources/sprites_unsorted/6 Girl/Girl.png");
 	character3->position = {400, 200};
+	character3->prevPos = {400, 200};
 	character3->width = 100;
 	character3->height = 100;
 	character3->pivot = {character3->width/2, character3->height/2};
@@ -56,7 +59,24 @@ MyGame::MyGame() : Game(1200, 600) {
 	character3->hitboxDownOffset = 0;
 	character1->addChild(character3);
 
+	floor = new Sprite("floor", "./resources/floor.png");
+	floor->position.y = 500;
+	floor->prevPos = floor->position;
+	floor->width = 1200;
+	floor->height = 200;
+	Game::addChild(floor);
+
+	gravity = new Sprite("gravity", "./resources/character/Idle_1.png");
+	gravity->position.x = 500;
+	gravity->width = 75;
+	gravity->height = 75;
+	Game::addChild(gravity);
+
 	collisionSystem->watchForCollisions("character1", "character3");
+	collisionSystem->watchForCollisions("character2", "character3");
+	collisionSystem->watchForCollisions("gravity", "floor");
+
+
 }
 
 MyGame::~MyGame(){
@@ -64,6 +84,12 @@ MyGame::~MyGame(){
 }
 
 void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){
+	character1->prevPos = character1->position;
+	character2->prevPos = character2->position;
+	character3->prevPos = character3->position;
+	gravity->prevPos = gravity->position;
+	//cout << "Current Position: " << character2->position.x << endl;
+	//cout << "Previous Position: " << character2->prevPos.x << endl;
 	if (pressedKeys.find(SDL_SCANCODE_D) != pressedKeys.end()) {
 		character1->position.x += 6;
 	}
@@ -144,7 +170,11 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 		character3->scaleX -= 0.05;
 		character3->scaleY -= 0.05;
 	}
+	gravity->position.y += 3;
 	collisionSystem->update();
+	//cout << "Gravity Previous Position" << gravity->prevPos.y << endl;
+	//cout << "Gravity  Position" << gravity->position.y << endl;
+
 	Game::update(pressedKeys, controllerStates);
 }
 

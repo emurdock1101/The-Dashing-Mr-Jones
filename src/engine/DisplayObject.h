@@ -45,6 +45,7 @@ public:
 
 	bool visible = true;
 	SDL_Point position = {0, 0};
+	SDL_Point prevPos = {0,0};
 	int width = 100;
 	int height = 100;
 	SDL_Point pivot = {0, 0};
@@ -54,6 +55,7 @@ public:
 	int alpha = 255;
 	bool facingRight = true;
 	bool showHitbox = false;
+
 
 	// Hitbox offsets are the amount to cut off the edge of the image
 	// eg hitboxRightOffset of 50 will make the hitbox 50 pixels skinnier
