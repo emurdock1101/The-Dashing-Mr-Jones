@@ -1,5 +1,8 @@
 Collision Support Demo: 
 
+Compile with make 
+Run with ./bin/myGame
+
 - Follow given instructions on the handout for main demo 
 - For gravity demo, use 1 and 2 to move the character, and space to jump 
 	- Demonstrates axis-specific collisions
