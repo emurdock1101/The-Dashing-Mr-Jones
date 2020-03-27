@@ -7,10 +7,10 @@ Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprite
 	state = 1;
 	
 
-	AnimatedSprite::addAnimation("./resources/player/Adventurer Sprite Sheet v1/anim_slices-0/idle_right_", "idle", 13, 12, true);
-	AnimatedSprite::play("idle");
+	AnimatedSprite::addAnimation("./resources/player/Adventurer Sprite Sheet v1/anim_slices-0/", "idle_right", 12, 12, true);
+	AnimatedSprite::play("idle_right");
 
-	DisplayObject::loadTexture("./resources/player/basic_player.png");
+	// DisplayObject::loadTexture("./resources/player/basic_player.png");
 	width = 32;
 	height = 32;
 	scaleX = 1;

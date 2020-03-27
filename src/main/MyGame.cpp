@@ -108,7 +108,7 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 	}
 
 	if (pressedKeys.find(SDL_SCANCODE_SPACE) != pressedKeys.end()) {
-		gravity->position.y -= 25;
+		// gravity->position.y -= 25;
 	}
 	gravity->position.y += 3;
 	collisionSystem->update();
