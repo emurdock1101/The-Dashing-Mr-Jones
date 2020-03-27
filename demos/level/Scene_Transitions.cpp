@@ -1,17 +1,15 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
-#include "../engine/Sprite.h"
-#include "../engine/ControllerState.h"
+#include "Sprite.h"
 #include "MyGame.h"
-#include "../engine/Scene.h"
-#include "../engine/Camera.h"
-#include "../engine/Sound.h"
-#include "../engine/CollisionSystem.h"
+#include "Scene.h"
+#include "Camera.h"
+#include "Sound.h"
 
 using namespace std;
 
-MyGame::MyGame() : Game(1920, 1000) {
+MyGame::MyGame() : Game(1200, 600) {
 
 	double camScale = 0.2;
 
@@ -36,40 +34,9 @@ MyGame::MyGame() : Game(1920, 1000) {
 	//fadeIn = new Tween(*player);
 	//fadeIn->animate(TweenableParams::ALPHA, player->alpha, 255, 180);
 	//juggler->add(fadeIn);
-	
-
-	// MAKE SURE COLLISION SYSTEM DECLARED BEFORE ADDING ANYTHING TO TREE
-	collisionSystem = new CollisionSystem();
-
-
-	Sprite *background = new Sprite("background", "./resources/tilesets/rooms/a1rm1.png");
-	background->position = { 0,0 };
-	background->width = 902;
-	background->height = 385;
-	background->scaleX = 1;
-	background->scaleY = 1;
-	Game::addChild(background);
-
-	floor = new Sprite("floor", "./resources/floor.png");
-	floor->position.y = 500;
-	floor->prevPos = floor->position;
-	floor->width = 1200;
-	floor->height = 200;
-	Game::addChild(floor);
-
-	player = new Player("player");
-	player->position.y = 0;
-	player->position.x = 0;
-	player->prevPos = player->position;
-	player->showHitbox = true;
-	Game::addChild(player);
-
-	collisionSystem->watchForCollisions("floor", "player");
-
 }
 
 MyGame::~MyGame(){
-	delete collisionSystem;
 }
 
 

@@ -12,6 +12,10 @@
 #include "../engine/Camera.h"
 #include "../engine/CollisionSystem.h"
 #include "../objects/Player.h"
+#include "../engine/tweens/Tween.h"
+#include "../engine/tweens/TweenJuggler.h"
+#include "../engine/tweens/TweenParam.h"
+#include "../engine/tweens/TweenableParams.h"
 
 using namespace std;
 
@@ -25,12 +29,15 @@ public:
 	virtual void draw(AffineTransform &at);
 
 private:
+	
+	Scene* sc;
+	Sound* sound;
+	Camera* cammy;
+	DisplayObjectContainer* player;
+	Tween* fadeIn;
+	TweenJuggler* juggler = TweenJuggler::getInstance();
 	Player* player;
-	Sprite* character1;
-	Sprite* character2;
-	Sprite* character3;
 	Sprite* floor;
-	AnimatedSprite* gravity;
 	CollisionSystem *collisionSystem;
 };
 
