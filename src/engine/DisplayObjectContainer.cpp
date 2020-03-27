@@ -1,6 +1,6 @@
 #include "DisplayObjectContainer.h"
 #include "AffineTransform.h"
-#include "EventParams.h"
+#include "./events/EventParams.h"
 #include "Game.h"
 #include <vector>
 #include <iostream>

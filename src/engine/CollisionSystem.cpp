@@ -1,6 +1,6 @@
 #include "CollisionSystem.h"
 #include "DisplayObject.h"
-#include "EventParams.h"
+#include "./events/EventParams.h"
 #include "Game.h"
 #include <iostream>
 #include <map>
