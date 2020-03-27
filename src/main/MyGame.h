@@ -10,6 +10,7 @@
 #include "../engine/Scene.h"
 #include "../engine/Sound.h"
 #include "../engine/Camera.h"
+#include "../engine/CollisionSystem.h"
 
 using namespace std;
 
@@ -23,7 +24,12 @@ public:
 	virtual void draw(AffineTransform &at);
 
 private:
-	AnimatedSprite* character;
+	Sprite* character1;
+	Sprite* character2;
+	Sprite* character3;
+	Sprite* floor;
+	Sprite* gravity;
+	CollisionSystem *collisionSystem;
 };
 
 #endif
