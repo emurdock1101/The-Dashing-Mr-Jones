@@ -11,6 +11,7 @@
 #include "../engine/Sound.h"
 #include "../engine/Camera.h"
 #include "../engine/CollisionSystem.h"
+#include "../objects/Player.h"
 
 using namespace std;
 
@@ -24,6 +25,7 @@ public:
 	virtual void draw(AffineTransform &at);
 
 private:
+	Player* player;
 	Sprite* character1;
 	Sprite* character2;
 	Sprite* character3;

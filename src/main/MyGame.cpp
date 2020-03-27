@@ -66,6 +66,13 @@ MyGame::MyGame() : Game(1200, 600) {
 	floor->height = 200;
 	Game::addChild(floor);
 
+	player = new Player("player");
+	player->position.y = 0;
+	player->position.x = 0;
+	player->prevPos = player->position;
+	player->showHitbox = true;
+	Game::addChild(player);
+
 	gravity = new AnimatedSprite("gravity");
 	gravity -> addAnimation("./resources/character/", "Run", 20, 2, true);
 	gravity ->play("Run");
@@ -77,7 +84,7 @@ MyGame::MyGame() : Game(1200, 600) {
 	collisionSystem->watchForCollisions("character1", "character3");
 	collisionSystem->watchForCollisions("character2", "character3");
 	collisionSystem->watchForCollisions("floor", "gravity");
-
+	collisionSystem->watchForCollisions("floor", "player");
 
 }
 

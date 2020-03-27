@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker https://www.codeandweb.com/texturepacker -->
+<!-- $TexturePacker:SmartUpdate:3ed79d9fb408a428715dd2f934af9f07:617d55f3e92102c818f87a3e02d76350:98c5852864b2d49293e994c7b9287d28$ -->
+<!--Format:
+n  => name of the sprite
+x  => sprite x pos in texture
+y  => sprite y pos in texture
+w  => sprite width (may be trimmed)
+h  => sprite height (may be trimmed)
+pX => x pos of the pivot point (relative to sprite width)
+pY => y pos of the pivot point (relative to sprite height)
+oX => sprite's x-corner offset (only available if trimmed)
+oY => sprite's y-corner offset (only available if trimmed)
+oW => sprite's original width (only available if trimmed)
+oH => sprite's original height (only available if trimmed)
+r => 'y' only set if sprite is rotated
+with polygon mode enabled:
+vertices   => points in sprite coordinate system (x0,y0,x1,y1,x2,y2, ...)
+verticesUV => points in sheet coordinate system (x0,y0,x1,y1,x2,y2, ...)
+triangles  => sprite triangulation, 3 vertex indices per triangle
+-->
+<TextureAtlas imagePath="player_sprites.png" width="238" height="170">
+    <sprite n="dash_right-0.png" x="1" y="1" w="32" h="32"/>
+    <sprite n="dash_right-1.png" x="35" y="1" w="32" h="32"/>
+    <sprite n="dash_right-2.png" x="69" y="1" w="32" h="32"/>
+    <sprite n="dash_right-3.png" x="103" y="1" w="32" h="32"/>
+    <sprite n="dash_right-4.png" x="137" y="1" w="32" h="32"/>
+    <sprite n="dash_right-5.png" x="171" y="1" w="32" h="32"/>
+    <sprite n="dash_right-6.png" x="205" y="1" w="32" h="32"/>
+    <sprite n="dash_right-7.png" x="1" y="35" w="32" h="32"/>
+    <sprite n="dash_right-8.png" x="35" y="35" w="32" h="32"/>
+    <sprite n="dash_right-9.png" x="69" y="35" w="32" h="32"/>
+    <sprite n="fall_right-0.png" x="103" y="35" w="32" h="32"/>
+    <sprite n="fall_right-1.png" x="137" y="35" w="32" h="32"/>
+    <sprite n="fall_right-2.png" x="171" y="35" w="32" h="32"/>
+    <sprite n="fall_right-3.png" x="205" y="35" w="32" h="32"/>
+    <sprite n="idle_right-0.png" x="1" y="69" w="32" h="32"/>
+    <sprite n="idle_right-1.png" x="35" y="69" w="32" h="32"/>
+    <sprite n="idle_right-2.png" x="69" y="69" w="32" h="32"/>
+    <sprite n="idle_right-3.png" x="103" y="69" w="32" h="32"/>
+    <sprite n="idle_right-4.png" x="137" y="69" w="32" h="32"/>
+    <sprite n="idle_right-5.png" x="171" y="69" w="32" h="32"/>
+    <sprite n="idle_right-6.png" x="205" y="69" w="32" h="32"/>
+    <sprite n="idle_right-7.png" x="1" y="103" w="32" h="32"/>
+    <sprite n="idle_right-8.png" x="35" y="103" w="32" h="32"/>
+    <sprite n="idle_right-9.png" x="69" y="103" w="32" h="32"/>
+    <sprite n="idle_right-10.png" x="103" y="103" w="32" h="32"/>
+    <sprite n="idle_right-11.png" x="137" y="103" w="32" h="32"/>
+    <sprite n="idle_right-12.png" x="171" y="103" w="32" h="32"/>
+    <sprite n="run_right-0.png" x="205" y="103" w="32" h="32"/>
+    <sprite n="run_right-1.png" x="1" y="137" w="32" h="32"/>
+    <sprite n="run_right-2.png" x="35" y="137" w="32" h="32"/>
+    <sprite n="run_right-3.png" x="69" y="137" w="32" h="32"/>
+    <sprite n="run_right-4.png" x="103" y="137" w="32" h="32"/>
+    <sprite n="run_right-5.png" x="137" y="137" w="32" h="32"/>
+    <sprite n="run_right-6.png" x="171" y="137" w="32" h="32"/>
+    <sprite n="run_right-7.png" x="205" y="137" w="32" h="32"/>
+</TextureAtlas>

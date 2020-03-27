@@ -16,7 +16,7 @@ AnimatedSprite::AnimatedSprite(string id) : Sprite(id, 0, 0, 0) {
     this->type = "AnimatedSprite";
 }
 
-AnimatedSprite::AnimatedSprite(string id, string spritesheet, string xml){
+AnimatedSprite::AnimatedSprite(string id, string spritesheet, string xml) : Sprite(id, 0,0,0){
    vector<string> lines;
    std::ifstream infile(xml);
    string line;
