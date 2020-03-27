@@ -1,15 +1,16 @@
 #include "Player.h"
 using namespace std;
 Player::Player() : AnimatedSprite() {
-	state = 1;
-	lastUpdate = SDL_GetTicks();
+	
 }
 Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprites.png", "./resources/player/player_sprites.xml") {
 	state = 1;
 	
 
-	AnimatedSprite::addAnimation("./resources/player/Adventurer Sprite Sheet v1/anim_slices-0/idle_right", "idle", 13, 12, true);
+	AnimatedSprite::addAnimation("./resources/player/Adventurer Sprite Sheet v1/anim_slices-0/idle_right_", "idle", 13, 12, true);
 	AnimatedSprite::play("idle");
+
+	DisplayObject::loadTexture("./resources/player/basic_player.png");
 	width = 32;
 	height = 32;
 	scaleX = 1;
@@ -23,9 +24,20 @@ Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprite
 void Player::physicsUpdate() {
 	double delta = SDL_GetTicks() - lastUpdate;
 	
+	if (DisplayObject::position.y > PROTOTYPE_FLOOR_LEVEL) {
+		isGrounded = true;
+		canDash = true;
+		canJump = true;
+		if (velocity.y > 0) {
+			velocity.y = 0;
+		}
+	}
+	else {
+		isGrounded = false;
+	}
 
-	DisplayObject::position.x += velocity.x * delta / 1000;
-	DisplayObject::position.y += velocity.y * delta / 1000;
+	DisplayObject::position.x += velocity.x * delta / 1000 * unitScale;
+	DisplayObject::position.y += velocity.y * delta / 1000 * unitScale;
 	double newVelY = velocity.y + gravity;
 	if (newVelY < maxFallSpeed) {
 		velocity.y = maxFallSpeed;
@@ -53,11 +65,15 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 		if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
 			position.x -= 6;
 		}
-		if (pressedKeys.find(SDL_SCANCODE_DOWN) != pressedKeys.end()) {
-			position.y += 6;
-		}
-		if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end()) {
-			position.y -= 6;
+		if (pressedKeys.find(SDL_SCANCODE_SPACE) != pressedKeys.end()) {
+			if (lastKeys.find(SDL_SCANCODE_SPACE) == lastKeys.end() && canJump) {
+				velocity.y = -jumpPower;
+				canJump = false;
+				lastGrounded = SDL_GetTicks();
+			}
+			else if (SDL_GetTicks() - lastGrounded < 100) {
+				velocity.y = -jumpPower;
+			}
 		}
 
 
@@ -81,6 +97,7 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 	}
 
 	
+	lastKeys = pressedKeys;
 	lastUpdate = SDL_GetTicks();
 	AnimatedSprite::update(pressedKeys, controllerStates);
 }

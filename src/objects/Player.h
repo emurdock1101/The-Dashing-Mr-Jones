@@ -18,16 +18,21 @@ public:
 	bool isGrounded = true;
 	bool canJump = true;
 	bool canDash = true;
-	double lastJumpTime;
+	double lastGrounded;
 	double runSpeed = 4;
 	double runAccel = 8;
-	double jumpAccel = 4;
+	double jumpPower = 32;
 	double maxFallSpeed = 8;
 	double gravity = 4;
+	double unitScale = 8;
+
+	double PROTOTYPE_FLOOR_LEVEL = 300;
 
 	double lastUpdate;
 
 	void physicsUpdate();
+
+	set<SDL_Scancode> lastKeys;
 
 	void update(set<SDL_Scancode> pressedKeys, vector<ControllerState*> controllerStates);
 	void draw(AffineTransform &at);
