@@ -11,7 +11,8 @@ void Player::physicsUpdate() {
 }
 
 void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates) {
-	// Remember to reference the state diagram.
+	// Remember to reference the state diagram. 
+	// I've merged the general movement and jumping states.
 	// Keep in mind that this function keeps firing for every frame that the state is active. If you want, you can create new states 
 	// and class fields to wait out tweens/other stuff before transitioning to another state.
 	switch (this->state) {
