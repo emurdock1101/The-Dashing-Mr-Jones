@@ -52,6 +52,9 @@ private:
 	// Pairs of ids that are watched for collisions
 	// Does not check for double adds - so may trigger twice if not careful
 	vector<pair<string, string>> watchedIds;
+
+	bool triggeredByX = false;
+	bool triggeredByY = false;
 };
 
 #endif

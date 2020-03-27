@@ -28,7 +28,7 @@ private:
 	Sprite* character2;
 	Sprite* character3;
 	Sprite* floor;
-	Sprite* gravity;
+	AnimatedSprite* gravity;
 	CollisionSystem *collisionSystem;
 };
 
