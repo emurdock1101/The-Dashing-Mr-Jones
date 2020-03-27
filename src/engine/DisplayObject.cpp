@@ -269,31 +269,19 @@ SDL_Point DisplayObject::getBottomRight() {
 }
 
 SDL_Point DisplayObject::getTopLeftHitbox() {
-	SDL_Point toReturn = getTopLeft();
-	toReturn.y += hitboxUpOffset;
-	toReturn.x += hitboxLeftOffset;
-	return toReturn;
+	return translatePoint(hitboxLeftOffset, hitboxUpOffset);
 }
 
 SDL_Point DisplayObject::getTopRightHitbox() {
-	SDL_Point toReturn = getTopRight();
-	toReturn.y += hitboxUpOffset;
-	toReturn.x -= hitboxRightOffset;
-	return toReturn;
+	return translatePoint(width-hitboxRightOffset, hitboxUpOffset);
 }
 
 SDL_Point DisplayObject::getBottomLeftHitbox() {
-	SDL_Point toReturn = getBottomLeft();
-	toReturn.y -= hitboxDownOffset;
-	toReturn.x += hitboxLeftOffset;
-	return toReturn;
+	return translatePoint(hitboxLeftOffset, height-hitboxDownOffset);
 }
 
 SDL_Point DisplayObject::getBottomRightHitbox() {
-	SDL_Point toReturn = getBottomRight();
-	toReturn.y -= hitboxDownOffset;
-	toReturn.x -= hitboxRightOffset;
-	return toReturn;
+	return translatePoint(width-hitboxRightOffset, height-hitboxDownOffset);
 }
 
 int DisplayObject::getAbsoluteWidth() {

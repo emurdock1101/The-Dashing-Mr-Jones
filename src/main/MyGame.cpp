@@ -66,7 +66,9 @@ MyGame::MyGame() : Game(1200, 600) {
 	floor->height = 200;
 	Game::addChild(floor);
 
-	gravity = new Sprite("gravity", "./resources/character/Idle_1.png");
+	gravity = new AnimatedSprite("gravity");
+	gravity -> addAnimation("./resources/character/", "Run", 20, 2, true);
+	gravity ->play("Run");
 	gravity->position.x = 500;
 	gravity->width = 75;
 	gravity->height = 75;
@@ -74,7 +76,7 @@ MyGame::MyGame() : Game(1200, 600) {
 
 	collisionSystem->watchForCollisions("character1", "character3");
 	collisionSystem->watchForCollisions("character2", "character3");
-	collisionSystem->watchForCollisions("gravity", "floor");
+	collisionSystem->watchForCollisions("floor", "gravity");
 
 
 }
@@ -169,6 +171,17 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 	if (pressedKeys.find(SDL_SCANCODE_B) != pressedKeys.end()) {
 		character3->scaleX -= 0.05;
 		character3->scaleY -= 0.05;
+	}
+
+	if (pressedKeys.find(SDL_SCANCODE_1) != pressedKeys.end()) {
+		gravity->position.x -= 5;
+	}
+	if (pressedKeys.find(SDL_SCANCODE_2) != pressedKeys.end()) {
+		gravity->position.x += 5;
+	}
+
+	if (pressedKeys.find(SDL_SCANCODE_SPACE) != pressedKeys.end()) {
+		gravity->position.y -= 25;
 	}
 	gravity->position.y += 3;
 	collisionSystem->update();

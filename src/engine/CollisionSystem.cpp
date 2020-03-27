@@ -35,16 +35,41 @@ void CollisionSystem::update() {
 
 		for (DisplayObject *object1 : *object1Vec) {
 			for (DisplayObject *object2 : *object2Vec) {
+
+				double xDelta1 = object1->position.x - object1->prevPos.x;
+				double xDelta2 = object2->position.x - object2->prevPos.x;
+				double yDelta1 = object1->position.y - object1->prevPos.y;
+				double yDelta2 = object2->position.y - object2->prevPos.y;
+
+				object1 -> position = object1->prevPos;
+				object2 -> position = object2->prevPos;
+				object1 -> position.x += xDelta1;
 				if (collidesWith(object1, object2)) {
-					// TODO: Enter correct values
-					//cout << "Collision Detected" << endl;
-					double xDelta1 = object1->position.x - object1->prevPos.x;
-					double xDelta2 = object2->position.x - object2->prevPos.x;
-					double yDelta1 = object1->position.y - object1->prevPos.y;
-					double yDelta2 = object2->position.y - object2->prevPos.y;
+					triggeredByX = true;
+					//resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
+				}
+				object1 -> position = object1->prevPos;
+				object1 -> position.y += yDelta1;
+				if (collidesWith(object1, object2)){
+					triggeredByY = true;
+				}
+				object2 -> position.x += xDelta2;
+				if (collidesWith(object1, object2)) {
+					triggeredByX = true;
+					//resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
+				}
+				object2 -> position = object2->prevPos;
+				object2 -> position.y += yDelta2;
+				if (collidesWith(object1, object2)){
+					triggeredByY = true;
+				}
+				object1 -> position.x += xDelta1;
+				object2 -> position.x += xDelta2;
+				if (triggeredByX == true || triggeredByY == true){
 					resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
 				}
 			}
+		
 		}
 
 	}
@@ -163,11 +188,17 @@ bool CollisionSystem::collidesWith(DisplayObject* obj1, DisplayObject* obj2) {
 //xDelta2 and yDelta2 are the amount other moved before causing the collision.
 void CollisionSystem::resolveCollision(DisplayObject* d, DisplayObject* other,
 		int xDelta1, int yDelta1, int xDelta2, int yDelta2) {
-	
-	d->position.x -= xDelta1;
-	other->position.x -= xDelta2;
-	d->position.y -= yDelta1;
-	other->position.y -= yDelta2;
+
+	if (triggeredByX == true){
+		d->position.x -= xDelta1;
+		other->position.x -= xDelta2;
+		triggeredByX = false;
+	}
+	if (triggeredByY == true){
+		d->position.y -= yDelta1;
+		other->position.y -= yDelta2;
+		triggeredByY = false;
+	}
 	// TODO: Implement resolve
 	// Maybe find deltas through a custom Event with those parameters	
 
