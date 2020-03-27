@@ -76,7 +76,7 @@ void DevTool::start(){
 		double duration = (( end - start ) / (double) CLOCKS_PER_SEC)*100000;
 		if(duration > ms_per_frame){
 			start = end;
-			this->update(pressedKeys);
+			this->update(pressedKeys, controllerStates);
 			AffineTransform at;
 			this->draw(at);
 		}
@@ -200,7 +200,7 @@ vector<string>DevTool::getImagesFromFolder(string folderName){
     return images;
 }
 
-void DevTool::update(set<SDL_Scancode> pressedKeys){
+void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){
 	string filename;
 	for (SDL_Scancode scancode: pressedKeys) {
 		switch(scancode) {
@@ -366,7 +366,7 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 		}
 	}
 	singleUseKeys.clear();
-	Game::update(pressedKeys);
+	Game::update(pressedKeys, controllerStates);
 }
 
 void DevTool::draw(AffineTransform &at){

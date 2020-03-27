@@ -21,7 +21,7 @@ public:
 	virtual ~DevTool();
 	virtual void start();
 
-	virtual void update(set<SDL_Scancode> pressedKeys);
+	virtual void update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates);
 	virtual void draw(AffineTransform &at);
 	vector<string> getImagesFromFolder(string folderName);
 
@@ -45,6 +45,7 @@ private:
 	vector<DisplayObjectContainer*> spritesToDisplay;
 	vector<DisplayObjectContainer*> onScreen;
 	set<SDL_Scancode> singleUseKeys;
+	vector<ControllerState *> controllerStates;
 
 };
 

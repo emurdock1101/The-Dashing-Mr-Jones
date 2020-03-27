@@ -315,6 +315,7 @@ void DisplayObject::applyParentTransformationsThenSelf(AffineTransform &at) {
 	applyTransformations(at);
 	// Unapply pivot
 	at.translate(pivot.x, pivot.y);
+
 }
 
 void DisplayObject::writeSceneData(ostream &stream) {
