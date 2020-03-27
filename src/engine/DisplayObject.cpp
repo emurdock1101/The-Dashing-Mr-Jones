@@ -228,6 +228,8 @@ int DisplayObject::getAbsoluteHeight() {
 SDL_Point DisplayObject::translatePoint(int x, int y) {
 	AffineTransform at;
 	applyParentTransformationsThenSelf(at);
+	// Only apply this one's pivot
+	at.translate(-pivot.x, -pivot.y);
 	return at.transformPoint(x, y);
 }
 
@@ -236,6 +238,9 @@ void DisplayObject::applyParentTransformationsThenSelf(AffineTransform &at) {
 		parent->applyParentTransformationsThenSelf(at);
 	}
 	applyTransformations(at);
+	// Unapply pivot
+	at.translate(pivot.x, pivot.y);
+
 }
 
 void DisplayObject::writeSceneData(ostream &stream) {
