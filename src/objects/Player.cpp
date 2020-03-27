@@ -15,6 +15,10 @@ Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprite
 	height = 32;
 	scaleX = 1;
 	scaleY = 1;
+	hitboxLeftOffset = 12;
+	hitboxRightOffset = 12;
+	hitboxDownOffset = 0;
+	hitboxUpOffset = 12;
 	pivot = { 16,16 };
 
 	lastUpdate = SDL_GetTicks();
@@ -22,33 +26,34 @@ Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprite
 
 // This method is a helper method - multiple states might want to abide by the same laws of physics
 void Player::physicsUpdate() {
-	double delta = SDL_GetTicks() - lastUpdate;
+	double delta = (SDL_GetTicks() - lastUpdate) / 1000;
 	
 	if (DisplayObject::position.y > PROTOTYPE_FLOOR_LEVEL) {
 		isGrounded = true;
 		canDash = true;
 		canJump = true;
-		if (velocity.y > 0) {
-			velocity.y = 0;
+		if (velY > 0) {
+			velY = 0;
 		}
 	}
 	else {
 		isGrounded = false;
 	}
 
-	DisplayObject::position.x += velocity.x * delta / 1000 * unitScale;
-	DisplayObject::position.y += velocity.y * delta / 1000 * unitScale;
-	double newVelY = velocity.y + gravity;
+	DisplayObject::position.x += velX * delta * unitScale;
+	DisplayObject::position.y += velY * delta * unitScale;
+	double newVelY = velY + (gravity * delta);
 	if (newVelY < maxFallSpeed) {
-		velocity.y = maxFallSpeed;
+		velY = maxFallSpeed;
 	}
 	else {
-		velocity.y = newVelY;
+		velY = newVelY;
 	}
 }
 
 void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates) {
 	DisplayObject::prevPos = position;
+	double delta = (SDL_GetTicks() - lastUpdate) / 1000;
 	// Remember to reference the state diagram. 
 	// I've merged the general movement and jumping states.
 	// Keep in mind that this function keeps firing for every frame that the state is active. If you want, you can create new states 
@@ -59,20 +64,58 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 		break;
 	case 1:
 		// general movement
-		if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
-			position.x += 6;
+
+		// horizontal input
+		if ((pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) ^ (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end())) {
+			if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
+				double newVx = velX + (runAccel*delta);
+				if (newVx > runSpeed) {
+					velX = runSpeed;
+				}
+				else {
+					velX = newVx;
+				}
+			}
+			if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
+				double newVx = velX - (runAccel*delta);
+				if (newVx < -runSpeed) {
+					velX = -runSpeed;
+				}
+				else {
+					velX = newVx;
+				}
+			}
 		}
-		if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
-			position.x -= 6;
+		else { // no horizontal input
+			if (velX > 0) {
+				double newVx = velX - (runAccel*delta);
+				if (newVx < 0) {
+					velX = 0;
+				}
+				else {
+					velX = newVx;
+				}
+			}
+			else {
+				double newVx = velX + (runAccel*delta);
+				if (newVx > 0) {
+					velX = 0;
+				}
+				else {
+					velX = newVx;
+				}
+			}
+			
 		}
+		
 		if (pressedKeys.find(SDL_SCANCODE_SPACE) != pressedKeys.end()) {
 			if (lastKeys.find(SDL_SCANCODE_SPACE) == lastKeys.end() && canJump) {
-				velocity.y = -jumpPower;
+				velY = -jumpPower;
 				canJump = false;
 				lastGrounded = SDL_GetTicks();
 			}
 			else if (SDL_GetTicks() - lastGrounded < 100) {
-				velocity.y = -jumpPower;
+				velY = -jumpPower;
 			}
 		}
 
