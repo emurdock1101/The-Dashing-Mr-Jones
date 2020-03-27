@@ -2,12 +2,12 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
 #include <iostream>
-#include "Sprite.h"
-#include "ControllerState.h"
+#include "../engine/Sprite.h"
+#include "../engine/ControllerState.h"
 #include "MyGame.h"
-#include "Scene.h"
-#include "Camera.h"
-#include "Sound.h"
+#include "../engine/Scene.h"
+#include "../engine/Camera.h"
+#include "../engine/Sound.h"
 
 using namespace std;
 bool idle = false;

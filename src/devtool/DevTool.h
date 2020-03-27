@@ -4,11 +4,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include "DisplayObjectContainer.h"
-#include "Game.h"
-#include "Camera.h"
-#include "Scene.h"
-#include "Sprite.h"
+#include "../engine/DisplayObjectContainer.h"
+#include "../engine/Game.h"
+#include "../engine/Camera.h"
+#include "../engine/Scene.h"
+#include "../engine/Sprite.h"
 #include <vector>
 #include <set>
 

@@ -144,6 +144,10 @@ void Game::start(){
 	}
 }
 
+void Game::update(set<SDL_Scancode> pressedKeys) {
+	vector<ControllerState*> blankState;
+	Game::update(pressedKeys, blankState);
+}
 void Game::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){
 	frameCounter++;
 	DisplayObjectContainer::update(pressedKeys, controllerStates);

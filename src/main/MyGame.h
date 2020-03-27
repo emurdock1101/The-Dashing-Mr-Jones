@@ -4,12 +4,12 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
-#include "Game.h"
-#include "Sprite.h"
-#include "AnimatedSprite.h"
-#include "Scene.h"
-#include "Sound.h"
-#include "Camera.h"
+#include "../engine/Game.h"
+#include "../engine/Sprite.h"
+#include "../engine/AnimatedSprite.h"
+#include "../engine/Scene.h"
+#include "../engine/Sound.h"
+#include "../engine/Camera.h"
 
 using namespace std;
 

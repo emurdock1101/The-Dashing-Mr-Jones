@@ -32,6 +32,7 @@ public:
 	virtual ~Game();
 	void start();
 
+	virtual void update(set<SDL_Scancode> pressedKeys);
 	virtual void update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates);
 	virtual void draw(AffineTransform &at);
 	set<SDL_Scancode> pressedKeys;

@@ -5,7 +5,7 @@
 #include <SDL2/SDL_image.h>
 #include <set>
 #include "AffineTransform.h"
-#include "EventDispatcher.h"
+#include "./events/EventDispatcher.h"
 #include "Camera.h"
 #include "ControllerState.h"
 #include <string>
