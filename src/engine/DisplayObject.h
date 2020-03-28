@@ -5,7 +5,7 @@
 #include <SDL2/SDL_image.h>
 #include <set>
 #include "AffineTransform.h"
-#include "EventDispatcher.h"
+#include "./events/EventDispatcher.h"
 #include "Camera.h"
 #include "ControllerState.h"
 #include <string>
@@ -45,6 +45,7 @@ public:
 
 	bool visible = true;
 	SDL_Point position = {0, 0};
+	SDL_Point prevPos = {0,0};
 	int width = 100;
 	int height = 100;
 	SDL_Point pivot = {0, 0};
@@ -53,22 +54,42 @@ public:
 	double rotation = 0.0; // in radians
 	int alpha = 255;
 	bool facingRight = true;
+	bool showHitbox = false;
+
+
+	// Hitbox offsets are the amount to cut off the edge of the image
+	// eg hitboxRightOffset of 50 will make the hitbox 50 pixels skinnier
+	// from the right side. Negative will make hitbox larger than image.
+	// Undefined behavior if offsets sum larger than width or height.
+	int hitboxRightOffset = 0;
+	int hitboxLeftOffset = 0;
+	int hitboxUpOffset = 0;
+	int hitboxDownOffset = 0;
 	
 	void setPos(int x, int y);
 	void setDim(int x, int y);
 	void setPiv(int x, int y);
 
 	bool isColliding(Camera *camera, int x, int y);
+	bool isCollidingHitbox(Camera *camera, int x, int y);
+
 
 	virtual void writeSceneData(ostream &stream);
 
-	// Top left conter - use width/height for others
 	SDL_Point getTopLeft();
 	SDL_Point getTopRight();
 	SDL_Point getBottomLeft();
 	SDL_Point getBottomRight();
+
+	// Same for absolute positions, but with hitbox offsets off
+	SDL_Point getTopLeftHitbox();
+	SDL_Point getTopRightHitbox();
+	SDL_Point getBottomLeftHitbox();
+	SDL_Point getBottomRightHitbox();
+
 	int getAbsoluteWidth();
 	int getAbsoluteHeight();
+	void displayHitbox();
 	void applyParentTransformationsThenSelf(AffineTransform &at);
 
 private:

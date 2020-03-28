@@ -16,7 +16,7 @@ AnimatedSprite::AnimatedSprite(string id) : Sprite(id, 0, 0, 0) {
     this->type = "AnimatedSprite";
 }
 
-AnimatedSprite::AnimatedSprite(string id, string spritesheet, string xml){
+AnimatedSprite::AnimatedSprite(string id, string spritesheet, string xml) : Sprite(id, 0,0,0){
    vector<string> lines;
    std::ifstream infile(xml);
    string line;
@@ -53,7 +53,7 @@ AnimatedSprite::~AnimatedSprite() {
     for (Animation* an : animations) {
         for (int i = 0; i < an->numFrames; i++) {// this needs to be an iterator loop
             if(an->frames[i]->image != NULL) SDL_FreeSurface(an->frames[i]->image);
-	        if(an->frames[i]->texture != NULL) SDL_DestroyTexture(an->frames[i]->texture);
+	        if(an->frames[i]->texture != NULL && Game::renderer != NULL) SDL_DestroyTexture(an->frames[i]->texture);
             delete an->frames[i];
         }
         delete an->frames;

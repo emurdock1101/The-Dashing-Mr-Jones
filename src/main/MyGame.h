@@ -4,12 +4,18 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
-#include "Game.h"
-#include "Sprite.h"
-#include "AnimatedSprite.h"
-#include "Scene.h"
-#include "Sound.h"
-#include "Camera.h"
+#include "../engine/Game.h"
+#include "../engine/Sprite.h"
+#include "../engine/AnimatedSprite.h"
+#include "../engine/Scene.h"
+#include "../engine/Sound.h"
+#include "../engine/Camera.h"
+#include "../engine/CollisionSystem.h"
+#include "../objects/Player.h"
+#include "../engine/tweens/Tween.h"
+#include "../engine/tweens/TweenJuggler.h"
+#include "../engine/tweens/TweenParam.h"
+#include "../engine/tweens/TweenableParams.h"
 
 using namespace std;
 
@@ -23,7 +29,15 @@ public:
 	virtual void draw(AffineTransform &at);
 
 private:
-	AnimatedSprite* character;
+	
+	Scene* sc;
+	Sound* sound;
+	Camera* cammy;
+	Tween* fadeIn;
+	TweenJuggler* juggler = TweenJuggler::getInstance();
+	Player* player;
+	Sprite* floor;
+	CollisionSystem *collisionSystem;
 };
 
 #endif

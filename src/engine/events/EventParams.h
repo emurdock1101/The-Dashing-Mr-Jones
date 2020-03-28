@@ -1,4 +1,5 @@
 enum EventParams {
 	NONE,
-	COIN_PICKED_UP
+	COIN_PICKED_UP,
+	DISPLAY_OBJECT_ADDED
 };

@@ -1,0 +1,16 @@
+AnimatedSprite player 0 0 0 0 1 1 0 150 150 255 1
+./resources/character/ Run 20 1 true
+AnimatedSprite dead1 -200 -100 0 0 1 1 0 150 150 255 1
+./resources/character/ Dead 30 1 true
+AnimatedSprite dead1 200 -100 0 0 1 1 0 150 150 255 1
+./resources/character/ Dead 30 1 true
+AnimatedSprite dead1 -200 -200 0 0 1 1 0 150 150 255 1
+./resources/character/ Dead 30 1 true
+AnimatedSprite dead1 200 -200 0 0 1 1 0 150 150 255 1
+./resources/character/ Dead 30 1 true
+AnimatedSprite dead1 -200 -300 0 0 1 1 0 150 150 255 1
+./resources/character/ Dead 30 1 true
+AnimatedSprite dead1 200 -300 0 0 1 1 0 150 150 255 1
+./resources/character/ Dead 30 1 true
+AnimatedSprite dead1 -100 -300 0 0 1 1 0 150 150 255 1
+./resources/character/ Dead 30 1 true

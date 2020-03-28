@@ -1,91 +1,145 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <SDL2/SDL_mixer.h>
 #include <iostream>
-#include "Sprite.h"
-#include "ControllerState.h"
+#include "../engine/Sprite.h"
+#include "../engine/ControllerState.h"
 #include "MyGame.h"
-#include "Scene.h"
-#include "Camera.h"
-#include "Sound.h"
+#include "../engine/Scene.h"
+#include "../engine/Camera.h"
+#include "../engine/Sound.h"
+#include "../engine/CollisionSystem.h"
 
 using namespace std;
-bool idle = false;
-bool paused = false;
 
-MyGame::MyGame() : Game(1200, 600) {
+MyGame::MyGame() : Game(1920, 1000) {
+
+	// MAKE SURE COLLISION SYSTEM DECLARED BEFORE ADDING ANYTHING TO TREE
+	collisionSystem = new CollisionSystem();
+
+	double camScale = 0.6;
+
 	instance = this;
 
-	character = new AnimatedSprite("test", "./resources/spritesheets/sayu.png", "./resources/spritesheets/sayu.xml");
-	character->position = {400, 400};
-	character->width = 200;
-	character->height = 200;
-	//character2->addAnimationFromSpriteSheet("./resources/spritesheets/test.png", "Run", 20, 2, true);
-	character->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Idle", 10, 2, true);
-	character->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Dead", 10, 2, true);
-	character->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Jump", 10, 2, true);
-	character->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Walk", 10, 2, true);
-	character->addAnimationFromSpriteSheet("./resources/spritesheets/sayu.png", "Run", 10, 2, true);
-	character->facingRight = true;
+	sound = new Sound();
+	sc = new Scene();
+	cammy = sc->camera;
+	cammy->scaleX = camScale;
+	cammy->scaleY = camScale;
+	cammy->x = -50;
+	cammy->y = -50;
+	sc->loadScene("./resources/scenes/area1_room1.txt");
+	instance->addChild(sc);
+	this->pivot.x = this->windowWidth/2;
+	this->pivot.y = this->windowHeight/2;
+	player = (Player*)sc->getChild("player");
+	sound->playMusic("./resources/sounds/boss.ogg");
 
-	Game::addChild(character);
-	character->play("Idle");
+	//Commented out code for Tween demo -- causing seg fault
+	//player->alpha = 0;
+	//fadeIn = new Tween(*player);
+	//fadeIn->animate(TweenableParams::ALPHA, player->alpha, 255, 180);
+	//juggler->add(fadeIn);
+	
+
+
+
+
+	// Sprite *background = new Sprite("background", "./resources/tilesets/rooms/a1rm1.png");
+	// background->position = { 0,0 };
+	// background->width = 902;
+	// background->height = 385;
+	// background->scaleX = 1;
+	// background->scaleY = 1;
+	// Game::addChild(background);
+
+	// floor = new Sprite("floor", "./resources/floor.png");
+	// floor->position.y = 500;
+	// floor->prevPos = floor->position;
+	// floor->width = 1200;
+	// floor->height = 200;
+	// Game::addChild(floor);
+
+	// player = new Player("player");
+	// player->position.y = 0;
+	// player->position.x = 0;
+	// player->prevPos = player->position;
+	// player->showHitbox = true;
+	// Game::addChild(player);
+
+	collisionSystem->watchForCollisions("0", "player");
+
 }
 
 MyGame::~MyGame(){
-
+	delete collisionSystem;
 }
 
-void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){
-	for (int i=0; i < controllerStates.size(); i++) {
-		ControllerState *controllerState = controllerStates.at(i);
-		if (i == 0) {
-			if (controllerState->joyLeftX == JoystickState::POSITIVE) {
-				character->position.x += 6;
-			}
-			else if (controllerState->joyLeftX == JoystickState::NEGATIVE) {
-				character->position.x -= 6;
-			}
-			if (controllerState->joyLeftY == JoystickState::POSITIVE) {
-				character->position.y += 6;
-			}
-			else if (controllerState->joyLeftY == JoystickState::NEGATIVE) {
-				character->position.y -= 6;
-			}
 
-			for (uint8_t button: controllerState->pressedButtons) {
-				switch(button) {
-					case SDL_CONTROLLER_BUTTON_A:
-						character->play("Dead");
-						break;
-					case SDL_CONTROLLER_BUTTON_B:
-						character->play("Jump");
-						break;
-					case SDL_CONTROLLER_BUTTON_X:
-						character->play("Run");
-						break;
-					case SDL_CONTROLLER_BUTTON_Y:
-						character->play("Walk");
-						break;
-					case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
-						character->play("Idle");
-						break;
-					case SDL_CONTROLLER_BUTTON_START:
-						if (paused == false){
-							character->stop();
-							paused = true;
-						}
-						else{
-							character->replay();
-							paused=false;
-						}
-				}
-			}
-		}
+void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){
+
+	//juggler->nextFrame();
+
+	double charSpeed = 25;
+	double camSpeed = 25;
+
+	double camDeadzoneX = 100;
+	double camDeadzoneY = 100;
+	// if (pressedKeys.find(SDL_SCANCODE_K) != pressedKeys.end()) {
+	// 	player->alpha +=5;
+	// }
+	// 
+	// if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
+	// 	player->position.x += charSpeed;
+	// 	cammy->x -= camSpeed;
+	// }
+	// 
+	// if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
+	// 	player->position.x -= charSpeed;
+	// 	cammy->x += camSpeed;	
+	// }
+	// if (pressedKeys.find(SDL_SCANCODE_DOWN) != pressedKeys.end()) {
+	// 	player->position.y += charSpeed;
+	// 	cammy->y -= camSpeed;
+	// }
+	// if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end()) {
+	// 	player->position.y -= charSpeed;
+	// 	cammy->y += camSpeed;
+	// }
+
+	if (player->position.x - cammy->x > camDeadzoneX) {
+		cammy->x = player->position.x - camDeadzoneX;
 	}
+	else if (player->position.x - cammy->x < -camDeadzoneX) {
+		cammy->x = player->position.x + camDeadzoneX;
+	}
+	if (player->position.y - cammy->y > camDeadzoneY) {
+		cammy->y = player->position.y - camDeadzoneY;
+	}
+	else if (player->position.y - cammy->y < -camDeadzoneY) {
+		cammy->y = player->position.y + camDeadzoneY;
+	}
+
+	if (pressedKeys.find(SDL_SCANCODE_Q) != pressedKeys.end()) {
+		cammy->scaleX += .05;
+		cammy->scaleY += .05;
+	}
+	if (pressedKeys.find(SDL_SCANCODE_W) != pressedKeys.end()) {		
+			cammy->scaleX -= .05;
+			cammy->scaleY -= .05;
+	}
+
+	DisplayObjectContainer* end = sc->inScene.back();
+	if (player->position.x ==  end->position.x && player->position.y == end->position.y) {
+		sc->loadScene("./resources/scenes/area1_room2.txt");
+		player = (Player*)sc->getChild("player");
+		cammy->x = player->position.x;
+		cammy->y = player->position.y;
+	}
+
 	Game::update(pressedKeys, controllerStates);
 }
 
 void MyGame::draw(AffineTransform &at){
+	at.translate(this->pivot.x, this->pivot.y);
 	Game::draw(at);
 }

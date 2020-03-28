@@ -35,6 +35,8 @@ void Game::quitSDL(){
 	SDL_DestroyRenderer(Game::renderer);
 	SDL_DestroyWindow(window);
 
+	Game::renderer = NULL;
+
 	IMG_Quit();
 	SDL_Quit();
 }
@@ -144,6 +146,10 @@ void Game::start(){
 	}
 }
 
+void Game::update(set<SDL_Scancode> pressedKeys) {
+	vector<ControllerState*> blankState;
+	Game::update(pressedKeys, blankState);
+}
 void Game::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){
 	frameCounter++;
 	DisplayObjectContainer::update(pressedKeys, controllerStates);

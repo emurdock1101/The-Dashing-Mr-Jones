@@ -1,5 +1,7 @@
 #include "DisplayObjectContainer.h"
 #include "AffineTransform.h"
+#include "./events/EventParams.h"
+#include "Game.h"
 #include <vector>
 #include <iostream>
 #include <string>
@@ -28,6 +30,10 @@ DisplayObjectContainer::~DisplayObjectContainer() {
 void DisplayObjectContainer::addChild(DisplayObjectContainer* child) {
     children.push_back(child);
     child->parent = this; // make sure to include reverse reference also
+	Event *displayObjectAdded = new Event(EventParams::DISPLAY_OBJECT_ADDED, child);
+	// Dispatch on the global Game instance so that can add listener to only
+	// Game's instance to see DO events
+	Game::instance->dispatchEvent(displayObjectAdded);
 }
 
 void DisplayObjectContainer::removeImmediateChild(DisplayObjectContainer* child) {
