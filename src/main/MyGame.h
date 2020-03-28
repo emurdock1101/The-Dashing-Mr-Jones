@@ -35,8 +35,7 @@ private:
 	Camera* cammy;
 	Tween* fadeIn;
 	TweenJuggler* juggler = TweenJuggler::getInstance();
-	DisplayObjectContainer* player;
-	// Player* player;
+	Player* player;
 	Sprite* floor;
 	CollisionSystem *collisionSystem;
 };

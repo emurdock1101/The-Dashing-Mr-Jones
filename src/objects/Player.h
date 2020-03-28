@@ -25,9 +25,9 @@ public:
 	double jumpPower = 32;
 	double maxFallSpeed = 16;
 	double gravity = 6;
-	double unitScale = 8;
+	double unitScale = 16;
 
-	double PROTOTYPE_FLOOR_LEVEL = 300;
+	double PROTOTYPE_FLOOR_LEVEL = 800;
 
 	double lastUpdate;
 

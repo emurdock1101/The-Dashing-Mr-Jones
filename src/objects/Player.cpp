@@ -11,8 +11,8 @@ Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprite
 	AnimatedSprite::play("idle_right");
 
 	// DisplayObject::loadTexture("./resources/player/basic_player.png");
-	width = 32;
-	height = 32;
+	width = unitScale* 12;
+	height = unitScale* 12;
 	scaleX = 1;
 	scaleY = 1;
 	hitboxLeftOffset = 12;
@@ -20,6 +20,7 @@ Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprite
 	hitboxDownOffset = 0;
 	hitboxUpOffset = 12;
 	pivot = { 16,16 };
+	showHitbox = true;
 
 	lastUpdate = SDL_GetTicks();
 }

@@ -16,7 +16,7 @@ MyGame::MyGame() : Game(1920, 1000) {
 	// MAKE SURE COLLISION SYSTEM DECLARED BEFORE ADDING ANYTHING TO TREE
 	collisionSystem = new CollisionSystem();
 
-	double camScale = 0.2;
+	double camScale = 0.6;
 
 	instance = this;
 
@@ -31,7 +31,7 @@ MyGame::MyGame() : Game(1920, 1000) {
 	instance->addChild(sc);
 	this->pivot.x = this->windowWidth/2;
 	this->pivot.y = this->windowHeight/2;
-	player = (DisplayObjectContainer *)sc->getChild("player");
+	player = (Player*)sc->getChild("player");
 	sound->playMusic("./resources/sounds/boss.ogg");
 
 	//Commented out code for Tween demo -- causing seg fault
@@ -82,26 +82,41 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 	double charSpeed = 25;
 	double camSpeed = 25;
 
-	if (pressedKeys.find(SDL_SCANCODE_K) != pressedKeys.end()) {
-		player->alpha +=5;
-	}
+	double camDeadzoneX = 100;
+	double camDeadzoneY = 100;
+	// if (pressedKeys.find(SDL_SCANCODE_K) != pressedKeys.end()) {
+	// 	player->alpha +=5;
+	// }
+	// 
+	// if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
+	// 	player->position.x += charSpeed;
+	// 	cammy->x -= camSpeed;
+	// }
+	// 
+	// if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
+	// 	player->position.x -= charSpeed;
+	// 	cammy->x += camSpeed;	
+	// }
+	// if (pressedKeys.find(SDL_SCANCODE_DOWN) != pressedKeys.end()) {
+	// 	player->position.y += charSpeed;
+	// 	cammy->y -= camSpeed;
+	// }
+	// if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end()) {
+	// 	player->position.y -= charSpeed;
+	// 	cammy->y += camSpeed;
+	// }
 
-	if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
-		player->position.x += charSpeed;
-		cammy->x -= camSpeed;
+	if (player->position.x - cammy->x > camDeadzoneX) {
+		cammy->x = player->position.x - camDeadzoneX;
 	}
-
-	if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
-		player->position.x -= charSpeed;
-		cammy->x += camSpeed;	
+	else if (player->position.x - cammy->x < -camDeadzoneX) {
+		cammy->x = player->position.x + camDeadzoneX;
 	}
-	if (pressedKeys.find(SDL_SCANCODE_DOWN) != pressedKeys.end()) {
-		player->position.y += charSpeed;
-		cammy->y -= camSpeed;
+	if (player->position.y - cammy->y > camDeadzoneY) {
+		cammy->y = player->position.y - camDeadzoneY;
 	}
-	if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end()) {
-		player->position.y -= charSpeed;
-		cammy->y += camSpeed;
+	else if (player->position.y - cammy->y < -camDeadzoneY) {
+		cammy->y = player->position.y + camDeadzoneY;
 	}
 
 	if (pressedKeys.find(SDL_SCANCODE_Q) != pressedKeys.end()) {
