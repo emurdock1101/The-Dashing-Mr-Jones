@@ -131,7 +131,7 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 	DisplayObjectContainer* end = sc->inScene.back();
 	if (player->position.x ==  end->position.x && player->position.y == end->position.y) {
 		sc->loadScene("./resources/scenes/area1_room2.txt");
-		player = (DisplayObjectContainer *)sc->getChild("player");
+		player = (Player*)sc->getChild("player");
 		cammy->x = player->position.x;
 		cammy->y = player->position.y;
 	}

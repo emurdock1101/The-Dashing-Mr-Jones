@@ -20,11 +20,11 @@ public:
 	bool canJump = true;
 	bool canDash = true;
 	double lastGrounded;
-	double runSpeed = 16;
-	double runAccel = 256;
-	double jumpPower = 32;
-	double maxFallSpeed = 16;
-	double gravity = 6;
+	double runSpeed = 30;
+	double runAccel = 300;
+	double jumpPower = 71.5;
+	double maxFallSpeed = 60;
+	double gravity = 240;
 	double unitScale = 16;
 
 	double PROTOTYPE_FLOOR_LEVEL = 800;

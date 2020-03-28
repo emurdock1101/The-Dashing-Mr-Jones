@@ -44,7 +44,7 @@ void Player::physicsUpdate() {
 	DisplayObject::position.x += velX * delta * unitScale;
 	DisplayObject::position.y += velY * delta * unitScale;
 	double newVelY = velY + (gravity * delta);
-	if (newVelY < maxFallSpeed) {
+	if (newVelY > maxFallSpeed) {
 		velY = maxFallSpeed;
 	}
 	else {
