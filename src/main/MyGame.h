@@ -33,10 +33,10 @@ private:
 	Scene* sc;
 	Sound* sound;
 	Camera* cammy;
-	DisplayObjectContainer* player;
 	Tween* fadeIn;
 	TweenJuggler* juggler = TweenJuggler::getInstance();
-	Player* player;
+	DisplayObjectContainer* player;
+	// Player* player;
 	Sprite* floor;
 	CollisionSystem *collisionSystem;
 };

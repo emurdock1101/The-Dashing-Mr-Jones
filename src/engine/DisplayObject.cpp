@@ -238,8 +238,10 @@ double DisplayObject::calculateRotation(SDL_Point &origin, SDL_Point &p) {
 	return (atan2(y, x) * 180 / PI);
 }
 void DisplayObject::setDim(int a, int b){
-	this->image->w = a;
-	this->image->h = b;
+	if (this->image != NULL) {
+		this->image->w = a;
+		this->image->h = b;
+	}
 	this->width = a;
 	this->height = b;
 }

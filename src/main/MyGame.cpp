@@ -13,6 +13,9 @@ using namespace std;
 
 MyGame::MyGame() : Game(1920, 1000) {
 
+	// MAKE SURE COLLISION SYSTEM DECLARED BEFORE ADDING ANYTHING TO TREE
+	collisionSystem = new CollisionSystem();
+
 	double camScale = 0.2;
 
 	instance = this;
@@ -38,33 +41,32 @@ MyGame::MyGame() : Game(1920, 1000) {
 	//juggler->add(fadeIn);
 	
 
-	// MAKE SURE COLLISION SYSTEM DECLARED BEFORE ADDING ANYTHING TO TREE
-	collisionSystem = new CollisionSystem();
 
 
-	Sprite *background = new Sprite("background", "./resources/tilesets/rooms/a1rm1.png");
-	background->position = { 0,0 };
-	background->width = 902;
-	background->height = 385;
-	background->scaleX = 1;
-	background->scaleY = 1;
-	Game::addChild(background);
 
-	floor = new Sprite("floor", "./resources/floor.png");
-	floor->position.y = 500;
-	floor->prevPos = floor->position;
-	floor->width = 1200;
-	floor->height = 200;
-	Game::addChild(floor);
+	// Sprite *background = new Sprite("background", "./resources/tilesets/rooms/a1rm1.png");
+	// background->position = { 0,0 };
+	// background->width = 902;
+	// background->height = 385;
+	// background->scaleX = 1;
+	// background->scaleY = 1;
+	// Game::addChild(background);
 
-	player = new Player("player");
-	player->position.y = 0;
-	player->position.x = 0;
-	player->prevPos = player->position;
-	player->showHitbox = true;
-	Game::addChild(player);
+	// floor = new Sprite("floor", "./resources/floor.png");
+	// floor->position.y = 500;
+	// floor->prevPos = floor->position;
+	// floor->width = 1200;
+	// floor->height = 200;
+	// Game::addChild(floor);
 
-	collisionSystem->watchForCollisions("floor", "player");
+	// player = new Player("player");
+	// player->position.y = 0;
+	// player->position.x = 0;
+	// player->prevPos = player->position;
+	// player->showHitbox = true;
+	// Game::addChild(player);
+
+	// collisionSystem->watchForCollisions("floor", "player");
 
 }
 
