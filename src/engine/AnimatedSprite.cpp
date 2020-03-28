@@ -53,7 +53,7 @@ AnimatedSprite::~AnimatedSprite() {
     for (Animation* an : animations) {
         for (int i = 0; i < an->numFrames; i++) {// this needs to be an iterator loop
             if(an->frames[i]->image != NULL) SDL_FreeSurface(an->frames[i]->image);
-	        if(an->frames[i]->texture != NULL) SDL_DestroyTexture(an->frames[i]->texture);
+	        if(an->frames[i]->texture != NULL && Game::renderer != NULL) SDL_DestroyTexture(an->frames[i]->texture);
             delete an->frames[i];
         }
         delete an->frames;

@@ -35,6 +35,8 @@ void Game::quitSDL(){
 	SDL_DestroyRenderer(Game::renderer);
 	SDL_DestroyWindow(window);
 
+	Game::renderer = NULL;
+
 	IMG_Quit();
 	SDL_Quit();
 }

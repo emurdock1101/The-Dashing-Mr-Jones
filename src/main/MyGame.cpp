@@ -66,7 +66,7 @@ MyGame::MyGame() : Game(1920, 1000) {
 	// player->showHitbox = true;
 	// Game::addChild(player);
 
-	// collisionSystem->watchForCollisions("floor", "player");
+	collisionSystem->watchForCollisions("0", "player");
 
 }
 
