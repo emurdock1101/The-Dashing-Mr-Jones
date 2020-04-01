@@ -106,77 +106,123 @@ bool CollisionSystem::collidesWith(DisplayObject* obj1, DisplayObject* obj2) {
 	SDL_Point bottomLeft1 = obj1->getBottomLeftHitbox();
 	SDL_Point bottomRight1 = obj1->getBottomRightHitbox();
 
+	vector<SDL_Point> obj1Points = { topLeft1, topRight1, bottomLeft1, bottomRight1 };
+	int xL1 = INT_MAX;
+	int xH1 = INT_MIN;
+	int yL1 = INT_MAX;
+	int yH1 = INT_MIN;
+	for (SDL_Point point : obj1Points) {
+		if (point.x < xL1) {
+			xL1 = point.x;
+		}
+		if (point.x > xH1) {
+			xH1 = point.x;
+		}
+		if (point.y < yL1) {
+			yL1 = point.y;
+		}
+		if (point.y > yH1) {
+			yH1 = point.y;
+		}
+	}
+
 	// Get points for obj2
 	SDL_Point topLeft2 = obj2->getTopLeftHitbox();
 	SDL_Point topRight2 = obj2->getTopRightHitbox();
 	SDL_Point bottomLeft2 = obj2->getBottomLeftHitbox();
 	SDL_Point bottomRight2 = obj2->getBottomRightHitbox();
 
-	// Test each possible line segment, not looping so here's to big blocks
-	// 16 checks incoming!!
+	vector<SDL_Point> obj2Points = { topLeft2, topRight2, bottomLeft2, bottomRight2 };
+	int xL2 = INT_MAX;
+	int xH2 = INT_MIN;
+	int yL2 = INT_MAX;
+	int yH2 = INT_MIN;
+	for (SDL_Point point : obj2Points) {
+		if (point.x < xL2) {
+			xL2 = point.x;
+		}
+		if (point.x > xH2) {
+			xH2 = point.x;
+		}
+		if (point.y < yL2) {
+			yL2 = point.y;
+		}
+		if (point.y > yH2) {
+			yH2 = point.y;
+		}
+	}
+	
+	// First, we see if box hull indicates a possible collision...
+	if (((xL2 < xH1 && xH2 > xL1) || (xH2 > xL1 && xL2 < xH1)) &&
+		((yL2 < yH1 && yH2 > yL1) || (yH2 > yL1 && yL2 < yH1))) {
 
-	// top left -> top right against obj2
-	if (lineSegmentsIntersect(topLeft1, topRight1, topLeft2, topRight2)) {
-		return true;
-	}
-	if (lineSegmentsIntersect(topLeft1, topRight1, topRight2, bottomRight2)) {
-		return true;
-	}
-	if (lineSegmentsIntersect(topLeft1, topRight1, bottomRight2, bottomLeft2)) {
-		return true;
-	}
-	if (lineSegmentsIntersect(topLeft1, topRight1, bottomLeft2, topLeft2)) {
-		return true;
-	}
 
-	// top right -> bottom right against obj2
-	if (lineSegmentsIntersect(topRight1, bottomRight1, topLeft2, topRight2)) {
-		return true;
-	}
-	if (lineSegmentsIntersect(topRight1, bottomRight1, topRight2, bottomRight2)) {
-		return true;
-	}
-	if (lineSegmentsIntersect(topRight1, bottomRight1, bottomRight2, bottomLeft2)) {
-		return true;
-	}
-	if (lineSegmentsIntersect(topRight1, bottomRight1, bottomLeft2, topLeft2)) {
-		return true;
-	}
+		// Test each possible line segment, not looping so here's to big blocks
+		// 16 checks incoming!!
 
-	// bottom right -> bottom left against obj2
-	if (lineSegmentsIntersect(bottomRight1, bottomLeft1, topLeft2, topRight2)) {
-		return true;
-	}
-	if (lineSegmentsIntersect(bottomRight1, bottomLeft1, topRight2, bottomRight2)) {
-		return true;
-	}
-	if (lineSegmentsIntersect(bottomRight1, bottomLeft1, bottomRight2, bottomLeft2)) {
-		return true;
-	}
-	if (lineSegmentsIntersect(bottomRight1, bottomLeft1, bottomLeft2, topLeft2)) {
-		return true;
-	}
+		// top left -> top right against obj2
+		if (lineSegmentsIntersect(topLeft1, topRight1, topLeft2, topRight2)) {
+			return true;
+		}
+		if (lineSegmentsIntersect(topLeft1, topRight1, topRight2, bottomRight2)) {
+			return true;
+		}
+		if (lineSegmentsIntersect(topLeft1, topRight1, bottomRight2, bottomLeft2)) {
+			return true;
+		}
+		if (lineSegmentsIntersect(topLeft1, topRight1, bottomLeft2, topLeft2)) {
+			return true;
+		}
 
-	// bottom left -> top left against obj2
-	if (lineSegmentsIntersect(bottomLeft1, topLeft1, topLeft2, topRight2)) {
-		return true;
-	}
-	if (lineSegmentsIntersect(bottomLeft1, topLeft1, topRight2, bottomRight2)) {
-		return true;
-	}
-	if (lineSegmentsIntersect(bottomLeft1, topLeft1, bottomRight2, bottomLeft2)) {
-		return true;
-	}
-	if (lineSegmentsIntersect(bottomLeft1, topLeft1, bottomLeft2, topLeft2)) {
-		return true;
-	}
+		// top right -> bottom right against obj2
+		if (lineSegmentsIntersect(topRight1, bottomRight1, topLeft2, topRight2)) {
+			return true;
+		}
+		if (lineSegmentsIntersect(topRight1, bottomRight1, topRight2, bottomRight2)) {
+			return true;
+		}
+		if (lineSegmentsIntersect(topRight1, bottomRight1, bottomRight2, bottomLeft2)) {
+			return true;
+		}
+		if (lineSegmentsIntersect(topRight1, bottomRight1, bottomLeft2, topLeft2)) {
+			return true;
+		}
 
-	// Edge case, object completely inside another
-	if (obj1->isCollidingHitbox(NULL, topLeft2.x, topLeft2.y)) {
-		return true;
-	}
-	if (obj2->isCollidingHitbox(NULL, topLeft1.x, topLeft1.y)) {
-		return true;
+		// bottom right -> bottom left against obj2
+		if (lineSegmentsIntersect(bottomRight1, bottomLeft1, topLeft2, topRight2)) {
+			return true;
+		}
+		if (lineSegmentsIntersect(bottomRight1, bottomLeft1, topRight2, bottomRight2)) {
+			return true;
+		}
+		if (lineSegmentsIntersect(bottomRight1, bottomLeft1, bottomRight2, bottomLeft2)) {
+			return true;
+		}
+		if (lineSegmentsIntersect(bottomRight1, bottomLeft1, bottomLeft2, topLeft2)) {
+			return true;
+		}
+
+		// bottom left -> top left against obj2
+		if (lineSegmentsIntersect(bottomLeft1, topLeft1, topLeft2, topRight2)) {
+			return true;
+		}
+		if (lineSegmentsIntersect(bottomLeft1, topLeft1, topRight2, bottomRight2)) {
+			return true;
+		}
+		if (lineSegmentsIntersect(bottomLeft1, topLeft1, bottomRight2, bottomLeft2)) {
+			return true;
+		}
+		if (lineSegmentsIntersect(bottomLeft1, topLeft1, bottomLeft2, topLeft2)) {
+			return true;
+		}
+
+		// Edge case, object completely inside another
+		if (obj1->isCollidingHitbox(NULL, topLeft2.x, topLeft2.y)) {
+			return true;
+		}
+		if (obj2->isCollidingHitbox(NULL, topLeft1.x, topLeft1.y)) {
+			return true;
+		}
 	}
 
 	// Else we gucci, no collision

@@ -136,6 +136,7 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 		cammy->y = player->position.y;
 	}
 
+	collisionSystem->update();
 	Game::update(pressedKeys, controllerStates);
 }
 
