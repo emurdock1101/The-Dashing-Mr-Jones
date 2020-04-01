@@ -1,4 +1,4 @@
-AnimatedSprite player 0 0 0 0 4 4 0 50 50 255 1
+AnimatedSprite player 50 200 0 0 4 4 0 50 50 255 1
 ./resources/character/ Run 20 1 true
 DisplayObjectContainer 0 ./resources/bosses/boulder/aaa.png 150 400 0 0 1 1 0 100 100 255
 DisplayObjectContainer 0 ./resources/bosses/boulder/aaa.png 250 300 0 0 1 1 0 100 100 255

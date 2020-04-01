@@ -38,6 +38,8 @@ void Scene::loadScene(string sceneFilePath){
 		if (args[0].compare("player") == 0) {
 			Player* temp = new Player(args[0]);
 			temp->type = "player";
+			temp->setPos(stoi(args[2]), stoi(args[3]));
+			temp->prevPos = { stoi(args[2]), stoi(args[3]) };
 			if (args.size() > 12) {
 				for (DisplayObjectContainer* x : inScene) {
 					if (x->id.compare(args[12]) == 0)

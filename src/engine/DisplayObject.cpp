@@ -14,6 +14,8 @@ DisplayObject::DisplayObject(){
 	image = NULL;
 	texture = NULL;
 	curTexture = NULL;
+
+	cachedTransform = new AffineTransform();
 }
 
 DisplayObject::DisplayObject(string id, string filepath){
@@ -21,6 +23,8 @@ DisplayObject::DisplayObject(string id, string filepath){
 	this->imgPath = filepath;
 
 	loadTexture(filepath);
+
+	cachedTransform = new AffineTransform();
 }
 
 DisplayObject::DisplayObject(string id, int red, int green, int blue){
@@ -32,12 +36,16 @@ DisplayObject::DisplayObject(string id, int red, int green, int blue){
 	this->green = green;
 
 	this->loadRGBTexture(red, green, blue);
+
+	cachedTransform = new AffineTransform();
 }
 
 DisplayObject::~DisplayObject(){
 	//TODO: Get this freeing working
 	if(image != NULL) SDL_FreeSurface(image);
 	if(texture != NULL && Game::renderer != NULL) SDL_DestroyTexture(texture);
+
+	delete cachedTransform;
 }
 
 void DisplayObject::loadTexture(string filepath){
@@ -288,7 +296,7 @@ SDL_Point DisplayObject::getBottomRightHitbox() {
 
 int DisplayObject::getAbsoluteWidth() {
 	AffineTransform at;
-	applyParentTransformationsThenSelf(at);
+	at.concatenate(*getGlobalTransform());
 	SDL_Point origin = at.transformPoint(0, 0);
 	SDL_Point upperRight = at.transformPoint(width, 0);
 	return (int)distance(origin, upperRight);
@@ -296,7 +304,7 @@ int DisplayObject::getAbsoluteWidth() {
 
 int DisplayObject::getAbsoluteHeight() {
 	AffineTransform at;
-	applyParentTransformationsThenSelf(at);
+	at.concatenate(*getGlobalTransform());
 	SDL_Point origin = at.transformPoint(0, 0);
 	SDL_Point bottomRight = at.transformPoint(0, height);
 	return (int)distance(origin, bottomRight);
@@ -304,7 +312,7 @@ int DisplayObject::getAbsoluteHeight() {
 
 SDL_Point DisplayObject::translatePoint(int x, int y) {
 	AffineTransform at;
-	applyParentTransformationsThenSelf(at);
+	at.concatenate(*getGlobalTransform());
 	// Only apply this one's pivot
 	at.translate(-pivot.x, -pivot.y);
 	return at.transformPoint(x, y);
@@ -318,6 +326,39 @@ void DisplayObject::applyParentTransformationsThenSelf(AffineTransform &at) {
 	// Unapply pivot
 	at.translate(pivot.x, pivot.y);
 
+}
+
+bool DisplayObject::isCacheValid() {
+	if (cacheFrame != Game::frameCounter) {
+		return false;
+	}
+	if (cachePosition.x != position.x || cachePosition.y != position.y) {
+		return false;
+	}
+	if (cacheRotation != rotation) {
+		return false;
+	}
+	if (cacheScaleX != scaleX || cacheScaleY != scaleY) {
+		return false;
+	}
+	return true;
+}
+
+/* 
+	Returns the cached global space transform. Don't transform it. 
+*/
+const AffineTransform *DisplayObject::getGlobalTransform() {
+	if (!isCacheValid()) {
+		delete cachedTransform;
+		cachedTransform = new AffineTransform();
+		cacheFrame = Game::frameCounter;
+		cachePosition = position;
+		cacheRotation = rotation;
+		cacheScaleX = scaleX;
+		cacheScaleY = scaleY;
+		applyParentTransformationsThenSelf(*cachedTransform);
+	}
+	return cachedTransform;
 }
 
 void DisplayObject::writeSceneData(ostream &stream) {
