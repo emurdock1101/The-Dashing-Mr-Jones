@@ -11,7 +11,7 @@ using namespace std;
 
 MyGame::MyGame() : Game(1200, 600) {
 
-	double camScale = 0.2;
+	double camScale = 1;
 
 	instance = this;
 
@@ -22,7 +22,7 @@ MyGame::MyGame() : Game(1200, 600) {
 	cammy->scaleY = camScale;
 	cammy->x = -50;
 	cammy->y = -50;
-	sc->loadScene("./resources/scenes/area1_room1.txt");
+	sc->loadScene("./resources/scenes/DemoTween.txt");
 	instance->addChild(sc);
 	this->pivot.x = this->windowWidth/2;
 	this->pivot.y = this->windowHeight/2;
@@ -30,10 +30,10 @@ MyGame::MyGame() : Game(1200, 600) {
 	sound->playMusic("./resources/sounds/boss.ogg");
 
 	//Commented out code for Tween demo -- causing seg fault
-	//player->alpha = 0;
-	//fadeIn = new Tween(*player);
-	//fadeIn->animate(TweenableParams::ALPHA, player->alpha, 255, 180);
-	//juggler->add(fadeIn);
+	player->alpha = 0;
+	fadeIn = new Tween(player);
+	fadeIn->animate(TweenableParams::ALPHA, player->alpha, 255, 180);
+	juggler->add(fadeIn);
 }
 
 MyGame::~MyGame(){
@@ -42,10 +42,10 @@ MyGame::~MyGame(){
 
 void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){
 
-	//juggler->nextFrame();
+	juggler->nextFrame();
 
-	double charSpeed = 25;
-	double camSpeed = 25;
+	double charSpeed = 5;
+	double camSpeed = 5;
 
 	if (pressedKeys.find(SDL_SCANCODE_K) != pressedKeys.end()) {
 		player->alpha +=5;
@@ -78,13 +78,13 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 			cammy->scaleY -= .05;
 	}
 
-	DisplayObjectContainer* end = sc->inScene.back();
-	if (player->position.x ==  end->position.x && player->position.y == end->position.y) {
-		sc->loadScene("./resources/scenes/area1_room2.txt");
-		player = (DisplayObjectContainer *)sc->getChild("player");
-		cammy->x = player->position.x;
-		cammy->y = player->position.y;
-	}
+	// DisplayObjectContainer* end = sc->inScene.back();
+	// if (player->position.x ==  end->position.x && player->position.y == end->position.y) {
+	// 	sc->loadScene("./resources/scenes/area1_room2.txt");
+	// 	player = (DisplayObjectContainer *)sc->getChild("player");
+	// 	cammy->x = player->position.x;
+	// 	cammy->y = player->position.y;
+	// }
 
 	Game::update(pressedKeys, controllerStates);
 }

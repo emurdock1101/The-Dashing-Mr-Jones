@@ -24,12 +24,10 @@ void TweenJuggler::add(Tween* tween) {
 void TweenJuggler::nextFrame() {
     for (int i = 0; i < tweenList.size(); i++) {
         if (tweenList[i]->isComplete()) {
-            cout << "hey\n";
-            //tweenList.erase(tweenList.begin() + i);
+            tweenList.erase(tweenList.begin() + i);
         }
         else {
-            cout << "second\n";
-            //tweenList[i]->update();
+            tweenList[i]->update();
         }
     }
 }
