@@ -21,7 +21,7 @@ public:
 	double gravity = 240;
 	double unitScale = 16;
 
-    SDL_Point anchor;
+    SDL_Point originalPos = this->position;
     void patrol();
     void stunned();
     void onCollision(DisplayObject* other);

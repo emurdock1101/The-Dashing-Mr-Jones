@@ -17,18 +17,9 @@ void Enemy::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> cont
 	//Sprite::update(pressedKeys, vector<ControllerState *> controllerStates);
 
 	
-	//enemy is dead so clean it up
 	if(this->hp == 0){
-		this->state = 0; //scene will clean it up
+		this->state = 0;
 	}
-    /* //Don't currently clean our enemies since they're just stunned
-	//do the actual cleaning if necessary
-	if(this->clean){
-		this->removeThis();
-		delete this;
-	}*/
-
-	//everything else controlled by state machine
 	//state 0 = one time state to kick things off
     //state 1 = stunned
 	//state 2 = patrolling
@@ -52,33 +43,34 @@ void Enemy::onCollision(DisplayObject* other){
 }
 
 void Enemy::draw(AffineTransform &at){
-	Sprite::draw(at);
+	AnimatedSprite::draw(at);
 	//this->drawHitbox();
 }
 
 
-void Enemy::patrol(){
-	//if close to target, set a new one
-	/*
-	if(isTargetReached() && pauseCount == 119){
-		this->targX = std::rand()%(this->maxPatX-this->minPatX) + this->minPatX;
-		this->targY = std::rand()%(this->maxPatY-this->minPatY) + this->minPatY;
-		this->vel = 0;
-		this->maxVel = 4;
-		this->pauseCount = 0;
-	}
-
-	if(pauseCount < 119){
-		pauseCount = (pauseCount+1) % 120;
+void Enemy::patrol(){	
+	//check for if been hit by player then
+	if (false){
+		this->state = 2;
 	}
 	else{
-		moveToTarget();
-	}*/
+		
+		//if outside of it's patrol range OR at the edge of a platform, then turn around
+		if(abs(this->position.x - this->originalPos.x) > this->patrolRange ){ //NEEED TO ADD the platform collison detection
+			this->velX = - this->velX;
+			this->facingRight = !this->facingRight;
+		}
+		//regardless, move according to its velocity
+		double delta = (SDL_GetTicks() - lastUpdate) / 1000;
+		DisplayObject::position.x += velX * delta * unitScale;
+	}
+
 }
 
 void Enemy::stunned(){
     this->stunnedCount++;
-    this->velX = 0;
+    double delta = (SDL_GetTicks() - lastUpdate) / 1000;
+	this->position.x += 0 * delta * unitScale; //0 instead of velX so don't have to worry about saving this value somewhere
     if (this->stunnedCount > 60){
         this->state = 1;
         this->stunnedCount = 0;
