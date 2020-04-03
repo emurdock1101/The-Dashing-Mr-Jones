@@ -2,7 +2,7 @@
 #define MUMMY_H
 
 #include "Enemy.h"
-#include "AnimatedSprite.h"
+#include "../engine/AnimatedSprite.h"
 
 using namespace std;
 

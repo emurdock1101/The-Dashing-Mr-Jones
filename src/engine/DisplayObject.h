@@ -54,7 +54,7 @@ public:
 	double rotation = 0.0; // in radians
 	int alpha = 255;
 	bool facingRight = true;
-	bool showHitbox = true;
+	bool showHitbox = false;
 
 
 	// Hitbox offsets are the amount to cut off the edge of the image
@@ -101,8 +101,10 @@ public:
 	bool isCacheValid();
 	const AffineTransform *getGlobalTransform();
 	
-private:
+protected:
 	double distance(SDL_Point &p1, SDL_Point &p2);
+private:
+	
 	double calculateRotation(SDL_Point &origin, SDL_Point &p);
 	SDL_Point translatePoint(int x, int y);
 	float area(int x1, int y1, int x2, int y2, int x3, int y3);

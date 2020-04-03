@@ -1,5 +1,5 @@
 #include "Mummy.h"
-#include "AnimatedSprite.h"
+#include "../engine/AnimatedSprite.h"
 #include "../engine/DisplayObjectContainer.h"
 #include <cstdlib>
 

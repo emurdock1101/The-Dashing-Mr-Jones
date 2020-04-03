@@ -30,7 +30,7 @@ void CollisionSystem::update() {
 			auto itr = object1Vec.begin();
 			while (itr != object1Vec.end()) {
 				SDL_Point viewPos = camera->globalToViewportSpace((*itr)->getTopLeftHitbox());
-				if (viewPos.x > 150 || viewPos.x < -150 || viewPos.y > 150 || viewPos.y < -150) {
+				if (viewPos.x > 110 || viewPos.x < -110 || viewPos.y > 110 || viewPos.y < -110) {
 					itr = object1Vec.erase(itr);
 				}
 				else {
@@ -50,7 +50,7 @@ void CollisionSystem::update() {
 			auto itr = object2Vec.begin();
 			while (itr != object2Vec.end()) {
 				SDL_Point viewPos = camera->globalToViewportSpace((*itr)->getTopLeftHitbox());
-				if (viewPos.x > 150 || viewPos.x < -150 || viewPos.y > 150 || viewPos.y < -150) {
+				if (viewPos.x > 110 || viewPos.x < -110 || viewPos.y > 110 || viewPos.y < -110) {
 					itr = object2Vec.erase(itr);
 				}
 				else {

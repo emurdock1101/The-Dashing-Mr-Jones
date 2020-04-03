@@ -1,5 +1,6 @@
 #pragma once
 #include "../engine/AnimatedSprite.h"
+#include "../engine/Game.h"
 class Player :
 	public AnimatedSprite
 {

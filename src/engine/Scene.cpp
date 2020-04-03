@@ -6,6 +6,7 @@
 #include "DisplayObjectContainer.h"
 #include "AffineTransform.h"
 #include "../objects/Player.h"
+#include "../objects/CollisionBlock.h"
 #include <vector>
 #include <string>
 
@@ -40,6 +41,28 @@ void Scene::loadScene(string sceneFilePath){
 			temp->type = "player";
 			temp->setPos(stoi(args[2]), stoi(args[3]));
 			temp->prevPos = { stoi(args[2]), stoi(args[3]) };
+			if (args.size() > 12) {
+				for (DisplayObjectContainer* x : inScene) {
+					if (x->id.compare(args[12]) == 0)
+						x->addChild(temp);
+				}
+			}
+			else {
+				addChild((DisplayObjectContainer*)temp);
+			}
+			inScene.push_back((DisplayObjectContainer*)temp);
+		} else
+		if (args[0].compare("0") == 0) {
+			//id, imgpath, pos.x, pox.y, piv.x, piv.y, scaleX, scaleY, rotation, imgH, imgW, alpha, parents
+			CollisionBlock* temp = new CollisionBlock();
+			temp->type = object;
+			temp->setPos(stoi(args[2]), stoi(args[3]));
+			temp->setPiv(stoi(args[4]), stoi(args[5]));
+			temp->scaleX = stoi(args[6]);
+			temp->scaleY = stoi(args[7]);
+			temp->rotation = stoi(args[8]);
+			temp->setDim(stoi(args[9]), stoi(args[10]));
+			temp->alpha = stoi(args[11]);
 			if (args.size() > 12) {
 				for (DisplayObjectContainer* x : inScene) {
 					if (x->id.compare(args[12]) == 0)

@@ -27,7 +27,8 @@ Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprite
 
 // This method is a helper method - multiple states might want to abide by the same laws of physics
 void Player::physicsUpdate() {
-	double delta = (SDL_GetTicks() - lastUpdate) / 1000;
+	// double delta = (SDL_GetTicks() - lastUpdate) / 1000;
+	double delta = (double)1/Game::instance->frames_per_sec;
 	
 	if (DisplayObject::position.y > PROTOTYPE_FLOOR_LEVEL) {
 		isGrounded = true;
@@ -54,7 +55,8 @@ void Player::physicsUpdate() {
 
 void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates) {
 	DisplayObject::prevPos = position;
-	double delta = (SDL_GetTicks() - lastUpdate) / 1000;
+	// double delta = (SDL_GetTicks() - lastUpdate) / 1000;
+	double delta = (double)1 / Game::instance->frames_per_sec;
 	// Remember to reference the state diagram. 
 	// I've merged the general movement and jumping states.
 	// Keep in mind that this function keeps firing for every frame that the state is active. If you want, you can create new states 
