@@ -12,6 +12,7 @@
 #include "Camera.h"
 #include "Text.h"
 #include "Menu.h"
+#include "HealthBar.h"
 #include "../objects/Player.h"
 #include "./tweens/Tween.h"
 #include "./tweens/TweenJuggler.h"
@@ -36,9 +37,12 @@ private:
 	Camera* cammy;
 	Player* player;
 	Tween* fadeIn;
-	Tween* fadeOut;
-	DisplayObjectContainer* textBox;
-	Text* text;
+	Tween* fadeInMenu;
+	Tween* fadeOutMenu;
+	Tween* fadeOutHeart;
+	Menu* textBox;
+	Text* bubble;
+	HealthBar* health;
 	TweenJuggler* juggler = TweenJuggler::getInstance();
 };
 
