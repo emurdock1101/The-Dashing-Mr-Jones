@@ -29,7 +29,7 @@ MyGame::MyGame() : Game(1200, 600) {
 	player = (DisplayObjectContainer *)sc->getChild("player");
 	sound->playMusic("./resources/sounds/boss.ogg");
 
-	//Commented out code for Tween demo -- causing seg fault
+	//Tween that fades player into existence
 	player->alpha = 0;
 	fadeIn = new Tween(player);
 	fadeIn->animate(TweenableParams::ALPHA, player->alpha, 255, 180);
