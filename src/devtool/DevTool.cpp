@@ -350,8 +350,10 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 				}*/
 			case SDL_SCANCODE_C:
 				// Copy
-				copied = new DisplayObjectContainer;
-				*copied = *selected;
+				if (selected != NULL) {
+					copied = new DisplayObjectContainer;
+					*copied = *selected;
+				}
 				break;
 			case SDL_SCANCODE_V:
 				// Paste

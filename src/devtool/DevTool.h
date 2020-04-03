@@ -35,7 +35,7 @@ private:
 	Scene *scene;
 
 	DisplayObjectContainer *menus;
-	DisplayObjectContainer *selected;
+	DisplayObjectContainer *selected = NULL;
 	DisplayObjectContainer *copied;
 	Sprite *selectionArea;
 	Sprite* blueBar;

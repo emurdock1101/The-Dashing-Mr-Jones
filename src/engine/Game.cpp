@@ -16,11 +16,13 @@ SDL_Renderer* Game::renderer;
 Game* Game::instance;
 unsigned int Game::frameCounter = 0;
 
-Game::Game(int windowWidth, int windowHeight){
+Game::Game(int windowWidth, int windowHeight) : DisplayObjectContainer(){
 	Game::instance = this;
 	
 	this->windowWidth = windowWidth;
 	this->windowHeight = windowHeight;
+
+	DisplayObject::id = "Game";
 
 	initSDL();
 	TTF_Init();
