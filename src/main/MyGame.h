@@ -27,12 +27,19 @@ public:
 	virtual void draw(AffineTransform &at);
 
 private:
-	
 	Scene* sc;
 	Sound* sound;
 	Camera* cammy;
 	DisplayObjectContainer* player;
-	Tween* fadeIn;
+	DisplayObjectContainer* heart1;
+	DisplayObjectContainer* heart2;
+	DisplayObjectContainer* heart3;
+	Tween* heartOut1;
+	Tween* heartOut2;
+	Tween* heartOut3;
+	Tween* heartIn1;
+	Tween* heartIn2;
+	Tween* heartIn3;
 	TweenJuggler* juggler = TweenJuggler::getInstance();
 };
 
