@@ -6,9 +6,11 @@
 using namespace std;
 
 //need to adjust .png and .xml
-Enemy::Enemy(string id) : AnimatedSprite(id, "./resources/player/player_sprites.png", "./resources/player/player_sprites.xml"){
+Enemy::Enemy(string id) : AnimatedSprite(id, spritesheet, xml){
 	this->type = "Enemy";
 	this->id = id;
+	this->spritesheet = "./resources/player/player_sprites.png";
+	this->xml = "./resources/player/player_sprites.xml";
 	//this->width = 42; this->height = 40;
 	this->pivot = {this->width/2, this->height/2};
 }

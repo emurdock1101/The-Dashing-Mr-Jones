@@ -27,6 +27,8 @@ public:
     void onCollision(DisplayObject* other);
     int stunnedCount = 0;
     double patrolRange = 100;
+	string spritesheet;
+	string xml;
 
 	double PROTOTYPE_FLOOR_LEVEL = 800;
 
