@@ -356,7 +356,12 @@ const AffineTransform *DisplayObject::getGlobalTransform() {
 		cacheRotation = rotation;
 		cacheScaleX = scaleX;
 		cacheScaleY = scaleY;
-		applyParentTransformationsThenSelf(*cachedTransform);
+		if (parent != NULL) {
+			cachedTransform->concatenate(*(parent->getGlobalTransform()));
+		}
+		applyTransformations(*cachedTransform);
+		// Unapply pivot
+		cachedTransform->translate(pivot.x, pivot.y);
 	}
 	return cachedTransform;
 }
