@@ -8,10 +8,7 @@
 #include <vector>
 #include <string>
 
-
-
 using namespace std;
-//using namespace rapidjason;
 
 Scene::Scene() : DisplayObjectContainer(){
   this->type = "Scene";

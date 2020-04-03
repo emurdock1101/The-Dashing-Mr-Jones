@@ -1,3 +1,7 @@
-Demo is currently not working. Creating a new Tween and/or new TweenJuggler instance creates a seg fault. 
-I don't have time to work anymore before I have to travel for spring break. We will consult Floryan
-soon. 
+Tween is now WORKING.
+
+Replace the loadScene method in myGame.cpp to look like:
+
+sc->loadScene("./resources/scenes/DemoTween.txt");
+
+The player will fade into existence via a tween. 

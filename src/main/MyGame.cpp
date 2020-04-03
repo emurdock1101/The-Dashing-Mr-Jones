@@ -12,9 +12,7 @@ using namespace std;
 MyGame::MyGame() : Game(1200, 600) {
 
 	double camScale = 1;
-
 	instance = this;
-
 	sound = new Sound();
 	sc = new Scene();
 	cammy = sc->camera;
@@ -22,18 +20,12 @@ MyGame::MyGame() : Game(1200, 600) {
 	cammy->scaleY = camScale;
 	cammy->x = -50;
 	cammy->y = -50;
-	sc->loadScene("./resources/scenes/DemoTween.txt");
+	sc->loadScene("./resources/scenes/UI_DEMO/DemoUI.txt");
 	instance->addChild(sc);
 	this->pivot.x = this->windowWidth/2;
 	this->pivot.y = this->windowHeight/2;
 	player = (DisplayObjectContainer *)sc->getChild("player");
-	sound->playMusic("./resources/sounds/boss.ogg");
-
-	//Tween that fades player into existence
-	player->alpha = 0;
-	fadeIn = new Tween(player);
-	fadeIn->animate(TweenableParams::ALPHA, player->alpha, 255, 180);
-	juggler->add(fadeIn);
+	//sound->playMusic("./resources/sounds/boss.ogg");
 }
 
 MyGame::~MyGame(){
