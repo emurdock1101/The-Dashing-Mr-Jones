@@ -8,6 +8,7 @@
 #include "./events/Event.h"
 #include <map>
 #include <vector>
+#include "./Camera.h"
 
 using namespace std;
 
@@ -40,6 +41,7 @@ public:
 	//xDelta2 and yDelta2 are the amount other moved before causing the collision.
 	void resolveCollision(DisplayObject* d, DisplayObject* other, int xDelta1, int yDelta1, int xDelta2, int yDelta2);
 
+	Camera *camera;
 private:
 	bool lineSegmentsIntersect(SDL_Point a, SDL_Point b, SDL_Point c, SDL_Point d);
 	// 1 means clockwise (1st slope larger)
@@ -55,6 +57,9 @@ private:
 
 	bool triggeredByX = false;
 	bool triggeredByY = false;
+
+	// Camera, if set, will only run collision checks for things within 1.5x range of the camera
+
 };
 
 #endif

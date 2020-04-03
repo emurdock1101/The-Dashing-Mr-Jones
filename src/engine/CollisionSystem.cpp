@@ -24,17 +24,42 @@ void CollisionSystem::update() {
 			// Continue if one of the ids has no known objects
 			continue;
 		}
-		vector<DisplayObject *> *object1Vec = object1It->second;
+		vector<DisplayObject *> object1Vec(*(object1It->second));
+		// If we have a camera object, we filter what we process by what's on screen
+		if (camera != NULL) {
+			auto itr = object1Vec.begin();
+			while (itr != object1Vec.end()) {
+				SDL_Point viewPos = camera->globalToViewportSpace((*itr)->getTopLeftHitbox());
+				if (viewPos.x > 150 || viewPos.x < -150 || viewPos.y > 150 || viewPos.y < -150) {
+					itr = object1Vec.erase(itr);
+				}
+				else {
+					++itr;
+				}
+			}
+		}
+
 		// Same for second
 		auto object2It = knownIds.find(it->second);
 		if (object2It == knownIds.end()) {
 			// Continue if one of the ids has no known objects
 			continue;
 		}
-		vector<DisplayObject *> *object2Vec = object2It->second;
-
-		for (DisplayObject *object1 : *object1Vec) {
-			for (DisplayObject *object2 : *object2Vec) {
+		vector<DisplayObject *> object2Vec(*(object2It->second));
+		if (camera != NULL) {
+			auto itr = object2Vec.begin();
+			while (itr != object2Vec.end()) {
+				SDL_Point viewPos = camera->globalToViewportSpace((*itr)->getTopLeftHitbox());
+				if (viewPos.x > 150 || viewPos.x < -150 || viewPos.y > 150 || viewPos.y < -150) {
+					itr = object2Vec.erase(itr);
+				}
+				else {
+					++itr;
+				}
+			}
+		}
+		for (DisplayObject *object1 : object1Vec) {
+			for (DisplayObject *object2 : object2Vec) {
 
 				double xDelta1 = object1->position.x - object1->prevPos.x;
 				double xDelta2 = object2->position.x - object2->prevPos.x;

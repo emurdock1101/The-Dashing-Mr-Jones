@@ -1,6 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include <SDL2/SDL.h>
+
 class Camera{ 
 
 public:
@@ -14,8 +16,8 @@ public:
 	double scaleX = 1;
 	double scaleY = 1;
 
+	SDL_Point globalToViewportSpace(SDL_Point point);
 private:
-
 	
 };
 
