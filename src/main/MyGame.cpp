@@ -6,12 +6,14 @@
 #include "Scene.h"
 #include "Camera.h"
 #include "Sound.h"
+#include "Text.h"
 
 using namespace std;
 
 MyGame::MyGame() : Game(1200, 600) {
 
 	double camScale = 1;
+	
 	instance = this;
 	sound = new Sound();
 	sc = new Scene();
@@ -24,7 +26,10 @@ MyGame::MyGame() : Game(1200, 600) {
 	instance->addChild(sc);
 	this->pivot.x = this->windowWidth/2;
 	this->pivot.y = this->windowHeight/2;
-	player = (DisplayObjectContainer *)sc->getChild("player");
+	player = (DisplayObjectContainer*)sc->getChild("player");
+	
+	//sound->playMusic("./resources/sounds/boss.ogg");
+
 	heart1 = (DisplayObjectContainer *)sc->getChild("heart1");
 	heart1->scaleX = 0.25;
 	heart1->scaleY = 0.25;
@@ -34,7 +39,13 @@ MyGame::MyGame() : Game(1200, 600) {
 	heart3 = (DisplayObjectContainer *)sc->getChild("heart3");
 	heart3->scaleX = 0.25;
 	heart3->scaleY = 0.25;
-	//sound->playMusic("./resources/sounds/boss.ogg");
+
+	textBox = new Menu("box1");
+	instance->addChild(textBox);
+	instance->getChild("box1")->position = {-600,-300};
+	instance->getChild("box1")->scaleX = 5;
+	instance->getChild("box1")->scaleY = 3;
+	instance->getChild("box1")->alpha = 0;
 }
 
 MyGame::~MyGame(){
@@ -43,8 +54,8 @@ MyGame::~MyGame(){
 
 void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){
 
+	//TweenJuggler
 	juggler->nextFrame();
-
 	double charSpeed = 5;
 	double camSpeed = 5;
 
@@ -70,21 +81,17 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 		cammy->y += camSpeed;
 	}
 
-	// if (pressedKeys.find(SDL_SCANCODE_Q) != pressedKeys.end()) {
-	// 	cammy->scaleX += .05;
-	// 	cammy->scaleY += .05;
-	// }
-	// if (pressedKeys.find(SDL_SCANCODE_W) != pressedKeys.end()) {		
-	// 		cammy->scaleX -= .05;
-	// 		cammy->scaleY -= .05;
-	// }
-
-	// DisplayObjectContainer* end = sc->inScene.back();
-	// if (player->position.x ==  end->position.x && player->position.y == end->position.y) {
-	// 	sc->loadScene("./resources/scenes/area1_room2.txt");
-	// 	player = (DisplayObjectContainer *)sc->getChild("player");
-	// 	cammy->x = player->position.x;
-	// 	cammy->y = player->position.y;
+	// if (pressedKeys.find(SDL_SCANCODE_M) != pressedKeys.end()) {
+	// 	//if (instance->getChild("box1")->alpha == 0) {
+	// 	fadeInMenu = new Tween(instance->getChild("box1"));
+	// 	fadeInMenu->animate(TweenableParams::ALPHA, instance->getChild("box1")->alpha, 255, 180);
+	// 	juggler->add(fadeInMenu);
+	// 	//}
+	// 	//else {
+	// 	fadeOutMenu = new Tween(instance->getChild("box1"));
+	// 	fadeOutMenu->animate(TweenableParams::ALPHA, instance->getChild("box1")->alpha, 0, 60);
+	// 	juggler->add(fadeOutMenu);
+	// 	//}
 	// }
 
 	//Simulates losing a heart
@@ -93,6 +100,7 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 			heartOut3 = new Tween(heart3);
 			heartOut3->animate(TweenableParams::ALPHA, 255, 110, 20);
 			juggler->add(heartOut3);
+			instance->addChild((DisplayObjectContainer*) new Text("./resources/OpenSans-Regular.ttf", 15, {255,255,255}, "Uh oh, you lost health!", 100, 500));
 		}
 		else if (heart2->alpha == 255) {
 			heartOut2 = new Tween(heart2);
@@ -124,10 +132,27 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 		}
 	}
 
+	
+	if (player->position.x > 50) {
+		bubble = new Text("./resources/OpenSans-Regular.ttf", 15, {255,255,255}, "Press 'm' to open the menu!", 650, 300);
+		instance->addChild((DisplayObjectContainer*) bubble);
+		if (player->position.x > 290) {
+			bubble->setText("");
+		}
+	}
+
 	heart1->setPos(-cammy->x - 600, -cammy->y - 300);
 	heart2->setPos(-cammy->x - 575, -cammy->y - 300);
 	heart3->setPos(-cammy->x - 550, -cammy->y - 300);
 
+	// DisplayObjectContainer* end = sc->inScene.back();
+	// if (player->position.x ==  end->position.x && player->position.y == end->position.y) {
+	// 	sc->loadScene("./resources/scenes/area1_room2.txt");
+	// 	player = (DisplayObjectContainer *)sc->getChild("player");
+	// 	cammy->x = player->position.x;
+	// 	cammy->y = player->position.y;
+	// }
+	
 	Game::update(pressedKeys, controllerStates);
 }
 
