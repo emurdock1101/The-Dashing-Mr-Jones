@@ -10,6 +10,9 @@
 #include "Scene.h"
 #include "Sound.h"
 #include "Camera.h"
+#include "Text.h"
+#include "Menu.h"
+#include "../objects/Player.h"
 #include "./tweens/Tween.h"
 #include "./tweens/TweenJuggler.h"
 #include "./tweens/TweenParam.h"
@@ -31,8 +34,11 @@ private:
 	Scene* sc;
 	Sound* sound;
 	Camera* cammy;
-	DisplayObjectContainer* player;
+	Player* player;
 	Tween* fadeIn;
+	Tween* fadeOut;
+	DisplayObjectContainer* textBox;
+	Text* text;
 	TweenJuggler* juggler = TweenJuggler::getInstance();
 };
 

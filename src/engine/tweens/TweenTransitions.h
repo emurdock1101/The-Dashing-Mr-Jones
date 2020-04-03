@@ -1,5 +1,5 @@
 #ifndef TWEENTRANSITIONS_H
-#define TWEENTRASITIONS_H
+#define TWEENTRANSITIONS_H
 
 #include <string>
 #include <fstream>
