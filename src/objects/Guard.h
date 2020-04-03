@@ -1,11 +1,13 @@
-#pragma once
+#ifndef GUARD_H
+#define GUARD_H
 #include "../engine/AnimatedSprite.h"
-class Enemy :
+#include "Player.h"
+class Guard :
 	public AnimatedSprite
 {
 public:
-	Enemy();
-	Enemy(string id);
+	Guard();
+	Guard(string id, Player* player);
 
 	// movement stuff
 	int state = 0; // 0 - instantiating stage, 1 - enemy stunned, 2 - enemy patrolling
@@ -13,20 +15,21 @@ public:
 	double velX = 0;
 	bool isGrounded = true;
 	double lastGrounded;
-	double runSpeed = 30;
+	double runSpeed = 20;
 	double runAccel = 300;
 	double maxFallSpeed = 60;
 	double gravity = 240;
 	double unitScale = 16;
 
     SDL_Point originalPos = this->position;
+    int targetX;
     void patrol();
     void stunned();
+    void pursue();
     void onCollision(DisplayObject* other);
     int stunnedCount = 0;
     double patrolRange = 100;
-	string spritesheet = "./resources/player/player_sprites.png";
-	string xml = "./resources/player/player_sprites.xml";
+    Player* player;
 
 	double PROTOTYPE_FLOOR_LEVEL = 800;
 
@@ -39,3 +42,5 @@ public:
 	void update(set<SDL_Scancode> pressedKeys, vector<ControllerState*> controllerStates);
 	void draw(AffineTransform &at);
 };
+
+#endif
