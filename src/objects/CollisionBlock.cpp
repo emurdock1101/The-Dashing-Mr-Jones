@@ -1,6 +1,6 @@
 #include "CollisionBlock.h"
-CollisionBlock::CollisionBlock() : DisplayObjectContainer() {
-	this->id = "0";
+CollisionBlock::CollisionBlock() : DisplayObjectContainer("0", 0, 0, 0) {
+	
 }
 
 void CollisionBlock::draw(AffineTransform &at) {
