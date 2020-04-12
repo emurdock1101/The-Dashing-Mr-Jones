@@ -25,12 +25,12 @@ MyGame::MyGame() : Game(1920, 1000) {
 	cammy = sc->camera;
 	cammy->scaleX = camScale;
 	cammy->scaleY = camScale;
-	cammy->x = -50;
-	cammy->y = -50;
+	cammy->x = -this->windowWidth;
+	cammy->y = -this->windowHeight;
 	sc->loadScene("./resources/scenes/area1_room1.txt");
 	instance->addChild(sc);
-	this->pivot.x = this->windowWidth/2;
-	this->pivot.y = this->windowHeight/2;
+	//this->pivot.x = this->windowWidth/2;
+	//this->pivot.y = this->windowHeight/2;
 	player = (Player*)sc->getChild("player");
 	sound->playMusic("./resources/sounds/boss.ogg");
 
@@ -108,16 +108,16 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 	// }
 
 	if (player->position.x - cammy->x > camDeadzoneX) {
-		cammy->x = player->position.x - camDeadzoneX;
+		cammy->x = player->position.x - camDeadzoneX - this->windowWidth/2;
 	}
 	else if (player->position.x - cammy->x < -camDeadzoneX) {
-		cammy->x = player->position.x + camDeadzoneX;
+		cammy->x = player->position.x + camDeadzoneX - this->windowWidth/2;
 	}
 	if (player->position.y - cammy->y > camDeadzoneY) {
-		cammy->y = player->position.y - camDeadzoneY;
+		cammy->y = player->position.y - camDeadzoneY - this->windowHeight/2;
 	}
 	else if (player->position.y - cammy->y < -camDeadzoneY) {
-		cammy->y = player->position.y + camDeadzoneY;
+		cammy->y = player->position.y + camDeadzoneY - this->windowHeight/2;
 	}
 
 	if (pressedKeys.find(SDL_SCANCODE_Q) != pressedKeys.end()) {

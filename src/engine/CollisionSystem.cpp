@@ -2,6 +2,7 @@
 #include "DisplayObject.h"
 #include "./events/EventParams.h"
 #include "Game.h"
+#include <climits>
 #include <iostream>
 #include <map>
 
@@ -259,7 +260,6 @@ bool CollisionSystem::collidesWith(DisplayObject* obj1, DisplayObject* obj2) {
 //xDelta2 and yDelta2 are the amount other moved before causing the collision.
 void CollisionSystem::resolveCollision(DisplayObject* d, DisplayObject* other,
 		int xDelta1, int yDelta1, int xDelta2, int yDelta2) {
-
 	if (triggeredByX == true){
 		d->position.x -= xDelta1;
 		other->position.x -= xDelta2;

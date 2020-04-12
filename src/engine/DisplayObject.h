@@ -100,6 +100,8 @@ public:
 	double cacheScaleY;
 	bool isCacheValid();
 	const AffineTransform *getGlobalTransform();
+	virtual void onCollision(DisplayObject *other);
+
 	
 protected:
 	double distance(SDL_Point &p1, SDL_Point &p2);

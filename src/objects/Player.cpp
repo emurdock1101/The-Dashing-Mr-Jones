@@ -30,7 +30,7 @@ void Player::physicsUpdate() {
 	// double delta = (SDL_GetTicks() - lastUpdate) / 1000;
 	double delta = (double)1/Game::instance->frames_per_sec;
 	
-	if (DisplayObject::position.y > PROTOTYPE_FLOOR_LEVEL) {
+	/*if (DisplayObject::position.y > PROTOTYPE_FLOOR_LEVEL) {
 		isGrounded = true;
 		canDash = true;
 		canJump = true;
@@ -40,7 +40,7 @@ void Player::physicsUpdate() {
 	}
 	else {
 		isGrounded = false;
-	}
+	}*/
 
 	DisplayObject::position.x += velX * delta * unitScale;
 	DisplayObject::position.y += velY * delta * unitScale;
@@ -51,6 +51,7 @@ void Player::physicsUpdate() {
 	else {
 		velY = newVelY;
 	}
+	isGrounded = false;
 }
 
 void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates) {
@@ -150,4 +151,13 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 
 void Player::draw(AffineTransform &at) {
 	AnimatedSprite::draw(at);
+}
+
+void Player::onCollision(DisplayObject *other) {
+	isGrounded = true;
+	canDash = true;
+	canJump = true;
+	if (velY > 0) {
+		velY = 0;
+	}
 }

@@ -38,5 +38,6 @@ public:
 
 	void update(set<SDL_Scancode> pressedKeys, vector<ControllerState*> controllerStates);
 	void draw(AffineTransform &at);
+	void onCollision(DisplayObject *other);
 };
 

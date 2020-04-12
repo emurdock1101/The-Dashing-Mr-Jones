@@ -256,6 +256,8 @@ void DisplayObject::setDim(int a, int b){
 void DisplayObject::setPos(int a, int b){
 	this->position.x = a;
 	this->position.y = b;
+	this->prevPos.x = a;
+	this->prevPos.y = b;
 }
 void DisplayObject::setPiv(int a, int b){
 	this->pivot.x = a;
@@ -279,18 +281,47 @@ SDL_Point DisplayObject::getBottomRight() {
 }
 
 SDL_Point DisplayObject::getTopLeftHitbox() {
-	return translatePoint(hitboxLeftOffset, hitboxUpOffset);
+	Camera *camera = Game::instance->cammy;
+	AffineTransform at;
+	at.scale(camera->scaleX, camera->scaleY);
+	at.translate(-camera->x, -camera->y);
+	at.concatenate(*getGlobalTransform());
+	// Only apply this one's pivot
+	at.translate(-pivot.x, -pivot.y);
+	return at.transformPoint(hitboxLeftOffset, hitboxUpOffset);
 }
 
 SDL_Point DisplayObject::getTopRightHitbox() {
-	return translatePoint(width-hitboxRightOffset, hitboxUpOffset);
+	Camera *camera = Game::instance->cammy;
+	AffineTransform at;
+	at.scale(camera->scaleX, camera->scaleY);
+	at.translate(-camera->x, -camera->y);
+	at.concatenate(*getGlobalTransform());
+	// Only apply this one's pivot
+	at.translate(-pivot.x, -pivot.y);
+	return at.transformPoint(width-hitboxRightOffset, hitboxUpOffset);
 }
 
 SDL_Point DisplayObject::getBottomLeftHitbox() {
-	return translatePoint(hitboxLeftOffset, height-hitboxDownOffset);
+	Camera *camera = Game::instance->cammy;
+	AffineTransform at;
+	at.scale(camera->scaleX, camera->scaleY);
+	at.translate(-camera->x, -camera->y);
+	at.concatenate(*getGlobalTransform());
+	// Only apply this one's pivot
+	at.translate(-pivot.x, -pivot.y);
+	return at.transformPoint(hitboxLeftOffset, height-hitboxDownOffset);
 }
 
 SDL_Point DisplayObject::getBottomRightHitbox() {
+	Camera *camera = Game::instance->cammy;
+	AffineTransform at;
+	at.scale(camera->scaleX, camera->scaleY);
+	at.translate(-camera->x, -camera->y);
+	at.concatenate(*getGlobalTransform());
+	// Only apply this one's pivot
+	at.translate(-pivot.x, -pivot.y);
+	return at.transformPoint(width-hitboxRightOffset, height-hitboxDownOffset);
 	return translatePoint(width-hitboxRightOffset, height-hitboxDownOffset);
 }
 
@@ -421,3 +452,5 @@ float DisplayObject::area(int x1, int y1, int x2, int y2, int x3, int y3) {
                 x3 * (y1 - y2)) / 2.0);
 }
 
+void DisplayObject::onCollision(DisplayObject *other) {
+}
