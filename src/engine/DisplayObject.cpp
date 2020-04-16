@@ -311,7 +311,7 @@ SDL_Point DisplayObject::getTopRightHitbox() {
 }
 
 SDL_Point DisplayObject::getBottomLeftHitbox() {
-	return translatePoint(width - hitboxRightOffset, hitboxUpOffset);
+	return translatePoint(hitboxLeftOffset, height - hitboxDownOffset);
 
 	// Camera *camera = Game::instance->cammy;
 	// AffineTransform at;

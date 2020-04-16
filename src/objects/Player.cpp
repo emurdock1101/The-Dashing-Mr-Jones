@@ -15,10 +15,10 @@ Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprite
 	height = unitScale* 12;
 	scaleX = 1;
 	scaleY = 1;
-	hitboxLeftOffset = 26;
-	hitboxRightOffset = 28;
-	hitboxDownOffset = 0;
-	hitboxUpOffset = 32;
+	hitboxLeftOffset = 50;
+	hitboxRightOffset = 68;
+	hitboxDownOffset = 10;
+	hitboxUpOffset = 68;
 	pivot = { 16,16 };
 	showHitbox = true;
 
@@ -159,6 +159,9 @@ void Player::onCollision(DisplayObject *other, SDL_Point delta) {
 		canDash = true;
 		canJump = true;
 		velY = 0.0001;
+	}
+	if (delta.y > 0) {
+		velY = -0.0001;
 	}
 	if (delta.x == 0 && delta.y == 0) {
 		if (velX == 0.0) {

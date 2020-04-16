@@ -29,8 +29,8 @@ MyGame::MyGame() : Game(1920, 1000) {
 	cammy->y = -this->windowHeight;
 	sc->loadScene("./resources/scenes/area1_room1.txt");
 	instance->addChild(sc);
-	//this->pivot.x = this->windowWidth/2;
-	//this->pivot.y = this->windowHeight/2;
+	this->pivot.x = this->windowWidth/2;
+	this->pivot.y = this->windowHeight/2;
 	player = (Player*)sc->getChild("player");
 	sound->playMusic("./resources/sounds/boss.ogg");
 
@@ -108,16 +108,16 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 	// }
 
 	if (player->position.x - cammy->x > camDeadzoneX) {
-		cammy->x = player->position.x - camDeadzoneX - this->windowWidth/2;
+		cammy->x = player->position.x - camDeadzoneX;
 	}
 	else if (player->position.x - cammy->x < -camDeadzoneX) {
-		cammy->x = player->position.x + camDeadzoneX - this->windowWidth/2;
+		cammy->x = player->position.x + camDeadzoneX;
 	}
 	if (player->position.y - cammy->y > camDeadzoneY) {
-		cammy->y = player->position.y - camDeadzoneY - this->windowHeight/2;
+		cammy->y = player->position.y - camDeadzoneY;
 	}
 	else if (player->position.y - cammy->y < -camDeadzoneY) {
-		cammy->y = player->position.y + camDeadzoneY - this->windowHeight/2;
+		cammy->y = player->position.y + camDeadzoneY;
 	}
 
 	if (pressedKeys.find(SDL_SCANCODE_Q) != pressedKeys.end()) {
@@ -137,8 +137,8 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 		cammy->y = player->position.y;
 	}
 
-	collisionSystem->update();
 	Game::update(pressedKeys, controllerStates);
+	collisionSystem->update();
 }
 
 void MyGame::draw(AffineTransform &at){
