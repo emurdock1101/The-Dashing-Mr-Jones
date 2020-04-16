@@ -22,8 +22,8 @@ public:
 	bool canDash = true;
 	int lastGrounded;
 	double runSpeed = 32;
-	double runAccel = 300;
-	double jumpPower = 100;
+	double runAccel = 600;
+	double jumpPower = 80;
 	double maxFallSpeed = 120;
 	double gravity = 180;
 	double unitScale = 16;

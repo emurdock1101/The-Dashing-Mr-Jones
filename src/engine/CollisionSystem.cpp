@@ -80,13 +80,13 @@ void CollisionSystem::update() {
 					triggeredByY = true;
 				}
 				object2 -> position.x += xDelta2;
-				if (collidesWith(object1, object2)) {
+				if (!triggeredByX && collidesWith(object1, object2)) {
 					triggeredByX = true;
 					//resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
 				}
 				object2 -> position = object2->prevPos;
 				object2 -> position.y += yDelta2;
-				if (collidesWith(object1, object2)){
+				if (!triggeredByY && collidesWith(object1, object2)){
 					triggeredByY = true;
 				}
 				object1 -> position.x += xDelta1;
