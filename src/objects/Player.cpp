@@ -15,14 +15,14 @@ Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprite
 	height = unitScale* 12;
 	scaleX = 1;
 	scaleY = 1;
-	hitboxLeftOffset = 12;
-	hitboxRightOffset = 12;
+	hitboxLeftOffset = 26;
+	hitboxRightOffset = 28;
 	hitboxDownOffset = 0;
-	hitboxUpOffset = 12;
+	hitboxUpOffset = 32;
 	pivot = { 16,16 };
 	showHitbox = true;
 
-	lastUpdate = SDL_GetTicks();
+	lastUpdate = Game::frameCounter;
 }
 
 // This method is a helper method - multiple states might want to abide by the same laws of physics
@@ -116,7 +116,7 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 			if (lastKeys.find(SDL_SCANCODE_SPACE) == lastKeys.end() && canJump) {
 				velY = -jumpPower;
 				canJump = false;
-				lastGrounded = SDL_GetTicks();
+				lastGrounded = Game::frameCounter;
 			}
 			else if (SDL_GetTicks() - lastGrounded < 100) {
 				velY = -jumpPower;
@@ -153,11 +153,17 @@ void Player::draw(AffineTransform &at) {
 	AnimatedSprite::draw(at);
 }
 
-void Player::onCollision(DisplayObject *other) {
-	isGrounded = true;
-	canDash = true;
-	canJump = true;
-	if (velY > 0) {
-		velY = 0;
+void Player::onCollision(DisplayObject *other, SDL_Point delta) {
+	if (delta.y < 0) {
+		isGrounded = true;
+		canDash = true;
+		canJump = true;
+		velY = 0.0001;
 	}
+	if (delta.x == 0 && delta.y == 0) {
+		if (velX == 0.0) {
+			// logic to get unstuck
+		}
+	}
+	DisplayObject::onCollision(other, delta);
 }

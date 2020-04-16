@@ -48,16 +48,16 @@ void CollisionSystem::update() {
 		}
 		vector<DisplayObject *> object2Vec(*(object2It->second));
 		if (camera != NULL) {
-			// auto itr = object2Vec.begin();
-			// while (itr != object2Vec.end()) {
-			// 	SDL_Point viewPos = camera->globalToViewportSpace((*itr)->getTopLeftHitbox());
-			// 	if (viewPos.x > 110 || viewPos.x < -110 || viewPos.y > 110 || viewPos.y < -110) {
-			// 		itr = object2Vec.erase(itr);
-			// 	}
-			// 	else {
-			// 		++itr;
-			// 	}
-			// }
+			auto itr = object2Vec.begin();
+			while (itr != object2Vec.end()) {
+				SDL_Point viewPos = camera->globalToViewportSpace((*itr)->getTopLeftHitbox());
+				if (viewPos.x > 110 || viewPos.x < -110 || viewPos.y > 110 || viewPos.y < -110) {
+					itr = object2Vec.erase(itr);
+				}
+				else {
+					++itr;
+				}
+			}
 		}
 		for (DisplayObject *object1 : object1Vec) {
 			for (DisplayObject *object2 : object2Vec) {
@@ -260,20 +260,25 @@ bool CollisionSystem::collidesWith(DisplayObject* obj1, DisplayObject* obj2) {
 //xDelta2 and yDelta2 are the amount other moved before causing the collision.
 void CollisionSystem::resolveCollision(DisplayObject* d, DisplayObject* other,
 		int xDelta1, int yDelta1, int xDelta2, int yDelta2) {
+	SDL_Point deltaD = { 0,0 };
+	SDL_Point deltaO = { 0,0 };
 	if (triggeredByX == true){
 		d->position.x -= xDelta1;
+		deltaD.x = -xDelta1;
 		other->position.x -= xDelta2;
+		deltaO.x = -xDelta2;
 		triggeredByX = false;
 	}
 	if (triggeredByY == true){
 		d->position.y -= yDelta1;
+		deltaD.y = -yDelta1;
 		other->position.y -= yDelta2;
+		deltaO.y = -yDelta2;
 		triggeredByY = false;
 	}
-	// TODO: Implement resolve
-	// Maybe find deltas through a custom Event with those parameters	
-
 	
+	d->onCollision(other, deltaD);
+	other->onCollision(d, deltaO);
 }
 
 

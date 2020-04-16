@@ -20,17 +20,17 @@ public:
 	bool isGrounded = true;
 	bool canJump = true;
 	bool canDash = true;
-	double lastGrounded;
-	double runSpeed = 30;
+	int lastGrounded;
+	double runSpeed = 32;
 	double runAccel = 300;
-	double jumpPower = 71.5;
-	double maxFallSpeed = 60;
-	double gravity = 240;
+	double jumpPower = 100;
+	double maxFallSpeed = 120;
+	double gravity = 180;
 	double unitScale = 16;
 
-	double PROTOTYPE_FLOOR_LEVEL = 800;
+	double PROTOTYPE_FLOOR_LEVEL = 1200;
 
-	double lastUpdate;
+	int lastUpdate;
 
 	void physicsUpdate();
 
@@ -38,6 +38,6 @@ public:
 
 	void update(set<SDL_Scancode> pressedKeys, vector<ControllerState*> controllerStates);
 	void draw(AffineTransform &at);
-	void onCollision(DisplayObject *other);
+	void onCollision(DisplayObject *other, SDL_Point delta);
 };
 
