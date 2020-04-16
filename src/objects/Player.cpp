@@ -111,16 +111,23 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 			}
 			
 		}
-		
+
+		if (Game::frameCounter - lastGrounded > 6) {
+			isGrounded = false;
+			canJump = false;
+		}
+
 		if (pressedKeys.find(SDL_SCANCODE_SPACE) != pressedKeys.end()) {
 			if (lastKeys.find(SDL_SCANCODE_SPACE) == lastKeys.end() && canJump) {
 				velY = -jumpPower;
 				canJump = false;
+				isGrounded = false;
 				lastGrounded = Game::frameCounter;
 			}
-			else if (SDL_GetTicks() - lastGrounded < 100) {
-				velY = -jumpPower;
-			}
+		}
+		// shorthopping code - reduce velocity if quick release
+		else if (!isGrounded && Game::frameCounter - lastGrounded < 4 && velY < 0) {
+			// velY = -jumpPower * 0.6;
 		}
 
 
@@ -154,11 +161,43 @@ void Player::draw(AffineTransform &at) {
 }
 
 void Player::onCollision(DisplayObject *other, SDL_Point delta) {
+	// if the thing pushed us up:
 	if (delta.y < 0) {
+		// a bit of a hacky way to stop bouncing off platforms
+
+		// get the absolute top of the other entity
+		SDL_Point topLeft1 = other->getTopLeftHitbox();
+		SDL_Point topRight1 = other->getTopRightHitbox();
+		SDL_Point bottomLeft1 = other->getBottomLeftHitbox();
+		SDL_Point bottomRight1 = other->getBottomRightHitbox();
+
+		vector<SDL_Point> obj1Points = { topLeft1, topRight1, bottomLeft1, bottomRight1 };
+		int yH1 = INT_MAX;
+		for (SDL_Point point : obj1Points) {
+			if (point.y < yH1) {
+				yH1 = point.y;
+			}
+		}
+
+		// we cover the remaining distance to the top of that entity
+		// we assume that the player in game logic always has a 1:1 scale with the global scale
+		SDL_Point myBot = getBottomLeftHitbox();
+		if (myBot.y < yH1) {
+			int origY = position.y;
+			position.y += yH1 - myBot.y;
+			// just in case the player scale isn't 1:1 with global, we revert if something went wrong
+			SDL_Point newBot = getBottomLeftHitbox();
+			if (newBot.y > yH1) {
+				position.y = origY;
+			}
+		}
+
+
 		isGrounded = true;
+		lastGrounded = Game::frameCounter;
 		canDash = true;
 		canJump = true;
-		velY = 0.0001;
+		velY = 0.002;
 	}
 	if (delta.y > 0) {
 		velY = -0.0001;
