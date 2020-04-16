@@ -25,8 +25,8 @@ MyGame::MyGame() : Game(1920, 1000) {
 	cammy = sc->camera;
 	cammy->scaleX = camScale;
 	cammy->scaleY = camScale;
-	cammy->x = -50;
-	cammy->y = -50;
+	cammy->x = -this->windowWidth;
+	cammy->y = -this->windowHeight;
 	sc->loadScene("./resources/scenes/area1_room1.txt");
 	instance->addChild(sc);
 	this->pivot.x = this->windowWidth/2;
@@ -137,8 +137,8 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 		cammy->y = player->position.y;
 	}
 
-	collisionSystem->update();
 	Game::update(pressedKeys, controllerStates);
+	collisionSystem->update();
 }
 
 void MyGame::draw(AffineTransform &at){

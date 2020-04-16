@@ -256,6 +256,8 @@ void DisplayObject::setDim(int a, int b){
 void DisplayObject::setPos(int a, int b){
 	this->position.x = a;
 	this->position.y = b;
+	this->prevPos.x = a;
+	this->prevPos.y = b;
 }
 void DisplayObject::setPiv(int a, int b){
 	this->pivot.x = a;
@@ -278,20 +280,60 @@ SDL_Point DisplayObject::getBottomRight() {
 	return translatePoint(width, height);
 }
 
-SDL_Point DisplayObject::getTopLeftHitbox() {
+SDL_Point DisplayObject::getTopLeftHitbox() { 
 	return translatePoint(hitboxLeftOffset, hitboxUpOffset);
+
+	// Camera-dependent implementation
+
+	// Camera *camera = Game::instance->cammy;
+	// AffineTransform at;
+	// at.scale(camera->scaleX, camera->scaleY);
+	// at.translate(-camera->x, -camera->y);
+	// at.concatenate(*getGlobalTransform());
+	// // Only apply this one's pivot
+	// at.translate(-pivot.x, -pivot.y);
+	// return at.transformPoint(hitboxLeftOffset, hitboxUpOffset);
 }
 
 SDL_Point DisplayObject::getTopRightHitbox() {
-	return translatePoint(width-hitboxRightOffset, hitboxUpOffset);
+	return translatePoint(width - hitboxRightOffset, hitboxUpOffset);
+
+	// Camera-depedent:
+
+	// Camera *camera = Game::instance->cammy;
+	// AffineTransform at;
+	// at.scale(camera->scaleX, camera->scaleY);
+	// at.translate(-camera->x, -camera->y);
+	// at.concatenate(*getGlobalTransform());
+	// // Only apply this one's pivot
+	// at.translate(-pivot.x, -pivot.y);
+	// return at.transformPoint(width-hitboxRightOffset, hitboxUpOffset);
 }
 
 SDL_Point DisplayObject::getBottomLeftHitbox() {
-	return translatePoint(hitboxLeftOffset, height-hitboxDownOffset);
+	return translatePoint(hitboxLeftOffset, height - hitboxDownOffset);
+
+	// Camera *camera = Game::instance->cammy;
+	// AffineTransform at;
+	// at.scale(camera->scaleX, camera->scaleY);
+	// at.translate(-camera->x, -camera->y);
+	// at.concatenate(*getGlobalTransform());
+	// // Only apply this one's pivot
+	// at.translate(-pivot.x, -pivot.y);
+	// return at.transformPoint(hitboxLeftOffset, height-hitboxDownOffset);
 }
 
 SDL_Point DisplayObject::getBottomRightHitbox() {
-	return translatePoint(width-hitboxRightOffset, height-hitboxDownOffset);
+	return translatePoint(width - hitboxRightOffset, height - hitboxDownOffset);
+
+	// Camera *camera = Game::instance->cammy;
+	// AffineTransform at;
+	// at.scale(camera->scaleX, camera->scaleY);
+	// at.translate(-camera->x, -camera->y);
+	// at.concatenate(*getGlobalTransform());
+	// // Only apply this one's pivot
+	// at.translate(-pivot.x, -pivot.y);
+	// return at.transformPoint(width-hitboxRightOffset, height-hitboxDownOffset);
 }
 
 int DisplayObject::getAbsoluteWidth() {
@@ -387,11 +429,24 @@ void DisplayObject::writeSceneData(ostream &stream) {
 }
 
 void DisplayObject::displayHitbox() {
+	Camera *camera = Game::instance->cammy;
+	AffineTransform at;
+	at.scale(camera->scaleX, camera->scaleY);
+	at.translate(-camera->x, -camera->y);
+	at.concatenate(*getGlobalTransform());
+	// Only apply this one's pivot
+	at.translate(-pivot.x, -pivot.y);
+
     SDL_SetRenderDrawColor(Game::renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
-	SDL_Point topLeft = getTopLeftHitbox();
-	SDL_Point topRight = getTopRightHitbox();
-	SDL_Point bottomLeft = getBottomLeftHitbox();
-	SDL_Point bottomRight = getBottomRightHitbox();
+	SDL_Point topLeftH = getTopLeftHitbox();
+	SDL_Point topRightH = getTopRightHitbox();
+	SDL_Point bottomLeftH = getBottomLeftHitbox();
+	SDL_Point bottomRightH = getBottomRightHitbox();
+
+	SDL_Point topLeft = at.transformPoint(topLeftH.x, topLeftH.y);
+	SDL_Point topRight = at.transformPoint(topRightH.x, topRightH.y);
+	SDL_Point bottomLeft = at.transformPoint(bottomLeftH.x, bottomLeftH.y);
+	SDL_Point bottomRight = at.transformPoint(bottomRightH.x, bottomRightH.y);
 	SDL_RenderDrawLine(Game::renderer,
 			topLeft.x,
 			topLeft.y,
@@ -421,3 +476,6 @@ float DisplayObject::area(int x1, int y1, int x2, int y2, int x3, int y3) {
                 x3 * (y1 - y2)) / 2.0);
 }
 
+void DisplayObject::onCollision(DisplayObject *other, SDL_Point delta) {
+
+}

@@ -17,6 +17,7 @@ public:
 	double scaleY = 1;
 
 	SDL_Point globalToViewportSpace(SDL_Point point);
+	SDL_Point cameraToViewportSpace(SDL_Point point);
 private:
 	
 };

@@ -25,6 +25,8 @@ public:
 	SDL_Window * window;
 	static SDL_Renderer* renderer;
 
+	Camera *cammy;
+
 	//Global frame counter
 	static unsigned int frameCounter;
 
