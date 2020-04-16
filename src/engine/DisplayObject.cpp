@@ -430,12 +430,12 @@ void DisplayObject::writeSceneData(ostream &stream) {
 
 void DisplayObject::displayHitbox() {
 	Camera *camera = Game::instance->cammy;
+
 	AffineTransform at;
+	at.translate(Game::instance->pivot.x, Game::instance->pivot.y);
 	at.scale(camera->scaleX, camera->scaleY);
 	at.translate(-camera->x, -camera->y);
-	at.concatenate(*getGlobalTransform());
-	// Only apply this one's pivot
-	at.translate(-pivot.x, -pivot.y);
+
 
     SDL_SetRenderDrawColor(Game::renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
 	SDL_Point topLeftH = getTopLeftHitbox();
