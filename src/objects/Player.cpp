@@ -17,7 +17,7 @@ Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprite
 	scaleY = 1;
 	hitboxLeftOffset = 50;
 	hitboxRightOffset = 68;
-	hitboxDownOffset = 10;
+	hitboxDownOffset = 8;
 	hitboxUpOffset = 68;
 	pivot = { 16,16 };
 	showHitbox = true;
