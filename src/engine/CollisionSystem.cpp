@@ -48,16 +48,16 @@ void CollisionSystem::update() {
 		}
 		vector<DisplayObject *> object2Vec(*(object2It->second));
 		if (camera != NULL) {
-			auto itr = object2Vec.begin();
-			while (itr != object2Vec.end()) {
-				SDL_Point viewPos = camera->globalToViewportSpace((*itr)->getTopLeftHitbox());
-				if (viewPos.x > 110 || viewPos.x < -110 || viewPos.y > 110 || viewPos.y < -110) {
-					itr = object2Vec.erase(itr);
-				}
-				else {
-					++itr;
-				}
-			}
+			// auto itr = object2Vec.begin();
+			// while (itr != object2Vec.end()) {
+			// 	SDL_Point viewPos = camera->globalToViewportSpace((*itr)->getTopLeftHitbox());
+			// 	if (viewPos.x > 110 || viewPos.x < -110 || viewPos.y > 110 || viewPos.y < -110) {
+			// 		itr = object2Vec.erase(itr);
+			// 	}
+			// 	else {
+			// 		++itr;
+			// 	}
+			// }
 		}
 		for (DisplayObject *object1 : object1Vec) {
 			for (DisplayObject *object2 : object2Vec) {
