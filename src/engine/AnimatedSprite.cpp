@@ -180,6 +180,15 @@ void AnimatedSprite::stop() {
     this->playing = false;
 }
 
+string AnimatedSprite::currentAnimName() {
+	if (current == NULL) {
+		return "";
+	}
+	else {
+		return current->animName;
+	}
+}
+
 void AnimatedSprite::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates) {
     Sprite::update(pressedKeys, controllerStates);
     if (playing) {
@@ -188,7 +197,7 @@ void AnimatedSprite::update(set<SDL_Scancode> pressedKeys, vector<ControllerStat
             // increment local frame counter
             current->curFrame++;
             // check for array out of bounds
-            if (current->curFrame == current->numFrames) {
+            if (current->curFrame >= current->numFrames) {
                 // reset the animation
                 current->curFrame = 0;
                 // check for looping
@@ -235,15 +244,3 @@ void AnimatedSprite::writeSceneData(ostream &stream) {
 		stream << animation->loop << endl;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-

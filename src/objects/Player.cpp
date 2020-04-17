@@ -3,12 +3,15 @@ using namespace std;
 Player::Player() : AnimatedSprite() {
 	
 }
-Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprites.png", "./resources/player/player_sprites.xml") {
+Player::Player(string id) : AnimatedSprite(id) {
 	
 	
 	spriteObject = new AnimatedSprite(id + "_Sprite", "./resources/player/player_sprites.png", "./resources/player/player_sprites.xml");
 	DisplayObjectContainer::addChild(spriteObject);
-	spriteObject->addAnimationFromSpriteSheet("./resources/player/player_sprites.png", "idle_right", 12, 12, true);
+	spriteObject->addAnimationFromSpriteSheet("./resources/player/player_sprites.png", "idle_right", 13, 20, true);
+	spriteObject->addAnimationFromSpriteSheet("./resources/player/player_sprites.png", "run_right", 8, 6, true);
+	spriteObject->addAnimationFromSpriteSheet("./resources/player/player_sprites.png", "dash_right", 10, 6, false);
+	spriteObject->addAnimationFromSpriteSheet("./resources/player/player_sprites.png", "fall_right", 4, 12, true);
 	spriteObject->play("idle_right");
 	spriteObject->width = unitScale * 12;
 	spriteObject->height = unitScale * 12;
@@ -18,9 +21,9 @@ Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprite
 	state = 1;
 	
 
+	// this is just to get the hitboxes aligned right
 	AnimatedSprite::addAnimation("./resources/player/Adventurer Sprite Sheet v1/anim_slices-0/", "idle_right", 12, 12, true);
 	AnimatedSprite::play("idle_right");
-
 	DisplayObject::visible = false;
 
 	// DisplayObject::loadTexture("./resources/player/basic_player.png");
@@ -29,7 +32,7 @@ Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprite
 	scaleX = 1;
 	scaleY = 1;
 	hitboxLeftOffset = 50;
-	hitboxRightOffset = 68;
+	hitboxRightOffset = 78;
 	hitboxDownOffset = 8;
 	hitboxUpOffset = 68;
 	// pivot = { 16,16 };
@@ -64,7 +67,7 @@ void Player::physicsUpdate() {
 	else {
 		velY = newVelY;
 	}
-	isGrounded = false;
+	// isGrounded = false;
 }
 
 void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates) {
@@ -82,6 +85,24 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 	case 1:
 		// general movement
 
+		// animation states
+		if (isGrounded) {
+			if (velX > 0.2 || velX < -0.2) {
+				if (spriteObject->currentAnimName().compare("run_right") != 0) {
+					spriteObject->play("run_right");
+				}
+			}
+			else {
+				if (spriteObject->currentAnimName().compare("idle_right") != 0) {
+					spriteObject->play("idle_right");
+				}
+			}
+		}
+		else {
+			if (spriteObject->currentAnimName().compare("fall_right") != 0) {
+				spriteObject->play("fall_right");
+			}
+		}
 		// horizontal input
 		if ((pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) ^ (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end())) {
 			if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
@@ -127,6 +148,7 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 			
 		}
 
+		// detect if in air
 		if (Game::frameCounter - lastGrounded > 6) {
 			isGrounded = false;
 			canJump = false;
@@ -173,6 +195,14 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 					}
 				}
 
+				if (axis.x < 0) {
+					faceSprite(false);
+				} 
+				else if (axis.x > 0) {
+					faceSprite(true);
+				}
+				spriteObject->play("dash_right");
+
 				canDash = false;
 				state = 2;
 				substate = Game::frameCounter;
@@ -190,17 +220,32 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 		// pointState: stores a vector of the direction we're dashing
 
 		// if we're still dashing
-		if (Game::frameCounter - substate < 15) {
+		if (Game::frameCounter - substate < 20) {
+			position.x += velX * delta * unitScale;
+			position.y += velY * delta * unitScale;
+			
+			velX *= 0.1;
+			velY *= 0.1;
+
 			if (pointState.x == 0 || pointState.y == 0) {
 				// if we're only handling one axis
-				position.x += (int)((double)pointState.x * 20 * (25 + substate - Game::frameCounter) / 25);
-				position.y += (int)((double)pointState.y * 20 * (25 + substate - Game::frameCounter) / 25);
+				position.x += (int)((double)pointState.x * 32 * (28 + substate - Game::frameCounter) / 28);
+				position.y += (int)((double)pointState.y * 32 * (28 + substate - Game::frameCounter) / 28);
+			}
+			else {
+				position.x += (int)((double)pointState.x * 32 * (28 + substate - Game::frameCounter) / 28 / 1.8);
+				position.y += (int)((double)pointState.y * 32 * (28 + substate - Game::frameCounter) / 28 / 1.8);
 			}
 		}
 		else {
 			state = 1;
+
 			velX = pointState.x * runSpeed;
 			velY = pointState.y * runSpeed;
+			if (pointState.x != 0 && pointState.y != 0) {
+				velX /= 1.414;
+				velY /= 1.414;
+			}
 		}
 		
 		break;
@@ -234,7 +279,7 @@ void Player::faceSprite(bool facingRight) {
 		spriteObject->facingRight = true;
 	}
 	else {
-		spriteObject->position = { 69, 126 };
+		spriteObject->position = { 60, 126 };
 		spriteObject->facingRight = false;
 	}
 }
