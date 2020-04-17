@@ -4,7 +4,6 @@
 #include <SDL2/SDL_image.h>
 #include "Game.h"
 #include "Camera.h"
-#include <iostream>
 #include <algorithm>
 #include <cmath>
 
@@ -341,7 +340,7 @@ bool DisplayObject::isCacheValid() {
 	if (cacheScaleX != scaleX || cacheScaleY != scaleY) {
 		return false;
 	}
-	return true;
+	return !invalidateCache;
 }
 
 /* 
@@ -349,7 +348,9 @@ bool DisplayObject::isCacheValid() {
 */
 const AffineTransform *DisplayObject::getGlobalTransform() {
 	if (!isCacheValid()) {
-		delete cachedTransform;
+		if (cachedTransform != NULL) {
+			delete cachedTransform;
+		}
 		cachedTransform = new AffineTransform();
 		cacheFrame = Game::frameCounter;
 		cachePosition = position;
@@ -362,6 +363,7 @@ const AffineTransform *DisplayObject::getGlobalTransform() {
 		applyTransformations(*cachedTransform);
 		// Unapply pivot
 		cachedTransform->translate(pivot.x, pivot.y);
+		invalidateCache = false;
 	}
 	return cachedTransform;
 }

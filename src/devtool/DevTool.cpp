@@ -94,6 +94,8 @@ void DevTool::start(){
 					for (DisplayObjectContainer *sprite: selectionArea->children) {
 						if (isHoveredSelectBar(sprite, event)) {
 							DisplayObjectContainer *tmp = new DisplayObjectContainer();
+							sprite->cachedTransform = NULL;
+							sprite->invalidateCache = true;
 							*tmp = *sprite;
 							selected = tmp;
 							selected->loadTexture(selected->imgPath);
@@ -392,10 +394,12 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 				// Paste
 				DisplayObjectContainer *tmp = new DisplayObjectContainer;
 				*tmp = *copied;
+				tmp->cachedTransform = NULL;
+				tmp->invalidateCache = true;
 				tmp->position.x += 50;
 				tmp->position.y += 50;
 				scene->addChild(tmp);
-				onScreen.push_back(tmp); 
+				onScreen.push_back(tmp);
 				spritesToDisplay.push_back(tmp);
 				break;
 		}
