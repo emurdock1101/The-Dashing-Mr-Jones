@@ -4,11 +4,22 @@ Player::Player() : AnimatedSprite() {
 	
 }
 Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprites.png", "./resources/player/player_sprites.xml") {
+	spriteObject = new AnimatedSprite(id + "_Sprite", "./resources/player/player_sprites.png", "./resources/player/player_sprites.xml");
+	DisplayObjectContainer::addChild(spriteObject);
+	spriteObject->addAnimation("./resources/player/Adventurer Sprite Sheet v1/anim_slices-0/", "idle_right", 12, 12, true);
+	spriteObject->play("idle_right");
+	spriteObject->width = unitScale * 12;
+	spriteObject->height = unitScale * 12;
+	spriteObject->pivot = { 87, 126 };
+	faceSprite(true);
+
 	state = 1;
 	
 
 	AnimatedSprite::addAnimation("./resources/player/Adventurer Sprite Sheet v1/anim_slices-0/", "idle_right", 12, 12, true);
 	AnimatedSprite::play("idle_right");
+
+	DisplayObject::visible = false;
 
 	// DisplayObject::loadTexture("./resources/player/basic_player.png");
 	width = unitScale* 12;
@@ -19,7 +30,7 @@ Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprite
 	hitboxRightOffset = 68;
 	hitboxDownOffset = 8;
 	hitboxUpOffset = 68;
-	pivot = { 16,16 };
+	// pivot = { 16,16 };
 	showHitbox = true;
 
 	lastUpdate = Game::frameCounter;
@@ -72,6 +83,7 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 		// horizontal input
 		if ((pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) ^ (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end())) {
 			if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
+				faceSprite(true);
 				double newVx = velX + (runAccel*delta);
 				if (newVx > runSpeed) {
 					velX = runSpeed;
@@ -81,6 +93,7 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 				}
 			}
 			if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
+				faceSprite(false);
 				double newVx = velX - (runAccel*delta);
 				if (newVx < -runSpeed) {
 					velX = -runSpeed;
@@ -117,6 +130,7 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 			canJump = false;
 		}
 
+		// jump code
 		if (pressedKeys.find(SDL_SCANCODE_SPACE) != pressedKeys.end()) {
 			if (lastKeys.find(SDL_SCANCODE_SPACE) == lastKeys.end() && canJump) {
 				velY = -jumpPower;
@@ -126,8 +140,41 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 			}
 		}
 		// shorthopping code - reduce velocity if quick release
-		else if (!isGrounded && Game::frameCounter - lastGrounded < 4 && velY < 0) {
-			// velY = -jumpPower * 0.6;
+		else if (!isGrounded && Game::frameCounter - lastGrounded < 6 && velY < 0) {
+			velY = -jumpPower * 0.6;
+		}
+
+		// dash code
+		if (pressedKeys.find(SDL_SCANCODE_C) != pressedKeys.end()) {
+			if (lastKeys.find(SDL_SCANCODE_C) == lastKeys.end() && canDash) {
+				SDL_Point axis = { 0,0 };
+				// get horizontal
+				if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
+					axis.x += 1;
+				}
+				if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
+					axis.x -= 1;
+				}
+				if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end()) {
+					axis.y -= 1;
+				} 
+				if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end()) {
+					axis.y += 1;
+				}
+
+				if (axis.x == 0 && axis.y == 0) {
+					if (spriteObject->facingRight) {
+						axis.x = 1;
+					}
+					else {
+						axis.x = -1;
+					}
+				}
+
+				canDash = false;
+				state = 2;
+
+			}
 		}
 
 
@@ -135,6 +182,8 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 		break;
 	case 2:
 		// dashing
+
+		
 		break;
 	case 3:
 		// hitstun
@@ -159,6 +208,18 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 void Player::draw(AffineTransform &at) {
 	AnimatedSprite::draw(at);
 }
+
+void Player::faceSprite(bool facingRight) {
+	if (facingRight) {
+		spriteObject->position = { 87, 126 };
+		spriteObject->facingRight = true;
+	}
+	else {
+		spriteObject->position = { 69, 126 };
+		spriteObject->facingRight = false;
+	}
+}
+
 
 void Player::onCollision(DisplayObject *other, SDL_Point delta) {
 	// if the thing pushed us up:
@@ -193,6 +254,7 @@ void Player::onCollision(DisplayObject *other, SDL_Point delta) {
 		}
 
 
+		// state logic when hitting the ground
 		isGrounded = true;
 		lastGrounded = Game::frameCounter;
 		canDash = true;
