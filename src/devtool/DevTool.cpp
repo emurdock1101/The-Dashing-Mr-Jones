@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "DevTool.h"
 #include <string>
+#include "Player.h"
 #include <ctime>
 #include "../engine/Game.h"
 #include "../engine/Scene.h"
@@ -255,6 +256,38 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 					editPrompt();
 				}
 				break;
+			case SDL_SCANCODE_O: {
+				cout << "Add an object" << endl;
+				cout << "Be sure to use all lowercase or only first letter upper" << endl;
+				cout << "Press n to refuse" << endl;
+				string objectType;
+				cin >> objectType;
+				// To add an object:
+				// Add another else if statement with what you want to type
+				// Set parameters like Player
+				// Be sure to set inDevtool and make sure the object
+				// does not update physics if that's true!
+				// Add to scene and to onScreen
+				if (objectType == "player" || objectType == "Player") {
+					Player* temp = new Player("player");
+					temp->position = {100, 100};
+					// TODO: fix pivot
+					temp->pivot = {0, 0};
+					temp->inDevtool = true;
+					temp->showHitbox = false;
+					scene->addChild(temp);
+					onScreen.push_back(temp);
+				}
+				else if (objectType == "n") {
+					cout << "Aborting" << endl;
+					break;
+				}
+				else {
+					cout << "Object type not found!" << endl;
+					cout << "Aborting" << endl;
+				}
+				break;
+			}
 			case SDL_SCANCODE_A:
 			{
 

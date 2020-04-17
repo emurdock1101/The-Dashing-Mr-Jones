@@ -55,6 +55,7 @@ public:
 	int alpha = 255;
 	bool facingRight = true;
 	bool showHitbox = false;
+	bool inDevtool = false;
 
 
 	// Hitbox offsets are the amount to cut off the edge of the image

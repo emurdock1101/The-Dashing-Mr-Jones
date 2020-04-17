@@ -54,6 +54,10 @@ void Player::physicsUpdate() {
 }
 
 void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates) {
+	if (inDevtool) {
+		AnimatedSprite::update(pressedKeys, controllerStates);
+		return;
+	}
 	DisplayObject::prevPos = position;
 	// double delta = (SDL_GetTicks() - lastUpdate) / 1000;
 	double delta = (double)1 / Game::instance->frames_per_sec;

@@ -9,6 +9,7 @@
 #include <map>
 #include <vector>
 #include "./Camera.h"
+#include <climits>
 
 using namespace std;
 
