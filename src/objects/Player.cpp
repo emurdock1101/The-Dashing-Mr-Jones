@@ -4,9 +4,11 @@ Player::Player() : AnimatedSprite() {
 	
 }
 Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprites.png", "./resources/player/player_sprites.xml") {
+	
+	
 	spriteObject = new AnimatedSprite(id + "_Sprite", "./resources/player/player_sprites.png", "./resources/player/player_sprites.xml");
 	DisplayObjectContainer::addChild(spriteObject);
-	spriteObject->addAnimation("./resources/player/Adventurer Sprite Sheet v1/anim_slices-0/", "idle_right", 12, 12, true);
+	spriteObject->addAnimationFromSpriteSheet("./resources/player/player_sprites.png", "idle_right", 12, 12, true);
 	spriteObject->play("idle_right");
 	spriteObject->width = unitScale * 12;
 	spriteObject->height = unitScale * 12;

@@ -25,7 +25,6 @@ AnimatedSprite::AnimatedSprite(string id, string spritesheet, string xml) : Spri
         lines.push_back(line);
         //cout << "Adding line to vector " << endl;
     }
-    cout << "Parsing XML...This may take a minute." << endl;
     for (int i = 22; i < lines.size()-1; i++){
        // cout << lines[i]<<endl;
         istringstream in(lines[i]);
@@ -86,7 +85,7 @@ void AnimatedSprite::addAnimationFromSpriteSheet(string texture, string animName
         //no need for a path, just need the location of the image
         //f->image is the render copy of that location of the sprite sheet
         //f->texture is the render copy of that entire spritesheet
-
+        cout << "Loading Sprites From SpriteSheet";
         Animation* anim = new Animation();
         anim->basepath = texture;
         anim->animName = animName;
@@ -102,19 +101,31 @@ void AnimatedSprite::addAnimationFromSpriteSheet(string texture, string animName
         for (int i = startPos; i < numFrames+startPos; i++){
             Frame* f = new Frame();
             string name = split[i][1];
+            cout << "." << std::flush;
+
             //cout << name << endl;
+
             f->image = IMG_Load(anim->basepath.c_str());
+            SDL_SetSurfaceBlendMode(f->image, SDL_BLENDMODE_NONE); 
             f->texture = SDL_CreateTextureFromSurface(Game::renderer, f->image);
+
             int xVal = stoi(split[i][2].substr(3).substr(0, split[i][2].substr(3).length()-1));
             int yVal = stoi(split[i][3].substr(3).substr(0, split[i][3].substr(3).length()-1));
             int wVal = stoi(split[i][4].substr(3).substr(0, split[i][4].substr(3).length()-1));
             int hVal = stoi(split[i][5].substr(3).substr(0, split[i][5].substr(3).length()-3));
 
-            SDL_Texture* result = SDL_CreateTexture(Game::renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, wVal, hVal);
+
+            SDL_Texture* result = SDL_CreateTexture(Game::renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_TARGET, wVal, hVal);
+            SDL_SetTextureBlendMode(result, SDL_BLENDMODE_BLEND);
+    
             SDL_SetRenderTarget(Game::renderer, result);
             SDL_Rect srcrect = { xVal, yVal, wVal, hVal };
-            SDL_RenderCopy(Game::renderer, f->texture, &srcrect, NULL);
+
+            SDL_RenderCopy(Game::renderer, f->texture, &srcrect, NULL); //already set the render target.
             f->texture = result;
+            SDL_SetTextureAlphaMod(f->texture, 0);
+
+            //SDL_SetTextureColorMod(f->texture, 255, 0, 0 );
             SDL_SetRenderTarget(Game::renderer, NULL);
 
             anim->frames[i-startPos] = f;
@@ -224,3 +235,15 @@ void AnimatedSprite::writeSceneData(ostream &stream) {
 		stream << animation->loop << endl;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
