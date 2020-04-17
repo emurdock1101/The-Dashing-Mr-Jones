@@ -240,6 +240,9 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 				cout << "Loading scene " << filename << endl;
 				scene->loadScene(filename);
 				for (DisplayObjectContainer* child : scene->children){
+					if (child->id == "player"){
+						child->inDevtool = true;
+					}
 					onScreen.push_back(child);
 				}
 				selected = NULL;
