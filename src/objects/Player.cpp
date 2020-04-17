@@ -7,7 +7,7 @@ Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprite
 	state = 1;
 	
 
-	AnimatedSprite::addAnimation("./resources/player/Adventurer Sprite Sheet v1/anim_slices-0/", "idle_right", 12, 12, true);
+	AnimatedSprite::addAnimationFromSpriteSheet("./resources/player/player_sprites.png", "idle_right", 12, 12, true);
 	AnimatedSprite::play("idle_right");
 
 	// DisplayObject::loadTexture("./resources/player/basic_player.png");
@@ -154,4 +154,33 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 
 void Player::draw(AffineTransform &at) {
 	AnimatedSprite::draw(at);
+}
+
+
+void Player::writeSceneData(ostream &stream) {
+	stream << "AnimatedSprite" << " ";
+	stream << id << " ";
+	stream << position.x << " ";
+	stream << position.y << " ";
+	stream << pivot.x << " ";
+	stream << pivot.y << " ";
+	stream << scaleX << " ";
+	stream << scaleY << " ";
+	stream << rotation << " ";
+	stream << height << " ";
+	stream << width << " ";
+	stream << alpha << " ";
+	stream << this->animations.size();
+	// Animation args
+	if (parent != NULL && parent->type != "Scene") {
+		stream << " " << parent->id;
+	}
+	stream << endl;
+	for (Animation * animation : animations) {
+		stream << animation->basepath << " ";
+		stream << animation->animName << " ";
+		stream << animation->numFrames << " ";
+		stream << animation->frameRate << " ";
+		stream << animation->loop << endl;
+	}
 }

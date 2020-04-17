@@ -1,0 +1,1 @@
+DisplayObjectContainer 1 ./resources/Character/Dead_10.png 200 250 0 0 1 1 0 100 100 255

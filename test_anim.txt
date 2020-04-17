@@ -1,0 +1,2 @@
+AnimatedSprite player 50 200 0 0 4 4 0 50 50 255 1
+./resources/player/player_sprites.png idle_right 12 1 true
