@@ -36,7 +36,7 @@ Player::Player(string id) : AnimatedSprite(id) {
 	hitboxDownOffset = 8;
 	hitboxUpOffset = 68;
 	// pivot = { 16,16 };
-	showHitbox = true;
+	showHitbox = false;
 
 	lastUpdate = Game::frameCounter;
 }
@@ -220,12 +220,24 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 		// pointState: stores a vector of the direction we're dashing
 
 		// if we're still dashing
-		if (Game::frameCounter - substate < 20) {
+		if (Game::frameCounter - substate < 3) {
 			position.x += velX * delta * unitScale;
 			position.y += velY * delta * unitScale;
+
+			velX *= 0.8;
+			velY *= 0.8;
+			if (pointState.x == 0 || pointState.y == 0) {
+				// if we're only handling one axis
+				position.x += (int)((double)pointState.x * 32 * (Game::frameCounter - substate) / 3);
+				position.y += (int)((double)pointState.y * 32 * (Game::frameCounter - substate) / 3);
+			}
+			else {
+				position.x += (int)((double)pointState.x * 32 * (Game::frameCounter - substate) / 3 / 1.6);
+				position.y += (int)((double)pointState.y * 32 * (Game::frameCounter - substate) / 3 / 1.6);
+			}
+		}
+		else if (Game::frameCounter - substate < 20) {
 			
-			velX *= 0.1;
-			velY *= 0.1;
 
 			if (pointState.x == 0 || pointState.y == 0) {
 				// if we're only handling one axis
@@ -233,8 +245,8 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 				position.y += (int)((double)pointState.y * 32 * (28 + substate - Game::frameCounter) / 28);
 			}
 			else {
-				position.x += (int)((double)pointState.x * 32 * (28 + substate - Game::frameCounter) / 28 / 1.8);
-				position.y += (int)((double)pointState.y * 32 * (28 + substate - Game::frameCounter) / 28 / 1.8);
+				position.x += (int)((double)pointState.x * 32 * (28 + substate - Game::frameCounter) / 28 / 1.6);
+				position.y += (int)((double)pointState.y * 32 * (28 + substate - Game::frameCounter) / 28 / 1.6);
 			}
 		}
 		else {
