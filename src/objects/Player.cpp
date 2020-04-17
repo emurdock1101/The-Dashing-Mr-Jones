@@ -158,7 +158,7 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 				if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end()) {
 					axis.y -= 1;
 				} 
-				if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end()) {
+				if (pressedKeys.find(SDL_SCANCODE_DOWN) != pressedKeys.end()) {
 					axis.y += 1;
 				}
 
@@ -173,7 +173,8 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 
 				canDash = false;
 				state = 2;
-
+				substate = Game::frameCounter;
+				pointState = axis;
 			}
 		}
 
@@ -183,6 +184,22 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 	case 2:
 		// dashing
 
+		// substate: stores the frame when the dash started
+		// pointState: stores a vector of the direction we're dashing
+
+		// if we're still dashing
+		if (Game::frameCounter - substate < 15) {
+			if (pointState.x == 0 || pointState.y == 0) {
+				// if we're only handling one axis
+				position.x += (int)((double)pointState.x * 20 * (25 + substate - Game::frameCounter) / 25);
+				position.y += (int)((double)pointState.y * 20 * (25 + substate - Game::frameCounter) / 25);
+			}
+		}
+		else {
+			state = 1;
+			velX = pointState.x * runSpeed;
+			velY = pointState.y * runSpeed;
+		}
 		
 		break;
 	case 3:
