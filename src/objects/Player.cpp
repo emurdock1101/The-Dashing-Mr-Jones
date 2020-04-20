@@ -1,153 +1,50 @@
-#include "Player.h"
+#pragma once
+#include "../engine/AnimatedSprite.h"
+#include "../engine/Game.h"
+class Player :
+	public AnimatedSprite
+{
+public:
+	Player();
+	Player(string id);
 
-using namespace std;
+	AnimatedSprite* spriteObject;
 
-Player::Player() : AnimatedSprite() {
-	
-}
-Player::Player(string id) : AnimatedSprite(id, "./resources/player/player_sprites.png", "./resources/player/player_sprites.xml") {
-	state = 1;
-	
+	// HUD-status type stuff
+	int hp = 2;
+	int lives = 3;
+	int ropes = 0;
+	bool dashUnlocked = true;
 
-	AnimatedSprite::addAnimation("./resources/player/Adventurer Sprite Sheet v1/anim_slices-0/", "idle_right", 12, 12, true);
-	AnimatedSprite::play("idle_right");
+	// movement stuff
+	int state = 0; // 0 - player disabled, 1 - general movement (+jumping), 2 - dash, 3 - hurt/stunned, 4 - rope climbing, 5-rope deploy, 6-death
+	int substate = 0; // optional - if you want more state logic within one state
+	SDL_Point pointState = { 0,0 }; // also optional, for state logic
+	double velX = 0;
+	double velY = 0;
+	bool isGrounded = true;
+	bool canJump = true;
+	bool canDash = true;
+	int lastGrounded;
+	double runSpeed = 32;
+	double runAccel = 600;
+	double jumpPower = 80;
+	double maxFallSpeed = 120;
+	double gravity = 180;
+	double unitScale = 16;
 
-	// DisplayObject::loadTexture("./resources/player/basic_player.png");
-	width = unitScale* 12;
-	height = unitScale* 12;
-	scaleX = 1;
-	scaleY = 1;
-	hitboxLeftOffset = 12;
-	hitboxRightOffset = 12;
-	hitboxDownOffset = 0;
-	hitboxUpOffset = 12;
-	pivot = { 16,16 };
-	showHitbox = true;
+	double PROTOTYPE_FLOOR_LEVEL = 1200;
 
-	lastUpdate = SDL_GetTicks();
-}
+	int lastUpdate;
 
-// This method is a helper method - multiple states might want to abide by the same laws of physics
-void Player::physicsUpdate() {
-	double delta = (SDL_GetTicks() - lastUpdate) / 1000;
-	
-	if (DisplayObject::position.y > PROTOTYPE_FLOOR_LEVEL) {
-		isGrounded = true;
-		canDash = true;
-		canJump = true;
-		if (velY > 0) {
-			velY = 0;
-		}
-	}
-	else {
-		isGrounded = false;
-	}
+	void physicsUpdate();
 
-	DisplayObject::position.x += velX * delta * unitScale;
-	DisplayObject::position.y += velY * delta * unitScale;
-	double newVelY = velY + (gravity * delta);
-	if (newVelY > maxFallSpeed) {
-		velY = maxFallSpeed;
-	}
-	else {
-		velY = newVelY;
-	}
-}
+	set<SDL_Scancode> lastKeys;
 
-void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates) {
-	DisplayObject::prevPos = position;
-	double delta = (SDL_GetTicks() - lastUpdate) / 1000;
-	// Remember to reference the state diagram. 
-	// I've merged the general movement and jumping states.
-	// Keep in mind that this function keeps firing for every frame that the state is active. If you want, you can create new states 
-	// and class fields to wait out tweens/other stuff before transitioning to another state.
-	switch (this->state) {
-	case 0:
-		// null state
-		break;
-	case 1:
-		// general movement
+	void update(set<SDL_Scancode> pressedKeys, vector<ControllerState*> controllerStates);
+	void draw(AffineTransform &at);
+	void onCollision(DisplayObject *other, SDL_Point delta);
 
-		// horizontal input
-		if ((pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) ^ (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end())) {
-			if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
-				double newVx = velX + (runAccel*delta);
-				if (newVx > runSpeed) {
-					velX = runSpeed;
-				}
-				else {
-					velX = newVx;
-				}
-			}
-			if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
-				double newVx = velX - (runAccel*delta);
-				if (newVx < -runSpeed) {
-					velX = -runSpeed;
-				}
-				else {
-					velX = newVx;
-				}
-			}
-		}
-		else { // no horizontal input
-			if (velX > 0) {
-				double newVx = velX - (runAccel*delta);
-				if (newVx < 0) {
-					velX = 0;
-				}
-				else {
-					velX = newVx;
-				}
-			}
-			else {
-				double newVx = velX + (runAccel*delta);
-				if (newVx > 0) {
-					velX = 0;
-				}
-				else {
-					velX = newVx;
-				}
-			}
-			
-		}
-		
-		if (pressedKeys.find(SDL_SCANCODE_SPACE) != pressedKeys.end()) {
-			if (lastKeys.find(SDL_SCANCODE_SPACE) == lastKeys.end() && canJump) {
-				velY = -jumpPower;
-				canJump = false;
-				lastGrounded = SDL_GetTicks();
-			}
-			else if (SDL_GetTicks() - lastGrounded < 100) {
-				velY = -jumpPower;
-			}
-		}
-
-
-		physicsUpdate();
-		break;
-	case 2:
-		// dashing
-		break;
-	case 3:
-		// hitstun
-		break;
-	case 4:
-		// rope climbing
-		break;
-	case 5:
-		// rope deploy
-		break;
-	case 6:
-		// death
-		break;
-	}
-
-	
-	lastKeys = pressedKeys;
-	lastUpdate = SDL_GetTicks();
-	AnimatedSprite::update(pressedKeys, controllerStates);
-}
-
-void Player::draw(AffineTransform &at) {
-	AnimatedSprite::draw(at);
-}
+private:
+	void faceSprite(bool facingRight);
+};

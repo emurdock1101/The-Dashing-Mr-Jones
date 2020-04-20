@@ -3,8 +3,8 @@ DEVTOOL_TARGET_EXEC ?= devtool
 
 BUILD_DIR ?= ./bin
 
-SRC_DIRS ?= ./src/engine ./src/main
-DEVTOOL_SRC_DIRS ?= ./src/engine ./src/devtool
+SRC_DIRS ?= ./src/engine ./src/main ./src/objects
+DEVTOOL_SRC_DIRS ?= ./src/engine ./src/devtool ./src/objects
 
 SRCS := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
 OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)

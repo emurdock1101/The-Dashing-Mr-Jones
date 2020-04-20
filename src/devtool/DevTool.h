@@ -4,11 +4,11 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
-#include "DisplayObjectContainer.h"
-#include "Game.h"
-#include "Camera.h"
-#include "Scene.h"
-#include "Sprite.h"
+#include "../engine/DisplayObjectContainer.h"
+#include "../engine/Game.h"
+#include "../engine/Camera.h"
+#include "../engine/Scene.h"
+#include "../engine/Sprite.h"
 #include <vector>
 #include <set>
 
@@ -21,7 +21,7 @@ public:
 	virtual ~DevTool();
 	virtual void start();
 
-	virtual void update(set<SDL_Scancode> pressedKeys);
+	virtual void update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates);
 	virtual void draw(AffineTransform &at);
 	vector<string> getImagesFromFolder(string folderName);
 
@@ -35,7 +35,7 @@ private:
 	Scene *scene;
 
 	DisplayObjectContainer *menus;
-	DisplayObjectContainer *selected;
+	DisplayObjectContainer *selected = NULL;
 	DisplayObjectContainer *copied;
 	Sprite *selectionArea;
 	Sprite* blueBar;
@@ -45,6 +45,7 @@ private:
 	vector<DisplayObjectContainer*> spritesToDisplay;
 	vector<DisplayObjectContainer*> onScreen;
 	set<SDL_Scancode> singleUseKeys;
+	vector<ControllerState *> controllerStates;
 
 };
 

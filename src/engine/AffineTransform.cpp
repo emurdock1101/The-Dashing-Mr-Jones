@@ -43,6 +43,11 @@ double **AffineTransform::identity()
 	return id;
 }
 
+// void AffineTransform::reset() {
+// 	cleanMatrix(transform);
+// 	transform = identity();
+// }
+
 /* Takes a point in the local coordinate system and transforms it to global space given this AffineTransform */
 SDL_Point AffineTransform::transformPoint(int x, int y)
 {
@@ -53,7 +58,7 @@ SDL_Point AffineTransform::transformPoint(int x, int y)
 }
 
 /* Add another transform to this one, is basically just matrix multiply */
-void AffineTransform::concatenate(AffineTransform &at)
+void AffineTransform::concatenate(const AffineTransform &at)
 {
 	// calculate the multiplication
 	double result[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};

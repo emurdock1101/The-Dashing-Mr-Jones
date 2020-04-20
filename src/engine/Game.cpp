@@ -16,11 +16,13 @@ SDL_Renderer* Game::renderer;
 Game* Game::instance;
 unsigned int Game::frameCounter = 0;
 
-Game::Game(int windowWidth, int windowHeight){
+Game::Game(int windowWidth, int windowHeight) : DisplayObjectContainer(){
 	Game::instance = this;
 	
 	this->windowWidth = windowWidth;
 	this->windowHeight = windowHeight;
+
+	DisplayObject::id = "Game";
 
 	initSDL();
 	TTF_Init();
@@ -34,6 +36,8 @@ void Game::quitSDL(){
 	cout << "Quitting sdl" << endl;
 	SDL_DestroyRenderer(Game::renderer);
 	SDL_DestroyWindow(window);
+
+	Game::renderer = NULL;
 
 	IMG_Quit();
 	SDL_Quit();
@@ -144,6 +148,10 @@ void Game::start(){
 	}
 }
 
+void Game::update(set<SDL_Scancode> pressedKeys) {
+	vector<ControllerState*> blankState;
+	Game::update(pressedKeys, blankState);
+}
 void Game::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){
 	frameCounter++;
 	DisplayObjectContainer::update(pressedKeys, controllerStates);

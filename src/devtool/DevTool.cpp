@@ -3,17 +3,21 @@
 #include "DevTool.h"
 #include <string>
 #include <ctime>
-#include "Game.h"
-#include "Scene.h"
-#include "Sprite.h"
+#include "../engine/Game.h"
+#include "../engine/Scene.h"
+#include "../engine/Sprite.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <iostream>
+#ifdef _WIN32
+#include <Windows.h>
+#else
 #include <dirent.h> 
+#endif
 #include <vector>
 #include <algorithm>
-#include "AnimatedSprite.h"
+#include "../engine/AnimatedSprite.h"
 
 using namespace std;
 vector<string> images;
@@ -72,7 +76,7 @@ void DevTool::start(){
 		double duration = (( end - start ) / (double) CLOCKS_PER_SEC)*100000;
 		if(duration > ms_per_frame){
 			start = end;
-			this->update(pressedKeys);
+			this->update(pressedKeys, controllerStates);
 			AffineTransform at;
 			this->draw(at);
 		}
@@ -156,7 +160,18 @@ vector<string>DevTool::getImagesFromFolder(string folderName){
 	vector<string> temp; 
 	
 	struct dirent *directory;
-
+#ifdef _WIN32
+	std::string pattern(folderName);
+	pattern.append("\\*");
+	WIN32_FIND_DATA data;
+	HANDLE hFind;
+	if ((hFind = FindFirstFile(pattern.c_str(), &data)) != INVALID_HANDLE_VALUE) {
+		do {
+			temp.push_back(data.cFileName);
+		} while (FindNextFile(hFind, &data) != 0);
+		FindClose(hFind);
+	}
+#else
 	DIR* dirp;
 	dirp = opendir(folderName.c_str());
 
@@ -175,6 +190,7 @@ vector<string>DevTool::getImagesFromFolder(string folderName){
        }
         closedir(dirp);
     }
+#endif
 
     for (string image: temp){
     	images.push_back(image);
@@ -184,7 +200,7 @@ vector<string>DevTool::getImagesFromFolder(string folderName){
     return images;
 }
 
-void DevTool::update(set<SDL_Scancode> pressedKeys){
+void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){
 	string filename;
 	for (SDL_Scancode scancode: pressedKeys) {
 		switch(scancode) {
@@ -334,8 +350,10 @@ void DevTool::update(set<SDL_Scancode> pressedKeys){
 				}*/
 			case SDL_SCANCODE_C:
 				// Copy
-				copied = new DisplayObjectContainer;
-				*copied = *selected;
+				if (selected != NULL) {
+					copied = new DisplayObjectContainer;
+					*copied = *selected;
+				}
 				break;
 			case SDL_SCANCODE_V:
 				// Paste

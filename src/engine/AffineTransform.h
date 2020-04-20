@@ -17,10 +17,12 @@ public:
 	void rotate(double r);
 	void scale(double x, double y);
 
-	void concatenate(AffineTransform &at);
+	void concatenate(const AffineTransform &at);
 
 	double getScaleX();
 	double getScaleY();
+
+	// void reset();
 
 private:
 	double** transform;

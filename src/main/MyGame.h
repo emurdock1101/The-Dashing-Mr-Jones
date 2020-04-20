@@ -4,20 +4,18 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <iostream>
-#include "Game.h"
-#include "Sprite.h"
-#include "AnimatedSprite.h"
-#include "Scene.h"
-#include "Sound.h"
-#include "Camera.h"
-#include "Text.h"
-#include "Menu.h"
-#include "HealthBar.h"
+#include "../engine/Game.h"
+#include "../engine/Sprite.h"
+#include "../engine/AnimatedSprite.h"
+#include "../engine/Scene.h"
+#include "../engine/Sound.h"
+#include "../engine/Camera.h"
+#include "../engine/CollisionSystem.h"
 #include "../objects/Player.h"
-#include "./tweens/Tween.h"
-#include "./tweens/TweenJuggler.h"
-#include "./tweens/TweenParam.h"
-#include "./tweens/TweenableParams.h"
+#include "../engine/tweens/Tween.h"
+#include "../engine/tweens/TweenJuggler.h"
+#include "../engine/tweens/TweenParam.h"
+#include "../engine/tweens/TweenableParams.h"
 
 using namespace std;
 
@@ -31,27 +29,14 @@ public:
 	virtual void draw(AffineTransform &at);
 
 private:
+	
 	Scene* sc;
 	Sound* sound;
-	Camera* cammy;
-	DisplayObjectContainer* heart1;
-	DisplayObjectContainer* heart2;
-	DisplayObjectContainer* heart3;
-	Tween* heartOut1;
-	Tween* heartOut2;
-	Tween* heartOut3;
-	Tween* heartIn1;
-	Tween* heartIn2;
-	Tween* heartIn3;
-	DisplayObjectContainer* player;
 	Tween* fadeIn;
-	Tween* fadeInMenu;
-	Tween* fadeOutMenu;
-	Tween* fadeOutHeart;
-	Menu* textBox;
-	Text* bubble;
-	HealthBar* health;
 	TweenJuggler* juggler = TweenJuggler::getInstance();
+	Player* player;
+	Sprite* floor;
+	CollisionSystem *collisionSystem;
 };
 
 #endif

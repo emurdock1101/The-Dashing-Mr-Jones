@@ -41,6 +41,7 @@ public:
 	void play(string animName);
 	void replay();
 	void stop();
+	string currentAnimName();
 
 	virtual void update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates);
 	virtual void draw(AffineTransform &at);
