@@ -9,5 +9,6 @@ public:
 	CollisionBlock();
 
 	void draw(AffineTransform &at);
+	// DisplayObject::visible gets set in the constructor, you can change it there
 };
 

@@ -32,7 +32,6 @@ private:
 	
 	Scene* sc;
 	Sound* sound;
-	Camera* cammy;
 	Tween* fadeIn;
 	TweenJuggler* juggler = TweenJuggler::getInstance();
 	Player* player;
