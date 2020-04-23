@@ -273,6 +273,8 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 				// Be sure to set inDevtool and make sure the object
 				// does not update physics if that's true!
 				// Add to scene and to onScreen
+				// Be sure to add capabilities in the object for saving scene
+				// with a writeSceneData method and for loading scene in Scene.cpp
 				if (objectType == "player" || objectType == "Player") {
 					Player* temp = new Player("player");
 					temp->position = {100, 100};

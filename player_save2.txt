@@ -1,2 +1,0 @@
-AnimatedSprite player 800 350 0 0 1 1 0 192 192 255 1
-./resources/player/player_sprites.png idle_right 12 12 1
