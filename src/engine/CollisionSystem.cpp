@@ -20,7 +20,7 @@ CollisionSystem::~CollisionSystem() {
 void CollisionSystem::update() {
 	for (auto it = watchedIds.begin(); it != watchedIds.end(); it++) {
 		// Get vector for first object in pair, or continue if none added
-		auto object1It = knownIds.find(it->first);
+		auto object1It = knownIds.find(it->type1);
 		if (object1It == knownIds.end()) {
 			// Continue if one of the ids has no known objects
 			continue;
@@ -41,7 +41,7 @@ void CollisionSystem::update() {
 		}
 
 		// Same for second
-		auto object2It = knownIds.find(it->second);
+		auto object2It = knownIds.find(it->type2);
 		if (object2It == knownIds.end()) {
 			// Continue if one of the ids has no known objects
 			continue;
@@ -67,6 +67,7 @@ void CollisionSystem::update() {
 				double yDelta1 = object1->position.y - object1->prevPos.y;
 				double yDelta2 = object2->position.y - object2->prevPos.y;
 
+				// condition: 1 at new x, 2 at prev
 				object1 -> position = object1->prevPos;
 				object2 -> position = object2->prevPos;
 				object1 -> position.x += xDelta1;
@@ -74,25 +75,43 @@ void CollisionSystem::update() {
 					triggeredByX = true;
 					//resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
 				}
+				// Condition: 1 at new y, 2 at prev
 				object1 -> position = object1->prevPos;
 				object1 -> position.y += yDelta1;
 				if (collidesWith(object1, object2)){
 					triggeredByY = true;
 				}
+				// Condition: 1 at new y, 2 at new X
 				object2 -> position.x += xDelta2;
 				if (!triggeredByX && collidesWith(object1, object2)) {
 					triggeredByX = true;
 					//resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
 				}
+				// Condition: 1 at new y, 2 at new Y
 				object2 -> position = object2->prevPos;
 				object2 -> position.y += yDelta2;
 				if (!triggeredByY && collidesWith(object1, object2)){
 					triggeredByY = true;
 				}
+				// condition: 1 at new XY, 2 at new XY, and collision stops
 				object1 -> position.x += xDelta1;
 				object2 -> position.x += xDelta2;
+				if ((triggeredByX && triggeredByY) && !collidesWith(object1, object2)) {
+					triggeredByX = false;
+					triggeredByY = false;
+				}
 				if (triggeredByX == true || triggeredByY == true){
-					resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
+					if (triggeredByX && triggeredByY) {
+						cout << "Collide mark" << endl;
+					}
+					if (it->resolve) {
+						resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
+					}
+					else {
+						SDL_Point deltaD = { 0,0 };
+						SDL_Point deltaO = { 0,0 };
+						notifyCollision(object1, object2, deltaD, deltaO);
+					}
 				}
 			}
 		
@@ -119,7 +138,17 @@ void CollisionSystem::handleEvent(Event* e) {
 //of DOs of a given type (e.g., player vs platform). The system will begin to check all player objects
 //against all platform objects that are in the current scene.
 void CollisionSystem::watchForCollisions(string type1, string type2) {
-	pair<string, string> watched = make_pair(type1, type2);
+	CollisionRegistration watched;
+	watched.type1 = type1;
+	watched.type2 = type2;
+	watched.resolve = true;
+	watchedIds.push_back(watched);
+}
+void CollisionSystem::watchForCollisions(string type1, string type2, bool resolve) {
+	CollisionRegistration watched;
+	watched.type1 = type1;
+	watched.type2 = type2;
+	watched.resolve = resolve;
 	watchedIds.push_back(watched);
 }
 
@@ -277,10 +306,13 @@ void CollisionSystem::resolveCollision(DisplayObject* d, DisplayObject* other,
 		triggeredByY = false;
 	}
 	
+	notifyCollision(d, other, deltaD, deltaO);
+}
+
+void CollisionSystem::notifyCollision(DisplayObject *d, DisplayObject *other, SDL_Point deltaD, SDL_Point deltaO) {
 	d->onCollision(other, deltaD);
 	other->onCollision(d, deltaO);
 }
-
 
 bool CollisionSystem::lineSegmentsIntersect(SDL_Point a, SDL_Point b, SDL_Point c, SDL_Point d) {
 	// Get orientations for each
