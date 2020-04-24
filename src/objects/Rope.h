@@ -12,9 +12,15 @@ public:
 	Rope(string id, string imgPath, int length);
 	void onCollision(DisplayObject* other, SDL_Point delta);
 
-	void cutRope(int point); // removes the object at point and all lower ones
+	int currentLength;
+	virtual void update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates);
+	void queueCut(int point); // set the point for the rope to cut at
+	
 	vector<RopeSegment*> segments;
 private:
+	int length;
+
+	void cutRope(int point); // removes the object at point and all lower ones
 	void createSegments(string imgPath, int length);
 };
 

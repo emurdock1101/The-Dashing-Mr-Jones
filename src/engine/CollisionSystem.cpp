@@ -154,7 +154,7 @@ void CollisionSystem::handleEvent(Event* e) {
 				itx = list->erase(itx);
 			}
 			else {
-				++itx;
+				itx++;
 			}
 		}
 		it->second = list;

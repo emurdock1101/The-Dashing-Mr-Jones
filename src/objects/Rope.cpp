@@ -1,22 +1,28 @@
 #include "Rope.h"
 
 Rope::Rope(int length) : DisplayObjectContainer("rope", 0, 0, 0) {
+	type = "rope";
 	visible = false;
 	width = 100;
 	height = 100;
+	this->length = length;
 	createSegments("./resources/objects/rope.png", length);
 }
 Rope::Rope(string id, int length) : DisplayObjectContainer(id, 0, 0, 0) {
+	type = "rope";
 	visible = false;
 	width = 100;
 	height = 100 * length;
+	this->length = length;
 	createSegments("./resources/objects/rope.png", length);
 }
 
 Rope::Rope(string id, string imgPath, int length) : DisplayObjectContainer(id, 0, 0, 0) {
+	type = "rope";
 	visible = false;
 	width = 100;
 	height = 100 * length;
+	this->length = length;
 	createSegments(imgPath, length);
 }
 
@@ -27,6 +33,14 @@ void Rope::createSegments(string imgPath, int length) {
 		segments[i]->ropeParent = this;
 		DisplayObjectContainer::addChild(segments[i]);
 	}
+}
+
+void Rope::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates) {
+	cutRope(length);
+}
+
+void Rope::queueCut(int point) {
+	length = point;
 }
 
 void Rope::cutRope(int point) {

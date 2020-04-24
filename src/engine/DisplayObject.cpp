@@ -476,6 +476,7 @@ float DisplayObject::area(int x1, int y1, int x2, int y2, int x3, int y3) {
                 x3 * (y1 - y2)) / 2.0);
 }
 
+
 void DisplayObject::onCollision(DisplayObject *other, SDL_Point delta) {
 
 }

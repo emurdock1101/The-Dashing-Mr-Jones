@@ -23,6 +23,8 @@ DisplayObjectContainer::DisplayObjectContainer(string id, int red, int green, in
 
 DisplayObjectContainer::~DisplayObjectContainer() {
     for (int i = children.size()-1; i >= 0; i-- ) {
+		Event newEvent(EventParams::DISPLAY_OBJECT_REMOVED, children[i]);
+		Game::instance->dispatchEvent(&newEvent);
         delete children[i];
     }
 }

@@ -10,7 +10,7 @@ RopeSegment::RopeSegment(string id, string imgPath, int segmentNum) : DisplayObj
 void RopeSegment::onCollision(DisplayObject* other, SDL_Point delta) {
 	if (other->type.compare("cb") == 0 || other->id == "0") {
 		if (ropeParent != NULL) {
-			ropeParent->cutRope(segmentNum);
+			ropeParent->queueCut(segmentNum);
 		}
 	}
 }
