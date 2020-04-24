@@ -157,7 +157,7 @@ void Scene::loadScene(string sceneFilePath){
                 pch = strtok((char*)line.c_str(), " ");;
                 while(pch != NULL){
                     animArgs.push_back(pch);
-                    //cout << pch << endl;
+                    cout << pch << endl;
                     pch = strtok(NULL, " ");
                 }
                 bool t = true;

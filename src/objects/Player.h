@@ -46,6 +46,8 @@ public:
 
 	set<SDL_Scancode> lastKeys;
 
+	virtual void writeSceneData(ostream &stream);
+
 	void update(set<SDL_Scancode> pressedKeys, vector<ControllerState*> controllerStates);
 	void draw(AffineTransform &at);
 	void onCollision(DisplayObject *other, SDL_Point delta);

@@ -244,3 +244,15 @@ void AnimatedSprite::writeSceneData(ostream &stream) {
 		stream << animation->loop << endl;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
