@@ -4,7 +4,7 @@
 RopeSegment::RopeSegment(string id, string imgPath, int segmentNum) : DisplayObjectContainer(id, imgPath) {
 	showHitbox = true;
 	this->segmentNum = segmentNum;
-	this->type = "ropeseg";
+	this->type = "rope_seg";
 }
 
 void RopeSegment::onCollision(DisplayObject* other, SDL_Point delta) {

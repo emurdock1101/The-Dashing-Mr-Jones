@@ -51,7 +51,7 @@ MyGame::MyGame() : Game(1920, 1000), EventListener() {
 	collisionSystem->camera = cammy;
 	collisionSystem->watchForCollisions("0", "player");
 	collisionSystem->watchForCollisions("0", "rope_seg", false);
-
+	collisionSystem->watchForCollisions("rope_seg", "player", false);
 }
 
 MyGame::~MyGame(){
@@ -142,11 +142,12 @@ void MyGame::ropePlaced() {
 		Rope* newRope = player->makeRope();
 		newRope->position = player->position;
 		if (player->facingRight) {
-			newRope->position.x += 100;
+			newRope->position.x += 150;
 		}
 		else {
-			newRope->position.x -= 100;
+			newRope->position.x -= 150;
 		}
+		newRope->position.y += 100;
 		sc->addChild(newRope);
 	}
 }
