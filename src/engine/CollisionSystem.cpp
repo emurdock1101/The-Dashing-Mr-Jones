@@ -14,6 +14,8 @@ CollisionSystem::CollisionSystem() {
 }
 
 CollisionSystem::~CollisionSystem() {
+	Game::instance->removeEventListener(this, EventParams::DISPLAY_OBJECT_ADDED);
+	Game::instance->removeEventListener(this, EventParams::DISPLAY_OBJECT_REMOVED);
 }
 
 //checks collisions between pairs of DOs where the corresponding types have been requested

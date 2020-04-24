@@ -11,7 +11,7 @@
 
 using namespace std;
 
-MyGame::MyGame() : Game(1920, 1000) {
+MyGame::MyGame() : Game(1920, 1000), EventListener() {
 
 	// MAKE SURE COLLISION SYSTEM DECLARED BEFORE ADDING ANYTHING TO TREE
 	collisionSystem = new CollisionSystem();
@@ -32,7 +32,7 @@ MyGame::MyGame() : Game(1920, 1000) {
 	this->pivot.x = this->windowWidth/2;
 	this->pivot.y = this->windowHeight/2;
 	player = (Player*)sc->getChild("player");
-	player->addEventListener(this, EventParams::ROPE_DEPLOYED);
+	player->addEventListener( (EventListener*)this, EventParams::ROPE_DEPLOYED);
 	sound->playMusic("./resources/sounds/boss.ogg");
 
 	//Commented out code for Tween demo -- causing seg fault
