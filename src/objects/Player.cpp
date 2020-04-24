@@ -71,6 +71,10 @@ void Player::physicsUpdate() {
 }
 
 void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates) {
+	if (inDevtool) {
+		AnimatedSprite::update(pressedKeys, controllerStates);
+		return;
+	}
 	DisplayObject::prevPos = position;
 	// double delta = (SDL_GetTicks() - lastUpdate) / 1000;
 	double delta = (double)1 / Game::instance->frames_per_sec;
@@ -283,6 +287,34 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 
 void Player::draw(AffineTransform &at) {
 	AnimatedSprite::draw(at);
+}
+
+void Player::writeSceneData(ostream &stream) {
+	stream << "AnimatedSprite" << " ";
+	stream << id << " ";
+	stream << position.x << " ";
+	stream << position.y << " ";
+	stream << pivot.x << " ";
+	stream << pivot.y << " ";
+	stream << scaleX << " ";
+	stream << scaleY << " ";
+	stream << rotation << " ";
+	stream << height << " ";
+	stream << width << " ";
+	stream << alpha << " ";
+	stream << this->animations.size();
+	// Animation args
+	if (parent != NULL && parent->type != "Scene") {
+		stream << " " << parent->id;
+	}
+	stream << endl;
+	for (Animation * animation : animations) {
+		stream << animation->basepath << " ";
+		stream << animation->animName << " ";
+		stream << animation->numFrames << " ";
+		stream << animation->frameRate << " ";
+		stream << animation->loop << endl;
+	}
 }
 
 void Player::faceSprite(bool facingRight) {
