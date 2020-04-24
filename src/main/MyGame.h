@@ -17,6 +17,8 @@
 #include "../engine/tweens/TweenParam.h"
 #include "../engine/tweens/TweenableParams.h"
 #include "../engine/events/EventListener.h"
+#include "Mummy.h"
+
 
 #include "../objects/Rope.h"
 
@@ -42,6 +44,7 @@ private:
 	Tween* fadeIn;
 	TweenJuggler* juggler = TweenJuggler::getInstance();
 	Player* player;
+	Mummy* mummy;
 	Sprite* floor;
 	CollisionSystem *collisionSystem;
 };

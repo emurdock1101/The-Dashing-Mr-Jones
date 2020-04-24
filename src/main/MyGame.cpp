@@ -29,11 +29,17 @@ MyGame::MyGame() : Game(1920, 1000), EventListener() {
 	cammy->y = -this->windowHeight;
 	sc->loadScene("./resources/scenes/area1_room1.txt");
 	instance->addChild(sc);
+
+	Mummy* mummy = new Mummy("name");
+	mummy -> position.x = 500;
+	mummy -> position.y = 500;
+	sc->addChild(mummy);
+
 	this->pivot.x = this->windowWidth/2;
 	this->pivot.y = this->windowHeight/2;
 	player = (Player*)sc->getChild("player");
 	player->addEventListener( (EventListener*)this, EventParams::ROPE_DEPLOYED);
-	sound->playMusic("./resources/sounds/boss.ogg");
+	//sound->playMusic("./resources/sounds/boss.ogg");
 
 	//Commented out code for Tween demo -- causing seg fault
 	//player->alpha = 0;
