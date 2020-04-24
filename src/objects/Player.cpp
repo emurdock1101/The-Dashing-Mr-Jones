@@ -158,6 +158,16 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 			canJump = false;
 		}
 
+		// place rope code
+		if (pressedKeys.find(SDL_SCANCODE_X) != pressedKeys.end() && lastKeys.find(SDL_SCANCODE_X) == lastKeys.end() && ropes > 0) {
+			state = 5;
+			substate = Game::frameCounter;
+			pointState.x = 0;
+			velX = 0;
+			velY = 0;
+			break;
+		}
+
 		// jump code
 		if (pressedKeys.find(SDL_SCANCODE_SPACE) != pressedKeys.end()) {
 			if (lastKeys.find(SDL_SCANCODE_SPACE) == lastKeys.end() && canJump) {
@@ -273,6 +283,13 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 		break;
 	case 5:
 		// rope deploy
+
+		if (Game::frameCounter - substate > 120) {
+			ropes--;
+			Event ropeEvent(EventParams::ROPE_DEPLOYED, this);
+			EventDispatcher::dispatchEvent(&ropeEvent);
+			state = 1;
+		}
 		break;
 	case 6:
 		// death
@@ -378,4 +395,9 @@ void Player::onCollision(DisplayObject *other, SDL_Point delta) {
 		}
 	}
 	DisplayObject::onCollision(other, delta);
+}
+
+Rope* Player::makeRope() {
+	Rope* newRope = new Rope(ropeLength);
+	return newRope;
 }

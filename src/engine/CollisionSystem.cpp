@@ -10,9 +10,12 @@ using namespace std;
 
 CollisionSystem::CollisionSystem() {
 	Game::instance->addEventListener(this, EventParams::DISPLAY_OBJECT_ADDED);
+	Game::instance->addEventListener(this, EventParams::DISPLAY_OBJECT_REMOVED);
 }
 
 CollisionSystem::~CollisionSystem() {
+	Game::instance->removeEventListener(this, EventParams::DISPLAY_OBJECT_ADDED);
+	Game::instance->removeEventListener(this, EventParams::DISPLAY_OBJECT_REMOVED);
 }
 
 //checks collisions between pairs of DOs where the corresponding types have been requested
@@ -62,57 +65,58 @@ void CollisionSystem::update() {
 		for (DisplayObject *object1 : object1Vec) {
 			for (DisplayObject *object2 : object2Vec) {
 
-				double xDelta1 = object1->position.x - object1->prevPos.x;
-				double xDelta2 = object2->position.x - object2->prevPos.x;
-				double yDelta1 = object1->position.y - object1->prevPos.y;
-				double yDelta2 = object2->position.y - object2->prevPos.y;
+				if (it->resolve) {
+					double xDelta1 = object1->position.x - object1->prevPos.x;
+					double xDelta2 = object2->position.x - object2->prevPos.x;
+					double yDelta1 = object1->position.y - object1->prevPos.y;
+					double yDelta2 = object2->position.y - object2->prevPos.y;
 
-				// condition: 1 at new x, 2 at prev
-				object1 -> position = object1->prevPos;
-				object2 -> position = object2->prevPos;
-				object1 -> position.x += xDelta1;
-				if (collidesWith(object1, object2)) {
-					triggeredByX = true;
-					//resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
-				}
-				// Condition: 1 at new y, 2 at prev
-				object1 -> position = object1->prevPos;
-				object1 -> position.y += yDelta1;
-				if (collidesWith(object1, object2)){
-					triggeredByY = true;
-				}
-				// Condition: 1 at new y, 2 at new X
-				object2 -> position.x += xDelta2;
-				if (!triggeredByX && collidesWith(object1, object2)) {
-					triggeredByX = true;
-					//resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
-				}
-				// Condition: 1 at new y, 2 at new Y
-				object2 -> position = object2->prevPos;
-				object2 -> position.y += yDelta2;
-				if (!triggeredByY && collidesWith(object1, object2)){
-					triggeredByY = true;
-				}
-				// condition: 1 at new XY, 2 at new XY, and collision stops
-				object1 -> position.x += xDelta1;
-				object2 -> position.x += xDelta2;
-				if ((triggeredByX && triggeredByY) && !collidesWith(object1, object2)) {
-					triggeredByX = false;
-					triggeredByY = false;
-				}
-				if (triggeredByX == true || triggeredByY == true){
-					if (triggeredByX && triggeredByY) {
-						cout << "Collide mark" << endl;
+					// condition: 1 at new x, 2 at prev
+					object1->position = object1->prevPos;
+					object2->position = object2->prevPos;
+					object1->position.x += xDelta1;
+					if (collidesWith(object1, object2)) {
+						triggeredByX = true;
+						//resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
 					}
-					if (it->resolve) {
+					// Condition: 1 at new y, 2 at prev
+					object1->position = object1->prevPos;
+					object1->position.y += yDelta1;
+					if (collidesWith(object1, object2)) {
+						triggeredByY = true;
+					}
+					// Condition: 1 at new y, 2 at new X
+					object2->position.x += xDelta2;
+					if (!triggeredByX && collidesWith(object1, object2)) {
+						triggeredByX = true;
+						//resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
+					}
+					// Condition: 1 at new y, 2 at new Y
+					object2->position = object2->prevPos;
+					object2->position.y += yDelta2;
+					if (!triggeredByY && collidesWith(object1, object2)) {
+						triggeredByY = true;
+					}
+					// condition: 1 at new XY, 2 at new XY, and collision stops
+					object1->position.x += xDelta1;
+					object2->position.x += xDelta2;
+					if ((triggeredByX && triggeredByY) && !collidesWith(object1, object2)) {
+						triggeredByX = false;
+						triggeredByY = false;
+					}
+					if (triggeredByX == true || triggeredByY == true) {
 						resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
 					}
-					else {
+				}
+				else {
+					// simpler logic for non-resolving collisions, since we don't need that axis-specific info
+					if (collidesWith(object1, object2)) {
 						SDL_Point deltaD = { 0,0 };
 						SDL_Point deltaO = { 0,0 };
 						notifyCollision(object1, object2, deltaD, deltaO);
 					}
 				}
+
 			}
 		
 		}
@@ -123,15 +127,42 @@ void CollisionSystem::update() {
 //This system watches the game's display tree and is notified whenever a display object is placed onto
 //or taken off of the tree. Thus, the collision system always knows what DOs are in the game at any moment automatically.
 void CollisionSystem::handleEvent(Event* e) {
-	string objectId = ((DisplayObject *)e->getSource())->id;
-	auto it = knownIds.find(objectId);
-	if (it == knownIds.end()) {
-		knownIds.insert(pair<string, vector<DisplayObject *> *>(
-					objectId, new vector<DisplayObject *>()));
-		it = knownIds.find(objectId);
+	switch (e->getType()) {
+
+	case EventParams::DISPLAY_OBJECT_ADDED:
+	{
+		string objectId = ((DisplayObject *)e->getSource())->id;
+		auto it = knownIds.find(objectId);
+		if (it == knownIds.end()) {
+			knownIds.insert(pair<string, vector<DisplayObject *> *>(
+				objectId, new vector<DisplayObject *>()));
+			it = knownIds.find(objectId);
+		}
+		// Add event's object to the vector
+		it->second->push_back((DisplayObject *)e->getSource());
+		break;
 	}
-	// Add event's object to the vector
-	it->second->push_back((DisplayObject *)e->getSource());
+	case EventParams::DISPLAY_OBJECT_REMOVED:
+	{
+		string objectId = ((DisplayObject *)e->getSource())->id;
+		auto it = knownIds.find(objectId);
+		if (it == knownIds.end()) {
+			break;
+		}
+		vector<DisplayObject*> *list = it->second;
+		auto itx = list->begin();
+		while (itx != list->end()) {
+			if (*itx == (DisplayObject*)e->getSource()) {
+				itx = list->erase(itx);
+			}
+			else {
+				itx++;
+			}
+		}
+		it->second = list;
+		break;
+	}
+	}
 }
 
 //This function asks the collision system to start checking for collisions between all pairs
@@ -210,7 +241,6 @@ bool CollisionSystem::collidesWith(DisplayObject* obj1, DisplayObject* obj2) {
 	// First, we see if box hull indicates a possible collision...
 	if (((xL2 < xH1 && xH2 > xL1) || (xH2 > xL1 && xL2 < xH1)) &&
 		((yL2 < yH1 && yH2 > yL1) || (yH2 > yL1 && yL2 < yH1))) {
-
 
 		// Test each possible line segment, not looping so here's to big blocks
 		// 16 checks incoming!!

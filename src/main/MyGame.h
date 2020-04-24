@@ -16,10 +16,13 @@
 #include "../engine/tweens/TweenJuggler.h"
 #include "../engine/tweens/TweenParam.h"
 #include "../engine/tweens/TweenableParams.h"
+#include "../engine/events/EventListener.h"
+
+#include "../objects/Rope.h"
 
 using namespace std;
 
-class MyGame : public Game{
+class MyGame : public Game, EventListener{
 
 public:
 	MyGame();
@@ -28,6 +31,10 @@ public:
 	virtual void update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates);
 	virtual void draw(AffineTransform &at);
 
+	void roomTransition(string newSceneFile);
+
+	void handleEvent(Event* e);
+	void ropePlaced();
 private:
 	
 	Scene* sc;

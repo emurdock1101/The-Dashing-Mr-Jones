@@ -11,7 +11,7 @@
 
 using namespace std;
 
-MyGame::MyGame() : Game(1920, 1000) {
+MyGame::MyGame() : Game(1920, 1000), EventListener() {
 
 	// MAKE SURE COLLISION SYSTEM DECLARED BEFORE ADDING ANYTHING TO TREE
 	collisionSystem = new CollisionSystem();
@@ -32,6 +32,7 @@ MyGame::MyGame() : Game(1920, 1000) {
 	this->pivot.x = this->windowWidth/2;
 	this->pivot.y = this->windowHeight/2;
 	player = (Player*)sc->getChild("player");
+	player->addEventListener( (EventListener*)this, EventParams::ROPE_DEPLOYED);
 	sound->playMusic("./resources/sounds/boss.ogg");
 
 	//Commented out code for Tween demo -- causing seg fault
@@ -39,25 +40,6 @@ MyGame::MyGame() : Game(1920, 1000) {
 	//fadeIn = new Tween(*player);
 	//fadeIn->animate(TweenableParams::ALPHA, player->alpha, 255, 180);
 	//juggler->add(fadeIn);
-	
-
-
-
-
-	// Sprite *background = new Sprite("background", "./resources/tilesets/rooms/a1rm1.png");
-	// background->position = { 0,0 };
-	// background->width = 902;
-	// background->height = 385;
-	// background->scaleX = 1;
-	// background->scaleY = 1;
-	// Game::addChild(background);
-
-	// floor = new Sprite("floor", "./resources/floor.png");
-	// floor->position.y = 500;
-	// floor->prevPos = floor->position;
-	// floor->width = 1200;
-	// floor->height = 200;
-	// Game::addChild(floor);
 
 	// player = new Player("player");
 	// player->position.y = 0;
@@ -68,6 +50,7 @@ MyGame::MyGame() : Game(1920, 1000) {
 
 	collisionSystem->camera = cammy;
 	collisionSystem->watchForCollisions("0", "player");
+	collisionSystem->watchForCollisions("0", "rope_seg", false);
 
 }
 
@@ -144,4 +127,26 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 void MyGame::draw(AffineTransform &at){
 	at.translate(this->pivot.x, this->pivot.y);
 	Game::draw(at);
+}
+
+void MyGame::handleEvent(Event* e) {
+	if (e->getSource() == player) {
+		switch (e->getType()) {
+		case EventParams::ROPE_DEPLOYED:
+			ropePlaced();
+		}
+	}
+}
+void MyGame::ropePlaced() {
+	if (player != NULL) {
+		Rope* newRope = player->makeRope();
+		newRope->position = player->position;
+		if (player->facingRight) {
+			newRope->position.x += 100;
+		}
+		else {
+			newRope->position.x -= 100;
+		}
+		sc->addChild(newRope);
+	}
 }
