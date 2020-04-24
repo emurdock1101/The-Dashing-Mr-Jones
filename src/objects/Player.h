@@ -9,6 +9,15 @@ class Player :
 	public AnimatedSprite
 {
 public:
+	static enum PlayerState {
+		NO_STATE,
+		MOVEMENT,
+		DASHING,
+		HITSTUN, 
+		CLIMBING,
+		ROPE_DEPLOY,
+		DEATH
+	};
 	Player();
 	Player(string id);
 
@@ -37,6 +46,7 @@ public:
 	double maxFallSpeed = 120;
 	double gravity = 180;
 	double unitScale = 16;
+	double climbSpeed = 0.5;
 
 	double PROTOTYPE_FLOOR_LEVEL = 1200;
 
@@ -55,6 +65,8 @@ public:
 	Rope* makeRope(); // returns a rope which needs to be placed in the scene
 
 private:
+	bool touchingRope = false;
 	void faceSprite(bool facingRight);
+	void handleDashInput(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates);
 };
 

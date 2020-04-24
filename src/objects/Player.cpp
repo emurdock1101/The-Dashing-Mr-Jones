@@ -83,11 +83,11 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 	// Keep in mind that this function keeps firing for every frame that the state is active. If you want, you can create new states 
 	// and class fields to wait out tweens/other stuff before transitioning to another state.
 	switch (this->state) {
-	case 0:
+	case PlayerState::NO_STATE:
 		// null state
 		break;
-	case 1:
-		// general movement
+	case PlayerState::MOVEMENT:
+		// ================================== general movement =========================
 
 		// animation states
 		if (isGrounded) {
@@ -160,7 +160,7 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 
 		// place rope code
 		if (pressedKeys.find(SDL_SCANCODE_X) != pressedKeys.end() && lastKeys.find(SDL_SCANCODE_X) == lastKeys.end() && ropes > 0) {
-			state = 5;
+			state = PlayerState::ROPE_DEPLOY;
 			substate = Game::frameCounter;
 			pointState.x = 0;
 			velX = 0;
@@ -185,50 +185,24 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 		// dash code
 		if (pressedKeys.find(SDL_SCANCODE_C) != pressedKeys.end()) {
 			if (lastKeys.find(SDL_SCANCODE_C) == lastKeys.end() && canDash) {
-				SDL_Point axis = { 0,0 };
-				// get horizontal
-				if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
-					axis.x += 1;
-				}
-				if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
-					axis.x -= 1;
-				}
-				if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end()) {
-					axis.y -= 1;
-				} 
-				if (pressedKeys.find(SDL_SCANCODE_DOWN) != pressedKeys.end()) {
-					axis.y += 1;
-				}
+				handleDashInput(pressedKeys, controllerStates);
+			}
+		}
 
-				if (axis.x == 0 && axis.y == 0) {
-					if (spriteObject->facingRight) {
-						axis.x = 1;
-					}
-					else {
-						axis.x = -1;
-					}
-				}
-
-				if (axis.x < 0) {
-					faceSprite(false);
-				} 
-				else if (axis.x > 0) {
-					faceSprite(true);
-				}
-				spriteObject->play("dash_right");
-
-				canDash = false;
-				state = 2;
-				substate = Game::frameCounter;
-				pointState = axis;
+		// climb code
+		if (touchingRope) {
+			if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end() || pressedKeys.find(SDL_SCANCODE_DOWN) != pressedKeys.end()) {
+				state = PlayerState::CLIMBING;
 			}
 		}
 
 
+		touchingRope = false;
+
 		physicsUpdate();
 		break;
-	case 2:
-		// dashing
+	case PlayerState::DASHING:
+		//  ========================= Dashing ============================
 
 		// substate: stores the frame when the dash started
 		// pointState: stores a vector of the direction we're dashing
@@ -264,7 +238,7 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 			}
 		}
 		else {
-			state = 1;
+			state = PlayerState::MOVEMENT;
 
 			velX = pointState.x * runSpeed;
 			velY = pointState.y * runSpeed;
@@ -273,22 +247,70 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 				velY /= 1.414;
 			}
 		}
-		
+		touchingRope = false;
+
 		break;
-	case 3:
+	case PlayerState::HITSTUN:
 		// hitstun
+
+		// not implemented
 		break;
-	case 4:
-		// rope climbing
+	case PlayerState::CLIMBING:
+		// ===================================== rope climbing ====================================
+		velX = 0.0;
+		velY = 0.0;
+		if (!touchingRope) {
+			state = PlayerState::MOVEMENT;
+			break;
+		}
+		else {
+			lastGrounded = Game::frameCounter;
+			canJump = true;
+			canDash = true;
+		}
+
+		// movement code
+		if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
+			position.x -= (int)(climbSpeed * unitScale);
+		}
+		if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
+			position.x += (int)(climbSpeed * unitScale);
+		}
+		if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end()) {
+			position.y -= (int)(climbSpeed * unitScale);
+		}
+		if (pressedKeys.find(SDL_SCANCODE_DOWN) != pressedKeys.end()) {
+			position.y += (int)(climbSpeed * unitScale);
+		}
+
+		// jump code
+		if (pressedKeys.find(SDL_SCANCODE_SPACE) != pressedKeys.end()) {
+			if (lastKeys.find(SDL_SCANCODE_SPACE) == lastKeys.end() && canJump) {
+				velY = -jumpPower;
+				canJump = false;
+				isGrounded = false;
+				lastGrounded = Game::frameCounter;
+				state = PlayerState::MOVEMENT;
+			}
+		} 
+		
+		// dash code
+		if (pressedKeys.find(SDL_SCANCODE_C) != pressedKeys.end()) {
+			if (lastKeys.find(SDL_SCANCODE_C) == lastKeys.end() && canDash) {
+				handleDashInput(pressedKeys, controllerStates);
+			}
+		}
+
+		touchingRope = false;
 		break;
 	case 5:
-		// rope deploy
+		// ================ rope deploy =======================
 
 		if (Game::frameCounter - substate > 120) {
 			ropes--;
 			Event ropeEvent(EventParams::ROPE_DEPLOYED, this);
 			EventDispatcher::dispatchEvent(&ropeEvent);
-			state = 1;
+			state = PlayerState::MOVEMENT;
 		}
 		break;
 	case 6:
@@ -301,6 +323,112 @@ void Player::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 	lastUpdate = SDL_GetTicks();
 	AnimatedSprite::update(pressedKeys, controllerStates);
 }
+
+void Player::handleDashInput(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates) {
+	SDL_Point axis = { 0,0 };
+	// get horizontal
+	if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
+		axis.x += 1;
+	}
+	if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
+		axis.x -= 1;
+	}
+	if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end()) {
+		axis.y -= 1;
+	}
+	if (pressedKeys.find(SDL_SCANCODE_DOWN) != pressedKeys.end()) {
+		axis.y += 1;
+	}
+
+	if (axis.x == 0 && axis.y == 0) {
+		if (spriteObject->facingRight) {
+			axis.x = 1;
+		}
+		else {
+			axis.x = -1;
+		}
+	}
+
+	if (axis.x < 0) {
+		faceSprite(false);
+	}
+	else if (axis.x > 0) {
+		faceSprite(true);
+	}
+	spriteObject->play("dash_right");
+
+	canDash = false;
+	state = 2;
+	substate = Game::frameCounter;
+	pointState = axis;
+}
+
+void Player::onCollision(DisplayObject *other, SDL_Point delta) {
+	if (other->type == "rope_seg") {
+		// rope segment handling
+		touchingRope = true;
+	}
+	else {
+		// genertic entity handling:
+
+		// if the thing pushed us up:
+		if (delta.y < 0) {
+			// a bit of a hacky way to stop bouncing off platforms: cover remaining distance assuming player is in global space
+
+			// get the absolute top of the other entity
+			SDL_Point topLeft1 = other->getTopLeftHitbox();
+			SDL_Point topRight1 = other->getTopRightHitbox();
+			SDL_Point bottomLeft1 = other->getBottomLeftHitbox();
+			SDL_Point bottomRight1 = other->getBottomRightHitbox();
+
+			vector<SDL_Point> obj1Points = { topLeft1, topRight1, bottomLeft1, bottomRight1 };
+			int yH1 = INT_MAX;
+			for (SDL_Point point : obj1Points) {
+				if (point.y < yH1) {
+					yH1 = point.y;
+				}
+			}
+
+			// we cover the remaining distance to the top of that entity
+			// we assume that the player in game logic always has a 1:1 scale with the global scale
+			SDL_Point myBot = getBottomLeftHitbox();
+			if (myBot.y < yH1) {
+				int origY = position.y;
+				position.y += yH1 - myBot.y;
+				// just in case the player scale isn't 1:1 with global, we revert if something went wrong
+				SDL_Point newBot = getBottomLeftHitbox();
+				if (newBot.y > yH1) {
+					position.y = origY;
+				}
+			}
+
+
+			// state logic when hitting the ground
+			isGrounded = true;
+			lastGrounded = Game::frameCounter;
+			canDash = true;
+			canJump = true;
+			velY = 0.002;
+		}
+		if (delta.y > 0) { // remove upwards velocity when hitting a ceiling
+			velY = -0.0001;
+		}
+	}
+
+	DisplayObject::onCollision(other, delta);
+}
+
+Rope* Player::makeRope() {
+	Rope* newRope = new Rope(ropeLength);
+	return newRope;
+}
+
+
+
+
+
+
+
 
 void Player::draw(AffineTransform &at) {
 	AnimatedSprite::draw(at);
@@ -335,6 +463,7 @@ void Player::writeSceneData(ostream &stream) {
 }
 
 void Player::faceSprite(bool facingRight) {
+	DisplayObject::facingRight = facingRight;
 	if (facingRight) {
 		spriteObject->position = { 87, 126 };
 		spriteObject->facingRight = true;
@@ -343,61 +472,4 @@ void Player::faceSprite(bool facingRight) {
 		spriteObject->position = { 60, 126 };
 		spriteObject->facingRight = false;
 	}
-}
-
-
-void Player::onCollision(DisplayObject *other, SDL_Point delta) {
-	// if the thing pushed us up:
-	if (delta.y < 0) {
-		// a bit of a hacky way to stop bouncing off platforms
-
-		// get the absolute top of the other entity
-		SDL_Point topLeft1 = other->getTopLeftHitbox();
-		SDL_Point topRight1 = other->getTopRightHitbox();
-		SDL_Point bottomLeft1 = other->getBottomLeftHitbox();
-		SDL_Point bottomRight1 = other->getBottomRightHitbox();
-
-		vector<SDL_Point> obj1Points = { topLeft1, topRight1, bottomLeft1, bottomRight1 };
-		int yH1 = INT_MAX;
-		for (SDL_Point point : obj1Points) {
-			if (point.y < yH1) {
-				yH1 = point.y;
-			}
-		}
-
-		// we cover the remaining distance to the top of that entity
-		// we assume that the player in game logic always has a 1:1 scale with the global scale
-		SDL_Point myBot = getBottomLeftHitbox();
-		if (myBot.y < yH1) {
-			int origY = position.y;
-			position.y += yH1 - myBot.y;
-			// just in case the player scale isn't 1:1 with global, we revert if something went wrong
-			SDL_Point newBot = getBottomLeftHitbox();
-			if (newBot.y > yH1) {
-				position.y = origY;
-			}
-		}
-
-
-		// state logic when hitting the ground
-		isGrounded = true;
-		lastGrounded = Game::frameCounter;
-		canDash = true;
-		canJump = true;
-		velY = 0.002;
-	}
-	if (delta.y > 0) {
-		velY = -0.0001;
-	}
-	if (delta.x == 0 && delta.y == 0) {
-		if (velX == 0.0) {
-			// logic to get unstuck
-		}
-	}
-	DisplayObject::onCollision(other, delta);
-}
-
-Rope* Player::makeRope() {
-	Rope* newRope = new Rope(ropeLength);
-	return newRope;
 }
