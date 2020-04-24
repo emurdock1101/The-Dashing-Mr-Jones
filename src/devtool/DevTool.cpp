@@ -2,7 +2,7 @@
 #include <algorithm>
 #include "DevTool.h"
 #include <string>
-#include "Player.h"
+#include "../objects/Player.h"
 #include <ctime>
 #include "../engine/Game.h"
 #include "../engine/Scene.h"

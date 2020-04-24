@@ -315,6 +315,7 @@ void Player::writeSceneData(ostream &stream) {
 		stream << animation->frameRate << " ";
 		stream << animation->loop << endl;
 	}
+}
 
 void Player::faceSprite(bool facingRight) {
 	if (facingRight) {
