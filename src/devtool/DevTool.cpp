@@ -102,10 +102,13 @@ void DevTool::start(){
 							scene->addChild(selected);
 							onScreen.push_back(selected);
 							dragging = true;
+							dragDelta = { event.motion.x, event.motion.y };
 							break;
 						}
 					}
-					for (DisplayObjectContainer *sprite: this->onScreen) {
+					
+					for (int i = this->onScreen.size() - 1; i >= 0; i--) { // go backwards so things drawn on top get selected first
+						DisplayObjectContainer* sprite = onScreen[i];
 						if (isHoveredScene(sprite, event) && makeChild == true){
 							cout << sprite->imgPath << " is now a child of " << selected->imgPath << endl;
 							selected->addChild(sprite);
@@ -113,14 +116,16 @@ void DevTool::start(){
 							sprite->position.y -= selected->position.y;
 							scene->removeImmediateChild(sprite);
 							makeChild = false;
+							break;
 						}
 						if (isHoveredScene(sprite, event)) {
 							dragging = true;
+							dragDelta = { event.motion.x, event.motion.y };
 							selected = sprite;
 							// Remove/add child so it's top of display tree (if it's a direct child of scene)
 							if (find(scene->children.begin(), scene->children.end(), sprite) != scene->children.end()){
-								scene->removeImmediateChild(selected);
-								scene->addChild(selected);
+								// scene->removeImmediateChild(selected);
+								// scene->addChild(selected);
 							}
 							break;
 						}
@@ -140,9 +145,11 @@ void DevTool::start(){
 				break;
 			case SDL_MOUSEMOTION:
 				if (dragging) {
-					SDL_Point absolutePos = selected->getTopLeft();
-					selected->position.x = event.motion.x - (absolutePos.x - selected->position.x) + scene->camera->x;
-					selected->position.y = event.motion.y - (absolutePos.y - selected->position.y) + scene->camera->y;
+					// SDL_Point absolutePos = selected->getTopLeft();
+					selected->position.x = (event.motion.x- dragDelta.x) + selected->position.x;
+					selected->position.y = (event.motion.y- dragDelta.y) + selected->position.y;
+					dragDelta.x = event.motion.x;
+					dragDelta.y = event.motion.y;
 					//selected->pivot = {selected->width/2, selected->height/2};
 				}
 				break;

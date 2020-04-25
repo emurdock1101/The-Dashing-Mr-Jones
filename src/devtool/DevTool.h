@@ -40,6 +40,7 @@ private:
 	Sprite *selectionArea;
 	Sprite* blueBar;
 	bool dragging = false;
+	SDL_Point dragDelta = { 0,0 };
 	bool makeChild = false;
 
 	vector<DisplayObjectContainer*> spritesToDisplay;
