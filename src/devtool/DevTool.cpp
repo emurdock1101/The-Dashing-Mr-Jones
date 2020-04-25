@@ -170,7 +170,15 @@ vector<string>DevTool::getImagesFromFolder(string folderName){
 	HANDLE hFind;
 	if ((hFind = FindFirstFile(pattern.c_str(), &data)) != INVALID_HANDLE_VALUE) {
 		do {
-			temp.push_back(data.cFileName);
+			string file = string(data.cFileName);
+			if ((file.find(".png") != std::string::npos)) {
+				//cout << directory->d_name << endl;
+				temp.push_back(folderName + "/" + data.cFileName);
+			}
+			if (!((file.find(".") != std::string::npos))) {
+				//cout << directory -> d_name << endl;
+				getImagesFromFolder(folderName + "/" + data.cFileName);
+			}
 		} while (FindNextFile(hFind, &data) != 0);
 		FindClose(hFind);
 	}
