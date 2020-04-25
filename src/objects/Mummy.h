@@ -21,7 +21,6 @@ public:
 	double unitScale = 16;
 	bool walkingRight;
 
-    SDL_Point originalPos = this->position;
     void init();
     void patrol();
     void stunned();
@@ -32,6 +31,8 @@ public:
     double patrolRange = 100;
 
 	double PROTOTYPE_FLOOR_LEVEL = 800;
+
+	SDL_Point originalPos;
 
 	double lastUpdate;
 
@@ -47,5 +48,4 @@ public:
 	void onCollision(DisplayObject *other, SDL_Point delta);
 
     private:
-	    void faceSprite(bool facingRight);
 };

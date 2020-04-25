@@ -17,6 +17,8 @@ Mummy::Mummy(string id, int x, int y) : AnimatedSprite(id, "./resources/sprites_
 	this->width = unitScale * 12;
 	this->height = unitScale * 12;
 	this->setPos(x, y);
+	cout << "pos: " << this->position.x << " y: " << this->position.y << endl;
+	cout << "prev pos: " << this->prevPos.x << " y: " << this->prevPos.y << endl;
 
 	//spriteObject->type = "Mummy";
 	AnimatedSprite::addAnimationFromSpriteSheet("./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "walk_right", 4, 16, true);
@@ -27,11 +29,10 @@ Mummy::Mummy(string id, int x, int y) : AnimatedSprite(id, "./resources/sprites_
 	AnimatedSprite::addAnimationFromSpriteSheet("./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "turn_right", 3, 32, false);
 	AnimatedSprite::play("walk_right");
 	this->walkingRight = true;
-	faceSprite(true);
 }
 
 void Mummy::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){
-	AnimatedSprite::update(pressedKeys, controllerStates);
+	cout << "pos: " << this->position.x << " y: " << this->position.y << endl;
 
 	
 	//state 0 = one time state to kick things off
@@ -54,6 +55,7 @@ void Mummy::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> cont
             turn();
             break;
     }
+	AnimatedSprite::update(pressedKeys, controllerStates);
 }
 
 void Mummy::onCollision(DisplayObject* other){
@@ -62,7 +64,6 @@ void Mummy::onCollision(DisplayObject* other){
 
 void Mummy::draw(AffineTransform &at){
 	AnimatedSprite::draw(at);
-	//this->drawHitbox();
 }
 
 void Mummy::init() {
@@ -120,57 +121,25 @@ void Mummy::turn() {
 			this->play("walk_left");
 		}
 		// And walk one step so it doesn't auto turn around again
+		this->setPos(this->position.x + velX * 2, this->position.y);
 		this->position.x += velX * 2;
 
 	}
 }
 
-void Mummy::faceSprite(bool facingRight) {
-	if (facingRight) {
-		this->position = { 87, 126 };
-		this->facingRight = true;
-	}
-	else {
-		this->position = { 60, 126 };
-		this->facingRight = false;
-	}
-}
-
 void Mummy::onCollision(DisplayObject *other, SDL_Point delta) {
-	cout << "COLLISION OMG" << endl;
-	// a bit of a hacky way to stop bouncing off platforms: cover remaining distance assuming player is in global space
+	// genertic entity handling:
 
-	// get the absolute top of the other entity
-	SDL_Point topLeft1 = other->getTopLeftHitbox();
-	SDL_Point topRight1 = other->getTopRightHitbox();
-	SDL_Point bottomLeft1 = other->getBottomLeftHitbox();
-	SDL_Point bottomRight1 = other->getBottomRightHitbox();
-
-	vector<SDL_Point> obj1Points = { topLeft1, topRight1, bottomLeft1, bottomRight1 };
-	int yH1 = INT_MAX;
-	for (SDL_Point point : obj1Points) {
-		if (point.y < yH1) {
-			yH1 = point.y;
-		}
+	cout << delta.y << endl;
+	// if the thing pushed us up:
+	if (delta.y < 0) {
+		// state logic when hitting the ground
+		isGrounded = true;
+		this->state = 1;
 	}
-
-	// we cover the remaining distance to the top of that entity
-	// we assume that the player in game logic always has a 1:1 scale with the global scale
-	SDL_Point myBot = getBottomLeftHitbox();
-	if (myBot.y < yH1) {
-		int origY = position.y;
-		position.y += yH1 - myBot.y;
-		// just in case the player scale isn't 1:1 with global, we revert if something went wrong
-		SDL_Point newBot = getBottomLeftHitbox();
-		if (newBot.y > yH1) {
-			position.y = origY;
-		}
+	if (delta.y > 0) { // remove upwards velocity when hitting a ceiling
+		velY = -0.0001;
 	}
-
-	// state logic when hitting the ground
-	isGrounded = true;
-	velY = 0.002;
-	this->state = 1;
 
 	DisplayObject::onCollision(other, delta);
 }
