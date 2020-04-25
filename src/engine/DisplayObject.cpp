@@ -413,7 +413,12 @@ const AffineTransform *DisplayObject::getGlobalTransform() {
 void DisplayObject::writeSceneData(ostream &stream) {
 	stream << type << " ";
 	stream << id << " ";
-	stream << imgPath << " ";
+	if (imgPath.size() == 0) {
+		stream << "0" << " ";
+	}
+	else {
+		stream << imgPath << " ";
+	}
 	stream << position.x << " ";
 	stream << position.y << " ";
 	stream << pivot.x << " ";
