@@ -205,7 +205,7 @@ void Scene::loadScene(string sceneFilePath){
 
 void Scene::saveScene(string sceneFilePath) {
     ofstream sceneFile;
-    sceneFile.open(sceneFilePath, ofstream::out | ofstream::app);
+    sceneFile.open(sceneFilePath, ofstream::out | ofstream::trunc);
 	for (DisplayObject *child: children) {
 		child->writeSceneData(sceneFile);
 	}

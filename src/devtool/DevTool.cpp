@@ -373,7 +373,6 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 					selected->position.y = selected->position.y - (selected->position.y % gridPixels) + gridPixels;
 				}
 				break;*/
-			/*
 			// Delete
 			case SDL_SCANCODE_BACKSPACE:
 				// Delete
@@ -394,8 +393,9 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 					cout << "SETTING NULL" << endl;
 					selected = NULL;
 					cout << "BREAKING" << endl;
-					break;
-				}*/
+					
+				}
+				break;
 			case SDL_SCANCODE_C:
 				// Copy
 				if (selected != NULL) {
