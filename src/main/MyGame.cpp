@@ -58,6 +58,7 @@ MyGame::MyGame() : Game(1920, 1000), EventListener() {
 	collisionSystem->watchForCollisions("0", "player");
 	collisionSystem->watchForCollisions("0", "rope_seg", false);
 	collisionSystem->watchForCollisions("rope_seg", "player", false);
+	collisionSystem->watchForCollisions("room_change", "player", false);
 }
 
 MyGame::~MyGame(){
@@ -135,11 +136,21 @@ void MyGame::draw(AffineTransform &at){
 	Game::draw(at);
 }
 
-void MyGame::handleEvent(Event* e) {
+void MyGame::handleEvent(Event* e) { // MyGame can listen to events.
 	if (e->getSource() == player) {
+		// player-specific event handling
 		switch (e->getType()) {
 		case EventParams::ROPE_DEPLOYED:
 			ropePlaced();
+		}
+	}
+	else {
+		// any entity event handling
+		switch (e->getType()) {
+		case EventParams::ROOM_CHANGED:
+			// roomChange: make MyGame dispatch an event, listened to by Scene
+			dispatchEvent(e);
+			roomTransition(((RoomChangeBlock*)e->getSource())->sceneFile);
 		}
 	}
 }
@@ -156,4 +167,8 @@ void MyGame::ropePlaced() {
 		newRope->position.y += 100;
 		sc->addChild(newRope);
 	}
+}
+
+void MyGame::roomTransition(string sceneFile) {
+	sc->loadScene(sceneFile);
 }
