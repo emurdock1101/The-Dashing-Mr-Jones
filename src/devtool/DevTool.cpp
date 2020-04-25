@@ -3,6 +3,7 @@
 #include "DevTool.h"
 #include <string>
 #include "../objects/Player.h"
+#include "../objects/CollisionBlock.h"
 #include <ctime>
 #include "../engine/Game.h"
 #include "../engine/Scene.h"
@@ -102,7 +103,7 @@ void DevTool::start(){
 							scene->addChild(selected);
 							onScreen.push_back(selected);
 							dragging = true;
-							dragDelta = { event.motion.x, event.motion.y };
+							lastMousePos = { event.motion.x, event.motion.y };
 							break;
 						}
 					}
@@ -120,7 +121,7 @@ void DevTool::start(){
 						}
 						if (isHoveredScene(sprite, event)) {
 							dragging = true;
-							dragDelta = { event.motion.x, event.motion.y };
+							lastMousePos = { event.motion.x, event.motion.y };
 							selected = sprite;
 							// Remove/add child so it's top of display tree (if it's a direct child of scene)
 							if (find(scene->children.begin(), scene->children.end(), sprite) != scene->children.end()){
@@ -137,8 +138,19 @@ void DevTool::start(){
 				break;
 			case SDL_MOUSEBUTTONUP:
 				if (dragging){
-					selected->position.x = (selected->position.x + gridPixels/2) / gridPixels * gridPixels;
-					selected->position.y = (selected->position.y + gridPixels/2) / gridPixels * gridPixels;
+					if (selected->position.x > 0) {
+						selected->position.x = (selected->position.x + gridPixels / 2) / gridPixels * gridPixels;
+					}
+					else {
+						selected->position.x = (selected->position.x - gridPixels / 2) / gridPixels * gridPixels;
+					}
+					if (selected->position.y > 0) {
+						selected->position.y = (selected->position.y + gridPixels / 2) / gridPixels * gridPixels;
+					}
+					else {
+						selected->position.y = (selected->position.y - gridPixels / 2) / gridPixels * gridPixels;
+					}
+					
 					//selected->pivot = {0,0};
 					dragging = false;
 				}
@@ -146,10 +158,10 @@ void DevTool::start(){
 			case SDL_MOUSEMOTION:
 				if (dragging) {
 					// SDL_Point absolutePos = selected->getTopLeft();
-					selected->position.x = (event.motion.x- dragDelta.x) + selected->position.x;
-					selected->position.y = (event.motion.y- dragDelta.y) + selected->position.y;
-					dragDelta.x = event.motion.x;
-					dragDelta.y = event.motion.y;
+					selected->position.x = (event.motion.x- lastMousePos.x) + selected->position.x;
+					selected->position.y = (event.motion.y- lastMousePos.y) + selected->position.y;
+					lastMousePos.x = event.motion.x;
+					lastMousePos.y = event.motion.y;
 					//selected->pivot = {selected->width/2, selected->height/2};
 				}
 				break;
@@ -411,6 +423,7 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 				}
 				break;
 			case SDL_SCANCODE_V:
+			{
 				// Paste
 				DisplayObjectContainer *tmp = new DisplayObjectContainer;
 				*tmp = *copied;
@@ -422,6 +435,20 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 				onScreen.push_back(tmp);
 				spritesToDisplay.push_back(tmp);
 				break;
+			}
+			case SDL_SCANCODE_B:
+			{
+				DisplayObjectContainer *tmp = new CollisionBlock;
+
+				tmp->cachedTransform = NULL;
+				tmp->invalidateCache = true;
+				tmp->position.x = lastMousePos.x + scene->camera->x;
+				tmp->position.y = lastMousePos.y + scene->camera->y;
+				scene->addChild(tmp);
+				onScreen.push_back(tmp);
+				spritesToDisplay.push_back(tmp);
+				break;
+			}
 		}
 	}
 	singleUseKeys.clear();
@@ -539,7 +566,7 @@ void DevTool::editPrompt() {
 
 	cout << "__________________________________________________" << endl;
 
-	cout << "Change id from " << selected->rotation << " to: ";
+	cout << "Change id from " << selected->id << " to: ";
 	string id;
 	cin >> id;
 	if (!(id == "n")){
