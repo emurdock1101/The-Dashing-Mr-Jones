@@ -892,5 +892,4 @@ DisplayObjectContainer 0 ./resources/bosses/boulder/aaa.png 3150 800 0 0 1 1 0 1
 DisplayObjectContainer 0 ./resources/bosses/boulder/aaa.png 3150 700 0 0 1 1 0 100 100 255
 DisplayObjectContainer 0 ./resources/bosses/boulder/aaa.png 3250 700 0 0 1 1 0 100 100 255
 DisplayObjectContainer 0 ./resources/bosses/boulder/aaa.png 3250 800 0 0 1 1 0 100 100 255
-DisplayObjectContainer 2 ./resources/bosses/boulder/aasquare.png 4750 1900 0 0 1 1 0 100 100 255
-DisplayObjectContainer 2 ./resources/bosses/boulder/aasquare.png 4750 2000 0 0 1 1 0 100 100 255
+RoomChangeBlock ./resources/scenes/area1_room2.txt ./resources/bosses/boulder/aasquare.png 4750 1900 0 0 1 1 0 100 200 255
