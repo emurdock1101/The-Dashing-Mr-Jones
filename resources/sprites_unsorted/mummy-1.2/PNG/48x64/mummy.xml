@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker https://www.codeandweb.com/texturepacker -->
+<!-- $TexturePacker:SmartUpdate:3ed79d9fb408a428715dd2f934af9f07:617d55f3e92102c818f87a3e02d76350:98c5852864b2d49293e994c7b9287d28$ -->
+<!--Format:
+n  => name of the sprite
+x  => sprite x pos in texture
+y  => sprite y pos in texture
+w  => sprite width (may be trimmed)
+h  => sprite height (may be trimmed)
+pX => x pos of the pivot point (relative to sprite width)
+pY => y pos of the pivot point (relative to sprite height)
+oX => sprite's x-corner offset (only available if trimmed)
+oY => sprite's y-corner offset (only available if trimmed)
+oW => sprite's original width (only available if trimmed)
+oH => sprite's original height (only available if trimmed)
+r => 'y' only set if sprite is rotated
+with polygon mode enabled:
+vertices   => points in sprite coordinate system (x0,y0,x1,y1,x2,y2, ...)
+verticesUV => points in sheet coordinate system (x0,y0,x1,y1,x2,y2, ...)
+triangles  => sprite triangulation, 3 vertex indices per triangle
+-->
+<TextureAtlas imagePath="mummy-01.png" width="144" height="256">
+    <sprite n="walk_back-0.png" x="1" y="1" w="48" h="64"/>
+    <sprite n="walk_back-1.png" x="49" y="1" w="48" h="64"/>
+    <sprite n="walk_back-2.png" x="97" y="1" w="48" h="64"/>
+    <sprite n="walk_back-3.png" x="49" y="1" w="48" h="64"/>
+    <sprite n="walk_right-0.png" x="1" y="65" w="48" h="64"/>
+    <sprite n="walk_right-1.png" x="49" y="65" w="48" h="64"/>
+    <sprite n="walk_right-2.png" x="97" y="65" w="48" h="64"/>
+    <sprite n="walk_right-3.png" x="49" y="65" w="48" h="64"/>
+    <sprite n="walk_forward-0.png" x="1" y="129" w="48" h="64"/>
+    <sprite n="walk_forward-1.png" x="49" y="129" w="48" h="64"/>
+    <sprite n="walk_forward-2.png" x="97" y="129" w="48" h="64"/>
+    <sprite n="walk_forward-3.png" x="49" y="129" w="48" h="64"/>
+    <sprite n="walk_left-0.png" x="1" y="192" w="48" h="64"/>
+    <sprite n="walk_left-1.png" x="49" y="192" w="48" h="64"/>
+    <sprite n="walk_left-2.png" x="97" y="192" w="48" h="64"/>
+    <sprite n="walk_left-3.png" x="49" y="192" w="48" h="64"/>
+</TextureAtlas>
+

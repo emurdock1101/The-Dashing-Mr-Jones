@@ -12,13 +12,13 @@ Mummy::Mummy(string id) : AnimatedSprite(id){
 	//this->width = 42; this->height = 40;
 	this->pivot = {this->width/2, this->height/2};
 
-	spriteObject = new AnimatedSprite(id + "_Sprite", "./resources/player/player_sprites.png", "./resources/player/player_sprites.xml");
+	spriteObject = new AnimatedSprite(id + "_Sprite", "./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy.xml");
 	DisplayObjectContainer::addChild(spriteObject);
-	spriteObject->addAnimationFromSpriteSheet("./resources/player/player_sprites.png", "idle_right", 13, 20, true);
-	spriteObject->addAnimationFromSpriteSheet("./resources/player/player_sprites.png", "run_right", 8, 6, true);
-	spriteObject->addAnimationFromSpriteSheet("./resources/player/player_sprites.png", "dash_right", 10, 6, false);
-	spriteObject->addAnimationFromSpriteSheet("./resources/player/player_sprites.png", "fall_right", 4, 12, true);
-	spriteObject->play("idle_right");
+	spriteObject->addAnimationFromSpriteSheet("./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "walk_right", 4, 16, true);
+	spriteObject->addAnimationFromSpriteSheet("./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "walk_left", 4, 16, true);
+	spriteObject->addAnimationFromSpriteSheet("./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "walk_forward", 4, 16, true);
+	spriteObject->addAnimationFromSpriteSheet("./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "walk_back", 4, 16, true);
+	spriteObject->play("walk_left");
 	spriteObject->width = unitScale * 12;
 	spriteObject->height = unitScale * 12;
 	spriteObject->pivot = { 87, 126 };
@@ -26,7 +26,7 @@ Mummy::Mummy(string id) : AnimatedSprite(id){
 }
 
 void Mummy::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){
-	//Sprite::update(pressedKeys, vector<ControllerState *> controllerStates);
+	AnimatedSprite::update(pressedKeys, controllerStates);
 
 	
 	//state 0 = one time state to kick things off
