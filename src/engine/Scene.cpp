@@ -38,10 +38,10 @@ void Scene::loadScene(string sceneFilePath){
             pch = strtok(NULL, " ");
         }
 		if (args[0].compare("player") == 0) {
-			Player* temp = new Player(args[0]);
-			temp->type = "player";
+			DisplayObjectContainer* temp = new DisplayObjectContainer("player_spawn", args[1]);
 			temp->setPos(stoi(args[2]), stoi(args[3]));
 			temp->prevPos = temp->position;
+			temp->visible = false;
 			if (args.size() > 12) {
 				for (DisplayObjectContainer* x : inScene) {
 					if (x->id.compare(args[12]) == 0)
@@ -215,6 +215,11 @@ void Scene::saveScene(string sceneFilePath) {
 void Scene::cleanScene(){
 	inScene.clear();
 	// TODO: Add a loop which deletes children objects
+	for (DisplayObject *child : children) {
+		Event newEvent(EventParams::DISPLAY_OBJECT_REMOVED, child);
+		Game::instance->dispatchEvent(&newEvent);
+		delete child;
+	}
 	children.clear();
 }
 void Scene::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){

@@ -27,8 +27,16 @@ MyGame::MyGame() : Game(1920, 1000), EventListener() {
 	cammy->scaleY = camScale;
 	cammy->x = -this->windowWidth;
 	cammy->y = -this->windowHeight;
-	sc->loadScene("./resources/scenes/area1_room1.txt");
 	instance->addChild(sc);
+
+
+	player = new Player("player");
+	player->position.y = 0;
+	player->position.x = 0;
+	player->prevPos = player->position;
+	player->addEventListener((EventListener*)this, EventParams::ROPE_DEPLOYED);
+
+	roomTransition("./resources/scenes/area1_room1.txt");
 
 	Mummy* mummy = new Mummy("name");
 	mummy -> position.x = 500;
@@ -37,8 +45,8 @@ MyGame::MyGame() : Game(1920, 1000), EventListener() {
 
 	this->pivot.x = this->windowWidth/2;
 	this->pivot.y = this->windowHeight/2;
-	player = (Player*)sc->getChild("player");
-	player->addEventListener( (EventListener*)this, EventParams::ROPE_DEPLOYED);
+	
+	
 	//sound->playMusic("./resources/sounds/boss.ogg");
 
 	//Commented out code for Tween demo -- causing seg fault
@@ -47,12 +55,14 @@ MyGame::MyGame() : Game(1920, 1000), EventListener() {
 	//fadeIn->animate(TweenableParams::ALPHA, player->alpha, 255, 180);
 	//juggler->add(fadeIn);
 
-	// player = new Player("player");
-	// player->position.y = 0;
-	// player->position.x = 0;
-	// player->prevPos = player->position;
-	// player->showHitbox = true;
-	// Game::addChild(player);
+	if (pressedKeys.find(SDL_SCANCODE_Q) != pressedKeys.end()) {
+		cammy->scaleX += .05;
+		cammy->scaleY += .05;
+	}
+	if (pressedKeys.find(SDL_SCANCODE_W) != pressedKeys.end()) {
+		cammy->scaleX -= .05;
+		cammy->scaleY -= .05;
+	}
 
 	collisionSystem->camera = cammy;
 	collisionSystem->watchForCollisions("0", "player");
@@ -75,27 +85,6 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 
 	double camDeadzoneX = 100;
 	double camDeadzoneY = 100;
-	// if (pressedKeys.find(SDL_SCANCODE_K) != pressedKeys.end()) {
-	// 	player->alpha +=5;
-	// }
-	// 
-	// if (pressedKeys.find(SDL_SCANCODE_RIGHT) != pressedKeys.end()) {
-	// 	player->position.x += charSpeed;
-	// 	cammy->x -= camSpeed;
-	// }
-	// 
-	// if (pressedKeys.find(SDL_SCANCODE_LEFT) != pressedKeys.end()) {
-	// 	player->position.x -= charSpeed;
-	// 	cammy->x += camSpeed;	
-	// }
-	// if (pressedKeys.find(SDL_SCANCODE_DOWN) != pressedKeys.end()) {
-	// 	player->position.y += charSpeed;
-	// 	cammy->y -= camSpeed;
-	// }
-	// if (pressedKeys.find(SDL_SCANCODE_UP) != pressedKeys.end()) {
-	// 	player->position.y -= charSpeed;
-	// 	cammy->y += camSpeed;
-	// }
 
 	if (player->position.x - cammy->x > camDeadzoneX) {
 		cammy->x = player->position.x - camDeadzoneX;
@@ -110,22 +99,13 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 		cammy->y = player->position.y + camDeadzoneY;
 	}
 
-	if (pressedKeys.find(SDL_SCANCODE_Q) != pressedKeys.end()) {
-		cammy->scaleX += .05;
-		cammy->scaleY += .05;
-	}
-	if (pressedKeys.find(SDL_SCANCODE_W) != pressedKeys.end()) {		
-			cammy->scaleX -= .05;
-			cammy->scaleY -= .05;
-	}
-
-	DisplayObjectContainer* end = sc->inScene.back();
-	if (player->position.x ==  end->position.x && player->position.y == end->position.y) {
-		sc->loadScene("./resources/scenes/area1_room2.txt");
-		player = (Player*)sc->getChild("player");
-		cammy->x = player->position.x;
-		cammy->y = player->position.y;
-	}
+	// DisplayObjectContainer* end = sc->inScene.back();
+	// if (player->position.x ==  end->position.x && player->position.y == end->position.y) {
+	// 	sc->loadScene("./resources/scenes/area1_room2.txt");
+	// 	player = (Player*)sc->getChild("player");
+	// 	cammy->x = player->position.x;
+	// 	cammy->y = player->position.y;
+	// }
 
 	Game::update(pressedKeys, controllerStates);
 	collisionSystem->update();
@@ -170,5 +150,12 @@ void MyGame::ropePlaced() {
 }
 
 void MyGame::roomTransition(string sceneFile) {
+	sc->removeImmediateChild(player);
 	sc->loadScene(sceneFile);
+	DisplayObject* playerSpawn = sc->getChild("player_spawn");
+	if (playerSpawn != NULL) {
+		player->position = playerSpawn->position;
+		player->prevPos = playerSpawn->position;
+	}
+	sc->addChild(player);
 }

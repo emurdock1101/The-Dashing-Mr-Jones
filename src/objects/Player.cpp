@@ -4,7 +4,7 @@ Player::Player() : AnimatedSprite() {
 	
 }
 Player::Player(string id) : AnimatedSprite(id) {
-	
+	type = "player";
 	
 	spriteObject = new AnimatedSprite(id + "_Sprite", "./resources/player/player_sprites.png", "./resources/player/player_sprites.xml");
 	DisplayObjectContainer::addChild(spriteObject);

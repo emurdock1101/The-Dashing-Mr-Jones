@@ -1,4 +1,4 @@
-AnimatedSprite player 0 0 0 0 4 4 0 50 50 255 1
+AnimatedSprite player 0 350 -500 0 4 4 0 50 50 255 1
 ./resources/character/ Run 20 1 true
 DisplayObjectContainer 0 ./resources/bosses/boulder/aaa.png 1050 200 0 0 1 1 0 100 100 255
 DisplayObjectContainer 0 ./resources/bosses/boulder/aaa.png 1050 200 0 0 1 1 0 100 100 255
@@ -1386,8 +1386,6 @@ DisplayObjectContainer 0 ./resources/bosses/boulder/aaa.png 2850 4400 0 0 1 1 0 
 DisplayObjectContainer 0 ./resources/bosses/boulder/aaa.png 2950 4400 0 0 1 1 0 100 100 255
 DisplayObjectContainer 0 ./resources/bosses/boulder/aaa.png 3050 4400 0 0 1 1 0 100 100 255
 DisplayObjectContainer 0 ./resources/bosses/boulder/aaa.png 3150 4400 0 0 1 1 0 100 100 255
-AnimatedSprite player 0 350 0 0 4 4 0 50 50 255 1
-./resources/character/ Run 20 1 1
 DisplayObjectContainer 0 ./resources/bosses/boulder/aaa.png 50 0 0 0 1 1 0 100 100 255
 DisplayObjectContainer 0 ./resources/bosses/boulder/aaa.png 450 200 0 0 1 1 0 100 100 255
 DisplayObjectContainer 2 ./resources/bosses/boulder/aasquare.png 3950 4200 0 0 1 1 0 100 100 255
