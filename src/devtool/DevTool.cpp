@@ -137,8 +137,8 @@ void DevTool::start(){
 				break;
 			case SDL_MOUSEBUTTONUP:
 				if (dragging){
-					selected->position.x -= selected->position.x % gridPixels;
-					selected->position.y -= selected->position.y % gridPixels;
+					selected->position.x = (selected->position.x + gridPixels/2) / gridPixels * gridPixels;
+					selected->position.y = (selected->position.y + gridPixels/2) / gridPixels * gridPixels;
 					//selected->pivot = {0,0};
 					dragging = false;
 				}
