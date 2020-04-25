@@ -572,7 +572,7 @@ void DevTool::editPrompt() {
 	if (!(id == "n")){
 		selected->id = id;
 	}
-	cout << "Rotation is now " << selected->id << endl;
+	cout << "Id is now " << selected->id << endl;
 
 	cout << "__________________________________________________" << endl;
 
