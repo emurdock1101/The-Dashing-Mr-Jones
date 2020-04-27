@@ -4,7 +4,6 @@
 #include <SDL2/SDL_image.h>
 #include "Game.h"
 #include "Camera.h"
-#include <iostream>
 #include <algorithm>
 #include <cmath>
 
@@ -133,14 +132,14 @@ bool DisplayObject::isColliding(Camera *camera, int x, int y) {
 
 	// Add the camera
 	if (camera != NULL) {
-		topLeft.x += camera->x;
-		topLeft.y += camera->y;
-		topRight.x += camera->x;
-		topRight.y += camera->y;
-		bottomLeft.x += camera->x;
-		bottomLeft.y += camera->y;
-		bottomRight.x += camera->x;
-		bottomRight.y += camera->y;
+		topLeft.x -= camera->x;
+		topLeft.y -= camera->y;
+		topRight.x -= camera->x;
+		topRight.y -= camera->y;
+		bottomLeft.x -= camera->x;
+		bottomLeft.y -= camera->y;
+		bottomRight.x -= camera->x;
+		bottomRight.y -= camera->y;
 	}
 
 	/* Now calculate if point is in this rectangle or not.
@@ -383,7 +382,7 @@ bool DisplayObject::isCacheValid() {
 	if (cacheScaleX != scaleX || cacheScaleY != scaleY) {
 		return false;
 	}
-	return true;
+	return !invalidateCache;
 }
 
 /* 
@@ -391,7 +390,9 @@ bool DisplayObject::isCacheValid() {
 */
 const AffineTransform *DisplayObject::getGlobalTransform() {
 	if (!isCacheValid()) {
-		delete cachedTransform;
+		if (cachedTransform != NULL) {
+			delete cachedTransform;
+		}
 		cachedTransform = new AffineTransform();
 		cacheFrame = Game::frameCounter;
 		cachePosition = position;
@@ -404,6 +405,7 @@ const AffineTransform *DisplayObject::getGlobalTransform() {
 		applyTransformations(*cachedTransform);
 		// Unapply pivot
 		cachedTransform->translate(pivot.x, pivot.y);
+		invalidateCache = false;
 	}
 	return cachedTransform;
 }
@@ -475,6 +477,7 @@ float DisplayObject::area(int x1, int y1, int x2, int y2, int x3, int y3) {
     return abs((x1 * (y2 - y3) + x2 * (y3 - y1) +
                 x3 * (y1 - y2)) / 2.0);
 }
+
 
 void DisplayObject::onCollision(DisplayObject *other, SDL_Point delta) {
 

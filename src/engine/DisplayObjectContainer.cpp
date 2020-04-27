@@ -23,6 +23,8 @@ DisplayObjectContainer::DisplayObjectContainer(string id, int red, int green, in
 
 DisplayObjectContainer::~DisplayObjectContainer() {
     for (int i = children.size()-1; i >= 0; i-- ) {
+		Event newEvent(EventParams::DISPLAY_OBJECT_REMOVED, children[i]);
+		Game::instance->dispatchEvent(&newEvent);
         delete children[i];
     }
 }
@@ -34,11 +36,14 @@ void DisplayObjectContainer::addChild(DisplayObjectContainer* child) {
 	// Dispatch on the global Game instance so that can add listener to only
 	// Game's instance to see DO events
 	Game::instance->dispatchEvent(displayObjectAdded);
+	delete displayObjectAdded;
 }
 
 void DisplayObjectContainer::removeImmediateChild(DisplayObjectContainer* child) {
     for (int i = 0; i < children.size(); i++) {
         if (children[i] == child) {
+			Event newEvent(EventParams::DISPLAY_OBJECT_REMOVED, child);
+			Game::instance->dispatchEvent(&newEvent);
             children.erase(children.begin() + i);
         }
     }
@@ -47,6 +52,8 @@ void DisplayObjectContainer::removeImmediateChild(DisplayObjectContainer* child)
 void DisplayObjectContainer::removeImmediateChild(string id) {
     for (int i = 0; i < children.size(); i++) {
         if (children[i]->id == id) {
+			Event newEvent(EventParams::DISPLAY_OBJECT_REMOVED, children[i]);
+			Game::instance->dispatchEvent(&newEvent);
             children.erase(children.begin() + i);
         }
     }
@@ -54,6 +61,8 @@ void DisplayObjectContainer::removeImmediateChild(string id) {
 
 void DisplayObjectContainer::removeChild(int index) {
     if (index < children.size()) {
+		Event newEvent(EventParams::DISPLAY_OBJECT_REMOVED, children[index]);
+		Game::instance->dispatchEvent(&newEvent);
         children.erase(children.begin() + index);
     }
 }

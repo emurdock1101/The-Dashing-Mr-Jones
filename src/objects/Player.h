@@ -1,10 +1,23 @@
 #pragma once
 #include "../engine/AnimatedSprite.h"
 #include "../engine/Game.h"
+
+#include "../engine/events/EventParams.h"
+#include "Rope.h"
+
 class Player :
 	public AnimatedSprite
 {
 public:
+	enum PlayerState {
+		NO_STATE,
+		MOVEMENT,
+		DASHING,
+		HITSTUN, 
+		CLIMBING,
+		ROPE_DEPLOY,
+		DEATH
+	};
 	Player();
 	Player(string id);
 
@@ -13,7 +26,8 @@ public:
 	// HUD-status type stuff
 	int hp = 2;
 	int lives = 3;
-	int ropes = 0;
+	int ropes = 1;
+	int ropeLength = 6;
 	bool dashUnlocked = true;
 
 	// movement stuff
@@ -32,6 +46,7 @@ public:
 	double maxFallSpeed = 120;
 	double gravity = 180;
 	double unitScale = 16;
+	double climbSpeed = 0.5;
 
 	double PROTOTYPE_FLOOR_LEVEL = 1200;
 
@@ -41,10 +56,17 @@ public:
 
 	set<SDL_Scancode> lastKeys;
 
+	virtual void writeSceneData(ostream &stream);
+
 	void update(set<SDL_Scancode> pressedKeys, vector<ControllerState*> controllerStates);
 	void draw(AffineTransform &at);
 	void onCollision(DisplayObject *other, SDL_Point delta);
 
+	Rope* makeRope(); // returns a rope which needs to be placed in the scene
+
 private:
+	bool touchingRope = false;
 	void faceSprite(bool facingRight);
+	void handleDashInput(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates);
 };
+

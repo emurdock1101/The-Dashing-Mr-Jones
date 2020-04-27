@@ -13,6 +13,7 @@ class EventDispatcher;
 class Event{
 
 public:
+
 	Event(int type, EventDispatcher* source);
 
 	int getType();

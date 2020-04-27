@@ -8,13 +8,20 @@
 #include "./events/Event.h"
 #include <map>
 #include <vector>
+#include <set>
 #include "./Camera.h"
+#include <climits>
 
 using namespace std;
 
 class CollisionSystem : public EventListener{
 
 public:
+	struct CollisionRegistration {
+		string type1;
+		string type2;
+		bool resolve;
+	};
 
 	CollisionSystem();
 	~CollisionSystem();
@@ -31,6 +38,7 @@ public:
 	//of DOs of a given type (e.g., player vs platform). The system will begin to check all player objects
 	//against all platform objects that are in the current scene.
 	void watchForCollisions(string type1, string type2);
+	void watchForCollisions(string type1, string type2, bool resolve);
 
 	//returns true iff obj1 hitbox and obj2 hitbox overlap. Uses the following method from DO:
 	//	SDL_Point* DisplayObject::getGlobalHitbox();
@@ -40,6 +48,7 @@ public:
 	//xDelta1 and yDelta1 are the amount d moved before causing the collision.
 	//xDelta2 and yDelta2 are the amount other moved before causing the collision.
 	void resolveCollision(DisplayObject* d, DisplayObject* other, int xDelta1, int yDelta1, int xDelta2, int yDelta2);
+	void notifyCollision(DisplayObject* d, DisplayObject* other, SDL_Point deltaD, SDL_Point deltaO);
 
 	Camera *camera;
 private:
@@ -50,10 +59,10 @@ private:
 	int getOrientation(SDL_Point a, SDL_Point b, SDL_Point c);
 
 	// Id to vector of DisplayObjects with that id
-	map<string, vector<DisplayObject *> *> knownIds;
+	map<string, set<DisplayObject *> *> knownIds;
 	// Pairs of ids that are watched for collisions
 	// Does not check for double adds - so may trigger twice if not careful
-	vector<pair<string, string>> watchedIds;
+	vector<CollisionRegistration> watchedIds;
 
 	bool triggeredByX = false;
 	bool triggeredByY = false;

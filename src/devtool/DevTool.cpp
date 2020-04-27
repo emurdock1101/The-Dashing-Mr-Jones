@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "DevTool.h"
 #include <string>
+#include "../objects/Player.h"
 #include <ctime>
 #include "../engine/Game.h"
 #include "../engine/Scene.h"
@@ -93,6 +94,8 @@ void DevTool::start(){
 					for (DisplayObjectContainer *sprite: selectionArea->children) {
 						if (isHoveredSelectBar(sprite, event)) {
 							DisplayObjectContainer *tmp = new DisplayObjectContainer();
+							sprite->cachedTransform = NULL;
+							sprite->invalidateCache = true;
 							*tmp = *sprite;
 							selected = tmp;
 							selected->loadTexture(selected->imgPath);
@@ -138,8 +141,8 @@ void DevTool::start(){
 			case SDL_MOUSEMOTION:
 				if (dragging) {
 					SDL_Point absolutePos = selected->getTopLeft();
-					selected->position.x = event.motion.x - (absolutePos.x - selected->position.x) - scene->camera->x;
-					selected->position.y = event.motion.y - (absolutePos.y - selected->position.y) - scene->camera->y;
+					selected->position.x = event.motion.x - (absolutePos.x - selected->position.x) + scene->camera->x;
+					selected->position.y = event.motion.y - (absolutePos.y - selected->position.y) + scene->camera->y;
 					//selected->pivot = {selected->width/2, selected->height/2};
 				}
 				break;
@@ -167,7 +170,15 @@ vector<string>DevTool::getImagesFromFolder(string folderName){
 	HANDLE hFind;
 	if ((hFind = FindFirstFile(pattern.c_str(), &data)) != INVALID_HANDLE_VALUE) {
 		do {
-			temp.push_back(data.cFileName);
+			string file = string(data.cFileName);
+			if ((file.find(".png") != std::string::npos)) {
+				//cout << directory->d_name << endl;
+				temp.push_back(folderName + "/" + data.cFileName);
+			}
+			if (!((file.find(".") != std::string::npos))) {
+				//cout << directory -> d_name << endl;
+				getImagesFromFolder(folderName + "/" + data.cFileName);
+			}
 		} while (FindNextFile(hFind, &data) != 0);
 		FindClose(hFind);
 	}
@@ -205,16 +216,16 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 	for (SDL_Scancode scancode: pressedKeys) {
 		switch(scancode) {
 			case SDL_SCANCODE_UP:
-				scene->camera->y += 3;
-				break;
-			case SDL_SCANCODE_DOWN:
 				scene->camera->y -= 3;
 				break;
+			case SDL_SCANCODE_DOWN:
+				scene->camera->y += 3;
+				break;
 			case SDL_SCANCODE_LEFT:
-				scene->camera->x += 3;
+				scene->camera->x -= 3;
 				break;
 			case SDL_SCANCODE_RIGHT:
-				scene->camera->x -= 3;
+				scene->camera->x += 3;
 				break;
 			case SDL_SCANCODE_Q:
 				selectionArea->position.x -= 5;
@@ -237,6 +248,9 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 				cout << "Loading scene " << filename << endl;
 				scene->loadScene(filename);
 				for (DisplayObjectContainer* child : scene->children){
+					if (child->id == "player"){
+						child->inDevtool = true;
+					}
 					onScreen.push_back(child);
 				}
 				selected = NULL;
@@ -255,6 +269,40 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 					editPrompt();
 				}
 				break;
+			case SDL_SCANCODE_O: {
+				cout << "Add an object" << endl;
+				cout << "Be sure to use all lowercase or only first letter upper" << endl;
+				cout << "Press n to refuse" << endl;
+				string objectType;
+				cin >> objectType;
+				// To add an object:
+				// Add another else if statement with what you want to type
+				// Set parameters like Player
+				// Be sure to set inDevtool and make sure the object
+				// does not update physics if that's true!
+				// Add to scene and to onScreen
+				// Be sure to add capabilities in the object for saving scene
+				// with a writeSceneData method and for loading scene in Scene.cpp
+				if (objectType == "player" || objectType == "Player") {
+					Player* temp = new Player("player");
+					temp->position = {100, 100};
+					// TODO: fix pivot
+					temp->pivot = {0, 0};
+					temp->inDevtool = true;
+					temp->showHitbox = false;
+					scene->addChild(temp);
+					onScreen.push_back(temp);
+				}
+				else if (objectType == "n") {
+					cout << "Aborting" << endl;
+					break;
+				}
+				else {
+					cout << "Object type not found!" << endl;
+					cout << "Aborting" << endl;
+				}
+				break;
+			}
 			case SDL_SCANCODE_A:
 			{
 
@@ -325,7 +373,6 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 					selected->position.y = selected->position.y - (selected->position.y % gridPixels) + gridPixels;
 				}
 				break;*/
-			/*
 			// Delete
 			case SDL_SCANCODE_BACKSPACE:
 				// Delete
@@ -346,8 +393,9 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 					cout << "SETTING NULL" << endl;
 					selected = NULL;
 					cout << "BREAKING" << endl;
-					break;
-				}*/
+					
+				}
+				break;
 			case SDL_SCANCODE_C:
 				// Copy
 				if (selected != NULL) {
@@ -359,10 +407,12 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 				// Paste
 				DisplayObjectContainer *tmp = new DisplayObjectContainer;
 				*tmp = *copied;
+				tmp->cachedTransform = NULL;
+				tmp->invalidateCache = true;
 				tmp->position.x += 50;
 				tmp->position.y += 50;
 				scene->addChild(tmp);
-				onScreen.push_back(tmp); 
+				onScreen.push_back(tmp);
 				spritesToDisplay.push_back(tmp);
 				break;
 		}
@@ -376,10 +426,10 @@ void DevTool::draw(AffineTransform &at){
 	SDL_RenderClear(Game::renderer);
 	DisplayObjectContainer::draw(at);
     SDL_SetRenderDrawColor(Game::renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-	for (int y = scene->camera->y % gridPixels; y < 1000; y += gridPixels) {
+	for (int y = -scene->camera->y % gridPixels; y < 1000; y += gridPixels) {
 		SDL_RenderDrawLine(Game::renderer, 0, y, windowWidth, y);
 	}
-	for (int x = scene->camera->x % gridPixels; x < 1200; x += gridPixels) {
+	for (int x = -scene->camera->x % gridPixels; x < 1200; x += gridPixels) {
 		SDL_RenderDrawLine(Game::renderer, x, 0, x, windowHeight);
 	}
 	// Draw red rectangle around selected sprite
@@ -389,14 +439,14 @@ void DevTool::draw(AffineTransform &at){
 		SDL_Point topRight = selected->getTopRight();
 		SDL_Point bottomLeft = selected->getBottomLeft();
 		SDL_Point bottomRight = selected->getBottomRight();
-		topLeft.x += scene->camera->x;
-		topLeft.y += scene->camera->y;
-		topRight.x += scene->camera->x;
-		topRight.y += scene->camera->y;
-		bottomLeft.x += scene->camera->x;
-		bottomLeft.y += scene->camera->y;
-		bottomRight.x += scene->camera->x;
-		bottomRight.y += scene->camera->y;
+		topLeft.x -= scene->camera->x;
+		topLeft.y -= scene->camera->y;
+		topRight.x -= scene->camera->x;
+		topRight.y -= scene->camera->y;
+		bottomLeft.x -= scene->camera->x;
+		bottomLeft.y -= scene->camera->y;
+		bottomRight.x -= scene->camera->x;
+		bottomRight.y -= scene->camera->y;
 		SDL_RenderDrawLine(Game::renderer,
 				topLeft.x,
 				topLeft.y,

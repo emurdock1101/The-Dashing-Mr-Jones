@@ -55,6 +55,8 @@ public:
 	double alpha = 255;
 	bool facingRight = true;
 	bool showHitbox = false;
+	bool inDevtool = false;
+	bool invalidateCache = false;
 
 
 	// Hitbox offsets are the amount to cut off the edge of the image
@@ -100,7 +102,11 @@ public:
 	double cacheScaleY;
 	bool isCacheValid();
 	const AffineTransform *getGlobalTransform();
-	virtual void onCollision(DisplayObject *other, SDL_Point delta);
+
+	/* Called by the CollisionSystem whenever a collision occurs. 
+	   Don't destroy objects in this method! CollisionSystem will keep iterating through them, so wait until the next update cycle. 
+	   */
+	virtual void onCollision(DisplayObject *other, SDL_Point delta); 
 
 	
 protected:
