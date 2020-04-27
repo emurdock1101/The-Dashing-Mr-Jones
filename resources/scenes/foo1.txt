@@ -1,2 +1,0 @@
-AnimatedSprite player 0 0 0 0 1 1 0 50 50 255 1
-./resources/character/ Run 20 1 true

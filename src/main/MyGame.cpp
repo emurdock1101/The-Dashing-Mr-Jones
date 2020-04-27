@@ -36,6 +36,7 @@ MyGame::MyGame() : Game(1920, 1000), EventListener() {
 	player->prevPos = player->position;
 	player->addEventListener((EventListener*)this, EventParams::ROPE_DEPLOYED);
 
+	//change to area1_room2.txt to view room 2 directly
 	roomTransition("./resources/scenes/area1_room1.txt");
 
 	Mummy* mummy = new Mummy("name");
@@ -62,10 +63,12 @@ void MyGame::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> con
 
 	//juggler->nextFrame();
 
+	//used for testing
 	if (pressedKeys.find(SDL_SCANCODE_Q) != pressedKeys.end()) {
 		cammy->scaleX += .05;
 		cammy->scaleY += .05;
 	}
+	//used for testing
 	if (pressedKeys.find(SDL_SCANCODE_W) != pressedKeys.end()) {
 		cammy->scaleX -= .05;
 		cammy->scaleY -= .05;
