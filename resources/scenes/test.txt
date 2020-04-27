@@ -1,3 +1,0 @@
-DisplayObjectContainer 6 ./resources/character/Dead_15.png 450 100 0 0 1 1 0 100 100 255
-DisplayObjectContainer 4 ./resources/character/Dead_13.png 700 400 0 0 1 1 0 100 100 255
-DisplayObjectContainer 3 ./resources/character/Dead_12.png 250 400 0 0 1 1 0 100 100 255
