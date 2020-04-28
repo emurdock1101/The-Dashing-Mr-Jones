@@ -39,17 +39,14 @@ MyGame::MyGame() : Game(1920, 1000), EventListener() {
 	//change to area1_room2.txt to view room 2 directly
 	roomTransition("./resources/scenes/area1_room1.txt");
 
-	Mummy* mummy = new Mummy("name");
-	mummy -> position.x = 500;
-	mummy -> position.y = 500;
-	sc->addChild(mummy);
-
 	this->pivot.x = this->windowWidth/2;
 	this->pivot.y = this->windowHeight/2;
 	//sound->playMusic("./resources/sounds/boss.ogg");
 
 	collisionSystem->camera = cammy;
 	collisionSystem->watchForCollisions("0", "player");
+	collisionSystem->watchForCollisions("player", "mummy");
+	collisionSystem->watchForCollisions("0", "mummy");
 	collisionSystem->watchForCollisions("0", "rope_seg", false);
 	collisionSystem->watchForCollisions("rope_seg", "player", false);
 	collisionSystem->watchForCollisions("room_change", "player", false);
