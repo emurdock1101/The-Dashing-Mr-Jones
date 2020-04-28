@@ -1,6 +1,6 @@
 #include "CollisionBlock.h"
 CollisionBlock::CollisionBlock() : DisplayObjectContainer("0", 0, 0, 0) {
-	type = "cb";
+	type = "CollisionBlock";
 	visible = true;
 }
 

@@ -10,7 +10,7 @@ RoomChangeBlock::RoomChangeBlock(string sceneFile) : DisplayObjectContainer("roo
 }
 
 void RoomChangeBlock::onCollision(DisplayObject* other, SDL_Point delta) {
-	if (other->type == "player") {
+	if (other->type == "Player") {
 		Event newEvent(EventParams::ROOM_CHANGED, this);
 		((MyGame*)Game::instance)->handleEvent(&newEvent);
 	}

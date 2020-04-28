@@ -5,7 +5,7 @@ Player::Player() : AnimatedSprite() {
 	
 }
 Player::Player(string id) : AnimatedSprite(id) {
-	type = "player";
+	type = "Player";
 	
 	spriteObject = new AnimatedSprite(id + "_Sprite", "./resources/player/player_sprites.png", "./resources/player/player_sprites.xml");
 	DisplayObjectContainer::addChild(spriteObject);
@@ -365,7 +365,7 @@ void Player::handleDashInput(set<SDL_Scancode> pressedKeys, vector<ControllerSta
 }
 
 void Player::onCollision(DisplayObject *other, SDL_Point delta) {
-	if (other->type == "rope_seg") {
+	if (other->type == "RopeSegment") {
 		// rope segment handling
 		touchingRope = true;
 	}
