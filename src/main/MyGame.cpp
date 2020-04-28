@@ -30,9 +30,6 @@ MyGame::MyGame() : Game(1920, 1000), EventListener() {
 	sc->loadScene("./resources/scenes/area1_room1.txt");
 	instance->addChild(sc);
 
-	Mummy* mummy = new Mummy("Mummy", 1000, 900);
-	sc->addChild(mummy);
-
 	this->pivot.x = this->windowWidth/2;
 	this->pivot.y = this->windowHeight/2;
 	player = (Player*)sc->getChild("player");
@@ -54,7 +51,8 @@ MyGame::MyGame() : Game(1920, 1000), EventListener() {
 
 	collisionSystem->camera = cammy;
 	collisionSystem->watchForCollisions("0", "player");
-	collisionSystem->watchForCollisions("0", "Mummy");
+	collisionSystem->watchForCollisions("player", "mummy");
+	collisionSystem->watchForCollisions("0", "mummy");
 	collisionSystem->watchForCollisions("0", "rope_seg", false);
 	collisionSystem->watchForCollisions("rope_seg", "player", false);
 }

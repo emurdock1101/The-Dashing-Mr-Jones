@@ -319,8 +319,6 @@ bool CollisionSystem::collidesWith(DisplayObject* obj1, DisplayObject* obj2) {
 //xDelta2 and yDelta2 are the amount other moved before causing the collision.
 void CollisionSystem::resolveCollision(DisplayObject* d, DisplayObject* other,
 		int xDelta1, int yDelta1, int xDelta2, int yDelta2) {
-	//cout << "RESOLVING " << d->id << " AND " << other->id << endl;
-	//cout << "other: " << other->position.x << " y: " << other->position.y << endl;
 	SDL_Point deltaD = { 0,0 };
 	SDL_Point deltaO = { 0,0 };
 	if (triggeredByX == true){
@@ -329,7 +327,6 @@ void CollisionSystem::resolveCollision(DisplayObject* d, DisplayObject* other,
 		other->position.x -= xDelta2;
 		deltaO.x = -xDelta2;
 		triggeredByX = false;
-		cout << "TRIGGERED X DELTA " << xDelta1 << " " << xDelta2 << endl;
 	}
 	if (triggeredByY == true){
 		d->position.y -= yDelta1;
@@ -337,7 +334,6 @@ void CollisionSystem::resolveCollision(DisplayObject* d, DisplayObject* other,
 		other->position.y -= yDelta2;
 		deltaO.y = -yDelta2;
 		triggeredByY = false;
-		cout << "TRIGGERED Y DELTA " << yDelta1 << " " << yDelta2 << endl;
 	}
 	
 	notifyCollision(d, other, deltaD, deltaO);

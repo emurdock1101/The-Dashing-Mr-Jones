@@ -7,20 +7,33 @@
 
 using namespace std;
 
-//need to adjust .png and .xml
-Mummy::Mummy(string id, int x, int y) : AnimatedSprite(id, "./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy.xml"){
-	this->type = "Mummy";
+Mummy::Mummy(int x, int y) : AnimatedSprite("mummy", "./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy.xml"){
+	this->type = "mummy";
 	this->id = id;
-	//this->width = 42; this->height = 40;
-	//this->pivot = {this->width/2, this->height/2};
 	this->originalPos = {x, y};
 	this->width = unitScale * 12;
 	this->height = unitScale * 12;
 	this->setPos(x, y);
-	cout << "pos: " << this->position.x << " y: " << this->position.y << endl;
-	cout << "prev pos: " << this->prevPos.x << " y: " << this->prevPos.y << endl;
 
-	//spriteObject->type = "Mummy";
+	AnimatedSprite::addAnimationFromSpriteSheet("./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "walk_right", 4, 16, true);
+	AnimatedSprite::addAnimationFromSpriteSheet("./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "walk_left", 4, 16, true);
+	AnimatedSprite::addAnimationFromSpriteSheet("./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "walk_forward", 4, 16, true);
+	AnimatedSprite::addAnimationFromSpriteSheet("./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "walk_back", 4, 16, true);
+	AnimatedSprite::addAnimationFromSpriteSheet("./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "turn_left", 3, 32, false);
+	AnimatedSprite::addAnimationFromSpriteSheet("./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "turn_right", 3, 32, false);
+	AnimatedSprite::play("walk_right");
+	this->walkingRight = true;
+}
+
+//need to adjust .png and .xml
+Mummy::Mummy(string id, int x, int y) : AnimatedSprite(id, "./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy.xml"){
+	this->type = "Mummy";
+	this->id = id;
+	this->originalPos = {x, y};
+	this->width = unitScale * 12;
+	this->height = unitScale * 12;
+	this->setPos(x, y);
+
 	AnimatedSprite::addAnimationFromSpriteSheet("./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "walk_right", 4, 16, true);
 	AnimatedSprite::addAnimationFromSpriteSheet("./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "walk_left", 4, 16, true);
 	AnimatedSprite::addAnimationFromSpriteSheet("./resources/sprites_unsorted/mummy-1.2/PNG/48x64/mummy-01.png", "walk_forward", 4, 16, true);
@@ -32,19 +45,21 @@ Mummy::Mummy(string id, int x, int y) : AnimatedSprite(id, "./resources/sprites_
 }
 
 void Mummy::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){
-	cout << "pos: " << this->position.x << " y: " << this->position.y << endl;
+	if (inDevtool) {
+		AnimatedSprite::update(pressedKeys, controllerStates);
+		return;
+	}
 
-	
-	//state 0 = one time state to kick things off
+	//state 0 = one time state to kick things off, mummy falls until it collides
+	//	with floor
 	//state 1 = patrolling
     //state 2 = stunned
 	//state 3 = turning around
-	
+
 	switch (this->state){
         case 0:
 			init();
             break;
-        
         case 1:
             patrol();
             break;
@@ -58,10 +73,6 @@ void Mummy::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> cont
 	AnimatedSprite::update(pressedKeys, controllerStates);
 }
 
-void Mummy::onCollision(DisplayObject* other){
-	
-}
-
 void Mummy::draw(AffineTransform &at){
 	AnimatedSprite::draw(at);
 }
@@ -71,27 +82,30 @@ void Mummy::init() {
 	this->setPos(this->position.x, this->position.y + velY);
 }
 
-void Mummy::patrol(){	
-	//check for if been hit by player then
-	if (false){
+void Mummy::patrol() {
+	// TODO: check if hit by player, maybe better in onCollision
+	if (false) {
+		// Stun
 		this->state = 2;
 	}
-	else{
-		//if outside of its patrol range OR at the edge of a platform, then turn around
-		if(abs(this->position.x - this->originalPos.x) > this->patrolRange ){ //NEEED TO ADD the platform collison detection
+	else {
+		// if outside of its patrol range
+		// Not implemented: hits platform/edge
+		if(abs(this->position.x - this->originalPos.x) > this->patrolRange ) {
 			// Turn
 			this->state = 3;
 		}
-		//regardless, move according to its velocity
-		this->position.x += velX;
+		// Regardless, move according to its velocity
 		this->setPos(this->position.x + velX, this->position.y);
 	}
 
 }
 
 void Mummy::stunned(){
+	this->stop();
     this->stunnedCount++;
     if (this->stunnedCount > 60){
+		this->replay();
         this->state = 1;
         this->stunnedCount = 0;
     }
@@ -128,18 +142,34 @@ void Mummy::turn() {
 }
 
 void Mummy::onCollision(DisplayObject *other, SDL_Point delta) {
-	// genertic entity handling:
-
-	cout << delta.y << endl;
-	// if the thing pushed us up:
-	if (delta.y < 0) {
-		// state logic when hitting the ground
-		isGrounded = true;
-		this->state = 1;
+	// Collides with player
+	// TODO: reduce player's health with event or something?
+	if (other->type == "player") {
+		this->state = 2;
+		this->stunnedCount = 0;
 	}
-	if (delta.y > 0) { // remove upwards velocity when hitting a ceiling
-		velY = -0.0001;
+
+	// Collision block/generic entities
+	// if the thing pushed us up:
+	else {
+		if (delta.y < 0) {
+			// state logic when hitting the ground
+			isGrounded = true;
+			this->state = 1;
+		}
+		if (delta.y > 0) { // remove upwards velocity when hitting a ceiling
+			velY = -0.0001;
+		}
 	}
 
 	DisplayObject::onCollision(other, delta);
 }
+
+void Mummy::writeSceneData(ostream &stream) {
+	stream << "mummy" << " ";
+	stream << id << " ";
+	stream << position.x << " ";
+	stream << position.y << " ";
+	stream << patrolRange << endl;
+}
+

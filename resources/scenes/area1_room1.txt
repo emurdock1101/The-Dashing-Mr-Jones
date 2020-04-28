@@ -1,5 +1,6 @@
 DisplayObjectContainer bg ./resources/tilesets/rooms/a1rm1.png -1750 -2100 0 0 97 48 0 100 100 255
 AnimatedSprite player 15 800 800 0 4 4 0 50 50 255 1
+mummy mummy 1000 900 50
 ./resources/character/ Run 20 1 true
 DisplayObjectContainer 0 ./resources/bosses/boulder/aaa.png 150 400 0 0 1 1 0 100 100 255
 DisplayObjectContainer 0 ./resources/bosses/boulder/aaa.png 50 500 0 0 1 6 0 100 100 255
