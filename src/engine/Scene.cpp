@@ -1,7 +1,7 @@
 #include "Scene.h"
 #include <iostream>
 #include "Sprite.h"
-#include "Mummy.h"
+#include "../objects/Mummy.h"
 #include "AnimatedSprite.h"
 #include "Game.h"
 #include "DisplayObjectContainer.h"

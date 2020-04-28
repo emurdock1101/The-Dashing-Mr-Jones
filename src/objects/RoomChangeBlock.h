@@ -1,6 +1,5 @@
 #pragma once
 #include "../engine/DisplayObjectContainer.h"
-#include "../engine/Scene.h"
 
 class RoomChangeBlock :
 	public DisplayObjectContainer
