@@ -1,0 +1,6 @@
+AnimatedSprite player 0 0 0 0 1 1 0 50 50 255 1
+./resources/character/ Run 20 1 true
+DisplayObject coin  ./resources/objects/coin.jpg 400 -100 0 0 6 10 0 50 20 255
+DisplayObjectContainer heart1 ./resources/scenes/UI_DEMO/full_heart.png 50 50 0 0 1 1 0 100 100 255
+DisplayObjectContainer heart2 ./resources/scenes/UI_DEMO/full_heart.png 75 50 0 0 1 1 0 100 100 255
+DisplayObjectContainer heart3 ./resources/scenes/UI_DEMO/full_heart.png 100 50 0 0 1 1 0 100 100 255

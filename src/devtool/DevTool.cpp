@@ -171,7 +171,15 @@ vector<string>DevTool::getImagesFromFolder(string folderName){
 	HANDLE hFind;
 	if ((hFind = FindFirstFile(pattern.c_str(), &data)) != INVALID_HANDLE_VALUE) {
 		do {
-			temp.push_back(data.cFileName);
+			string file = string(data.cFileName);
+			if ((file.find(".png") != std::string::npos)) {
+				//cout << directory->d_name << endl;
+				temp.push_back(folderName + "/" + data.cFileName);
+			}
+			if (!((file.find(".") != std::string::npos))) {
+				//cout << directory -> d_name << endl;
+				getImagesFromFolder(folderName + "/" + data.cFileName);
+			}
 		} while (FindNextFile(hFind, &data) != 0);
 		FindClose(hFind);
 	}
@@ -370,7 +378,6 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 					selected->position.y = selected->position.y - (selected->position.y % gridPixels) + gridPixels;
 				}
 				break;*/
-			/*
 			// Delete
 			case SDL_SCANCODE_BACKSPACE:
 				// Delete
@@ -391,8 +398,9 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 					cout << "SETTING NULL" << endl;
 					selected = NULL;
 					cout << "BREAKING" << endl;
-					break;
-				}*/
+					
+				}
+				break;
 			case SDL_SCANCODE_C:
 				// Copy
 				if (selected != NULL) {

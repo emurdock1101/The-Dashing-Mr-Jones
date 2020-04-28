@@ -21,6 +21,7 @@
 
 
 #include "../objects/Rope.h"
+#include "../objects/RoomChangeBlock.h"
 
 using namespace std;
 

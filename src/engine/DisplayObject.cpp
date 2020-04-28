@@ -132,14 +132,14 @@ bool DisplayObject::isColliding(Camera *camera, int x, int y) {
 
 	// Add the camera
 	if (camera != NULL) {
-		topLeft.x += camera->x;
-		topLeft.y += camera->y;
-		topRight.x += camera->x;
-		topRight.y += camera->y;
-		bottomLeft.x += camera->x;
-		bottomLeft.y += camera->y;
-		bottomRight.x += camera->x;
-		bottomRight.y += camera->y;
+		topLeft.x -= camera->x;
+		topLeft.y -= camera->y;
+		topRight.x -= camera->x;
+		topRight.y -= camera->y;
+		bottomLeft.x -= camera->x;
+		bottomLeft.y -= camera->y;
+		bottomRight.x -= camera->x;
+		bottomRight.y -= camera->y;
 	}
 
 	/* Now calculate if point is in this rectangle or not.
