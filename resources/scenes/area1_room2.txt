@@ -1,5 +1,5 @@
 DisplayObjectContainer bg ./resources/tilesets/rooms/a1rm2.png -750 -600 0 0 66 58 0 100 100 255
-DisplayObjectContainer player_spawn 0 350 -500 0 0 1 1 0 100 100 255
+DisplayObjectContainer player_spawn ./resources/bosses/boulder/aasquare.png 3950 900 0 0 1 1 0 100 100 255
 DisplayObjectContainer 0 0 1050 200 0 0 1 1 0 100 100 255
 DisplayObjectContainer 0 0 1050 4400 0 0 1 1 0 100 100 255
 DisplayObjectContainer 0 0 1150 200 0 0 1 1 0 100 100 255
@@ -169,8 +169,6 @@ cb 0 0 3350 1000 0 0 7 1 0 100 100 255
 cb 0 0 3350 1100 0 0 1 6 0 100 100 255
 cb 0 0 2850 1100 0 0 1 6 0 100 100 255
 cb 0 0 2950 1600 0 0 4 1 0 100 100 255
-DisplayObjectContainer 1 ./resources/bosses/boulder/aaa2.png 150 0 0 0 1 1 0 100 100 255
-DisplayObjectContainer 1 ./resources/bosses/boulder/aaa2.png 150 0 0 0 1 1 0 100 100 255
 cb 0 0 3950 1100 0 0 1 1 0 100 100 255
 cb 0 0 2350 1000 0 0 6 1 0 100 100 255
 cb 0 0 1750 1000 0 0 6 1 0 100 100 255
@@ -210,3 +208,16 @@ cb 0 0 2750 3400 0 0 3 1 0 100 100 255
 cb 0 0 3450 3200 0 0 4 1 0 100 100 255
 cb 0 0 3850 3200 0 0 5 1 0 100 100 255
 cb 0 0 2350 3900 0 0 8 1 0 100 100 255
+DisplayObjectContainer 1 ./resources/bosses/boulder/aaa2.png 950 2100 0 0 1 1 0 100 100 255
+DisplayObjectContainer 1 ./resources/bosses/boulder/aaa2.png 1050 2100 0 0 1 1 0 100 100 255
+DisplayObjectContainer 1 ./resources/bosses/boulder/aaa2.png 2950 1500 0 0 1 1 0 100 100 255
+DisplayObjectContainer 1 ./resources/bosses/boulder/aaa2.png 3050 1500 0 0 1 1 0 100 100 255
+DisplayObjectContainer 1 ./resources/bosses/boulder/aaa2.png 3150 1500 0 0 1 1 0 100 100 255
+DisplayObjectContainer 1 ./resources/bosses/boulder/aaa2.png 3250 1500 0 0 1 1 0 100 100 255
+DisplayObjectContainer 1 ./resources/bosses/boulder/aaa2.png 350 2100 0 0 1 1 0 100 100 255
+DisplayObjectContainer 1 ./resources/bosses/boulder/aaa2.png 450 2100 0 0 1 1 0 100 100 255
+DisplayObjectContainer 1 ./resources/bosses/boulder/aaa2.png 550 2100 0 0 1 1 0 100 100 255
+DisplayObjectContainer 1 ./resources/bosses/boulder/aaa2.png 250 2100 0 0 1 1 0 100 100 255
+cb 0 0 4150 700 0 0 1 1 0 100 100 255
+cb 0 0 4150 800 0 0 1 1 0 100 100 255
+cb 0 0 4150 900 0 0 1 1 0 100 100 255
