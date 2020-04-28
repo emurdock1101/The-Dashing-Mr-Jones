@@ -4,6 +4,7 @@
 #include <string>
 #include "../objects/Player.h"
 #include "../objects/CollisionBlock.h"
+#include "../objects/Mummy.h"
 #include <ctime>
 #include "../engine/Game.h"
 #include "../engine/Scene.h"
@@ -267,9 +268,7 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 				cout << "Loading scene " << filename << endl;
 				scene->loadScene(filename);
 				for (DisplayObjectContainer* child : scene->children){
-					if (child->id == "player"){
-						child->inDevtool = true;
-					}
+					child->inDevtool = true;
 					onScreen.push_back(child);
 				}
 				selected = NULL;
@@ -309,6 +308,12 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 					temp->pivot = {0, 0};
 					temp->inDevtool = true;
 					temp->showHitbox = false;
+					scene->addChild(temp);
+					onScreen.push_back(temp);
+				}
+				if (objectType == "mummy" || objectType == "Mummy") {
+					Mummy* temp = new Mummy(100, 100);
+					temp->inDevtool = true;
 					scene->addChild(temp);
 					onScreen.push_back(temp);
 				}

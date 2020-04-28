@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <climits>
 using namespace std;
 Player::Player() : AnimatedSprite() {
 	

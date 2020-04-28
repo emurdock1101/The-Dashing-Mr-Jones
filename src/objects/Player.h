@@ -9,7 +9,7 @@ class Player :
 	public AnimatedSprite
 {
 public:
-	static enum PlayerState {
+	enum PlayerState {
 		NO_STATE,
 		MOVEMENT,
 		DASHING,

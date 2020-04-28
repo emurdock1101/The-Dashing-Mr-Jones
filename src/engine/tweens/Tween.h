@@ -14,14 +14,14 @@ using namespace std;
 class Tween {
 
 public:
-    Tween(DisplayObject Object);
-    Tween(DisplayObject Object, TweenTransitions* transitions);
+    Tween(DisplayObject* Object);
+    Tween(DisplayObject* Object, TweenTransitions* transitions);
     void animate(string fieldToAnimate, double startVal, double endVal, double time);
     void update();
     bool isComplete();
     void setValue(TweenableParams param, double value);
 private:
-    DisplayObject object;
+    DisplayObject* object;
     TweenTransitions* transitions;
     vector<TweenParam*> paramList;
     bool complete;

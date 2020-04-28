@@ -253,10 +253,15 @@ void DisplayObject::setDim(int a, int b){
 	this->height = b;
 }
 void DisplayObject::setPos(int a, int b){
+	if (this->position.x != 0 && this->position.y != 0) {
+		this->prevPos = this->position;
+	}
+	else {
+		this->prevPos.x = a;
+		this->prevPos.y = b;
+	}
 	this->position.x = a;
 	this->position.y = b;
-	this->prevPos.x = a;
-	this->prevPos.y = b;
 }
 void DisplayObject::setPiv(int a, int b){
 	this->pivot.x = a;

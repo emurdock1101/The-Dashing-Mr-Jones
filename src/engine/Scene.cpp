@@ -1,6 +1,7 @@
 #include "Scene.h"
 #include <iostream>
 #include "Sprite.h"
+#include "../objects/Mummy.h"
 #include "AnimatedSprite.h"
 #include "Game.h"
 #include "DisplayObjectContainer.h"
@@ -64,9 +65,25 @@ void Scene::loadScene(string sceneFilePath){
 			temp->rotation = stoi(args[8]);
 			temp->setDim(stoi(args[9]), stoi(args[10]));
 			temp->alpha = stoi(args[11]);
-			if (args.size() > 12) {
+			if (args.size() > 13) {
 				for (DisplayObjectContainer* x : inScene) {
-					if (x->id.compare(args[12]) == 0)
+					if (x->id.compare(args[13]) == 0)
+						x->addChild(temp);
+				}
+			}
+			else {
+				addChild((DisplayObjectContainer*)temp);
+			}
+			inScene.push_back((DisplayObjectContainer*)temp);
+		} else
+		if (args[0].compare("mummy") == 0) {
+			//id, pos.x, pox.y, patrolRange, parents
+			Mummy* temp = new Mummy(stoi(args[1]), stoi(args[2]));
+			temp->type = object;
+			temp->patrolRange = stoi(args[3]);
+			if (args.size() > 4) {
+				for (DisplayObjectContainer* x : inScene) {
+					if (x->id.compare(args[4]) == 0)
 						x->addChild(temp);
 				}
 			}

@@ -52,7 +52,7 @@ public:
 	double scaleX = 1.0;
 	double scaleY = 1.0;
 	double rotation = 0.0; // in radians
-	int alpha = 255;
+	double alpha = 255;
 	bool facingRight = true;
 	bool showHitbox = false;
 	bool inDevtool = false;
