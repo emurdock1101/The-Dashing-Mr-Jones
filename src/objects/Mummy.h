@@ -4,7 +4,7 @@ class Mummy :
 	public AnimatedSprite
 {
 public:
-	Mummy();
+	Mummy(int x, int y);
 	Mummy(string id, int x, int y);
 
 	// movement stuff
@@ -46,6 +46,8 @@ public:
 	void update(set<SDL_Scancode> pressedKeys, vector<ControllerState*> controllerStates);
 	void draw(AffineTransform &at);
 	void onCollision(DisplayObject *other, SDL_Point delta);
+	virtual void writeSceneData(ostream &stream);
+
 
     private:
 };

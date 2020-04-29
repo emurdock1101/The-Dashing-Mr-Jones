@@ -1,12 +1,14 @@
 #include "Scene.h"
 #include <iostream>
 #include "Sprite.h"
+#include "Mummy.h"
 #include "AnimatedSprite.h"
 #include "Game.h"
 #include "DisplayObjectContainer.h"
 #include "AffineTransform.h"
 #include "../objects/Player.h"
 #include "../objects/CollisionBlock.h"
+#include "../objects/RoomChangeBlock.h"
 #include <vector>
 #include <string>
 
@@ -37,10 +39,10 @@ void Scene::loadScene(string sceneFilePath){
             pch = strtok(NULL, " ");
         }
 		if (args[0].compare("player") == 0) {
-			Player* temp = new Player(args[0]);
-			temp->type = "player";
+			DisplayObjectContainer* temp = new DisplayObjectContainer("player_spawn", args[1]);
 			temp->setPos(stoi(args[2]), stoi(args[3]));
 			temp->prevPos = temp->position;
+			temp->visible = false;
 			if (args.size() > 12) {
 				for (DisplayObjectContainer* x : inScene) {
 					if (x->id.compare(args[12]) == 0)
@@ -63,9 +65,25 @@ void Scene::loadScene(string sceneFilePath){
 			temp->rotation = stoi(args[8]);
 			temp->setDim(stoi(args[9]), stoi(args[10]));
 			temp->alpha = stoi(args[11]);
-			if (args.size() > 12) {
+			if (args.size() > 13) {
 				for (DisplayObjectContainer* x : inScene) {
-					if (x->id.compare(args[12]) == 0)
+					if (x->id.compare(args[13]) == 0)
+						x->addChild(temp);
+				}
+			}
+			else {
+				addChild((DisplayObjectContainer*)temp);
+			}
+			inScene.push_back((DisplayObjectContainer*)temp);
+		} else
+		if (args[0].compare("mummy") == 0) {
+			//id, pos.x, pox.y, patrolRange, parents
+			Mummy* temp = new Mummy(stoi(args[1]), stoi(args[2]));
+			temp->type = object;
+			temp->patrolRange = stoi(args[3]);
+			if (args.size() > 4) {
+				for (DisplayObjectContainer* x : inScene) {
+					if (x->id.compare(args[4]) == 0)
 						x->addChild(temp);
 				}
 			}
@@ -177,12 +195,34 @@ void Scene::loadScene(string sceneFilePath){
             }
             inScene.push_back((DisplayObjectContainer*)temp);
         }
+		else if (object.compare("RoomChangeBlock") == 0) {
+			//id, imgpath, pos.x, pox.y, piv.x, piv.y, scaleX, scaleY, rotation, imgH, imgW, alpha, parents
+			RoomChangeBlock* temp = new RoomChangeBlock(args[0]);
+			temp->type = object;
+			temp->setPos(stoi(args[2]), stoi(args[3]));
+			temp->setPiv(stoi(args[4]), stoi(args[5]));
+			temp->scaleX = stoi(args[6]);
+			temp->scaleY = stoi(args[7]);
+			temp->rotation = stoi(args[8]);
+			temp->setDim(stoi(args[9]), stoi(args[10]));
+			temp->alpha = stoi(args[11]);
+			if (args.size() > 12) {
+				for (DisplayObjectContainer* x : inScene) {
+					if (x->id.compare(args[12]) == 0)
+						x->addChild(temp);
+				}
+			}
+			else {
+				addChild((DisplayObjectContainer*)temp);
+			}
+			inScene.push_back((DisplayObjectContainer*)temp);
+		}
     }
 }
 
 void Scene::saveScene(string sceneFilePath) {
     ofstream sceneFile;
-    sceneFile.open(sceneFilePath, ofstream::out | ofstream::app);
+    sceneFile.open(sceneFilePath, ofstream::out | ofstream::trunc);
 	for (DisplayObject *child: children) {
 		child->writeSceneData(sceneFile);
 	}
@@ -191,6 +231,12 @@ void Scene::saveScene(string sceneFilePath) {
 
 void Scene::cleanScene(){
 	inScene.clear();
+	// TODO: Add a loop which deletes children objects
+	for (DisplayObject *child : children) {
+		Event newEvent(EventParams::DISPLAY_OBJECT_REMOVED, child);
+		Game::instance->dispatchEvent(&newEvent);
+		delete child;
+	}
 	children.clear();
 }
 void Scene::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> controllerStates){

@@ -8,6 +8,7 @@
 #include "./events/Event.h"
 #include <map>
 #include <vector>
+#include <set>
 #include "./Camera.h"
 #include <climits>
 
@@ -58,7 +59,7 @@ private:
 	int getOrientation(SDL_Point a, SDL_Point b, SDL_Point c);
 
 	// Id to vector of DisplayObjects with that id
-	map<string, vector<DisplayObject *> *> knownIds;
+	map<string, set<DisplayObject *> *> knownIds;
 	// Pairs of ids that are watched for collisions
 	// Does not check for double adds - so may trigger twice if not careful
 	vector<CollisionRegistration> watchedIds;

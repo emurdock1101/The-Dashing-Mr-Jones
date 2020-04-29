@@ -28,7 +28,7 @@ void CollisionSystem::update() {
 			// Continue if one of the ids has no known objects
 			continue;
 		}
-		vector<DisplayObject *> object1Vec(*(object1It->second));
+		set<DisplayObject *> object1Vec(*(object1It->second));
 		// If we have a camera object, we filter what we process by what's on screen
 		if (camera != NULL) {
 			auto itr = object1Vec.begin();
@@ -49,7 +49,7 @@ void CollisionSystem::update() {
 			// Continue if one of the ids has no known objects
 			continue;
 		}
-		vector<DisplayObject *> object2Vec(*(object2It->second));
+		set<DisplayObject *> object2Vec(*(object2It->second));
 		if (camera != NULL) {
 			auto itr = object2Vec.begin();
 			while (itr != object2Vec.end()) {
@@ -65,58 +65,58 @@ void CollisionSystem::update() {
 		for (DisplayObject *object1 : object1Vec) {
 			for (DisplayObject *object2 : object2Vec) {
 
-				if (it->resolve) {
-					double xDelta1 = object1->position.x - object1->prevPos.x;
-					double xDelta2 = object2->position.x - object2->prevPos.x;
-					double yDelta1 = object1->position.y - object1->prevPos.y;
-					double yDelta2 = object2->position.y - object2->prevPos.y;
+				if (collidesWith(object1, object2)) {
 
-					// condition: 1 at new x, 2 at prev
-					object1->position = object1->prevPos;
-					object2->position = object2->prevPos;
-					object1->position.x += xDelta1;
-					if (collidesWith(object1, object2)) {
-						triggeredByX = true;
-						//resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
+					if (it->resolve) {
+						double xDelta1 = object1->position.x - object1->prevPos.x;
+						double xDelta2 = object2->position.x - object2->prevPos.x;
+						double yDelta1 = object1->position.y - object1->prevPos.y;
+						double yDelta2 = object2->position.y - object2->prevPos.y;
+
+						// condition: 1 at new x, 2 at prev
+						object1->position = object1->prevPos;
+						object2->position = object2->prevPos;
+						object1->position.x += xDelta1;
+						if (collidesWith(object1, object2)) {
+							triggeredByX = true;
+							//resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
+						}
+						// Condition: 1 at new y, 2 at prev
+						object1->position = object1->prevPos;
+						object1->position.y += yDelta1;
+						if (collidesWith(object1, object2)) {
+							triggeredByY = true;
+						}
+						// Condition: 1 at new y, 2 at new X
+						object2->position.x += xDelta2;
+						if (!triggeredByX && collidesWith(object1, object2)) {
+							triggeredByX = true;
+							//resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
+						}
+						// Condition: 1 at new y, 2 at new Y
+						object2->position = object2->prevPos;
+						object2->position.y += yDelta2;
+						if (!triggeredByY && collidesWith(object1, object2)) {
+							triggeredByY = true;
+						}
+						// condition: 1 at new XY, 2 at new XY, and collision stops
+						object1->position.x += xDelta1;
+						object2->position.x += xDelta2;
+						if ((triggeredByX && triggeredByY) && !collidesWith(object1, object2)) {
+							triggeredByX = false;
+							triggeredByY = false;
+						}
+						if (triggeredByX == true || triggeredByY == true) {
+							resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
+						}
 					}
-					// Condition: 1 at new y, 2 at prev
-					object1->position = object1->prevPos;
-					object1->position.y += yDelta1;
-					if (collidesWith(object1, object2)) {
-						triggeredByY = true;
-					}
-					// Condition: 1 at new y, 2 at new X
-					object2->position.x += xDelta2;
-					if (!triggeredByX && collidesWith(object1, object2)) {
-						triggeredByX = true;
-						//resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
-					}
-					// Condition: 1 at new y, 2 at new Y
-					object2->position = object2->prevPos;
-					object2->position.y += yDelta2;
-					if (!triggeredByY && collidesWith(object1, object2)) {
-						triggeredByY = true;
-					}
-					// condition: 1 at new XY, 2 at new XY, and collision stops
-					object1->position.x += xDelta1;
-					object2->position.x += xDelta2;
-					if ((triggeredByX && triggeredByY) && !collidesWith(object1, object2)) {
-						triggeredByX = false;
-						triggeredByY = false;
-					}
-					if (triggeredByX == true || triggeredByY == true) {
-						resolveCollision(object1, object2, xDelta1, yDelta1, xDelta2, yDelta2);
-					}
-				}
-				else {
-					// simpler logic for non-resolving collisions, since we don't need that axis-specific info
-					if (collidesWith(object1, object2)) {
+					else {
+						// simpler logic for non-resolving collisions, since we don't need that axis-specific info
 						SDL_Point deltaD = { 0,0 };
 						SDL_Point deltaO = { 0,0 };
 						notifyCollision(object1, object2, deltaD, deltaO);
 					}
 				}
-
 			}
 		
 		}
@@ -134,12 +134,12 @@ void CollisionSystem::handleEvent(Event* e) {
 		string objectId = ((DisplayObject *)e->getSource())->id;
 		auto it = knownIds.find(objectId);
 		if (it == knownIds.end()) {
-			knownIds.insert(pair<string, vector<DisplayObject *> *>(
-				objectId, new vector<DisplayObject *>()));
+			knownIds.insert(pair<string, set<DisplayObject *> *>(
+				objectId, new set<DisplayObject *>()));
 			it = knownIds.find(objectId);
 		}
 		// Add event's object to the vector
-		it->second->push_back((DisplayObject *)e->getSource());
+		it->second->insert((DisplayObject *)e->getSource());
 		break;
 	}
 	case EventParams::DISPLAY_OBJECT_REMOVED:
@@ -149,7 +149,7 @@ void CollisionSystem::handleEvent(Event* e) {
 		if (it == knownIds.end()) {
 			break;
 		}
-		vector<DisplayObject*> *list = it->second;
+		set<DisplayObject*> *list = it->second;
 		auto itx = list->begin();
 		while (itx != list->end()) {
 			if (*itx == (DisplayObject*)e->getSource()) {
@@ -319,8 +319,6 @@ bool CollisionSystem::collidesWith(DisplayObject* obj1, DisplayObject* obj2) {
 //xDelta2 and yDelta2 are the amount other moved before causing the collision.
 void CollisionSystem::resolveCollision(DisplayObject* d, DisplayObject* other,
 		int xDelta1, int yDelta1, int xDelta2, int yDelta2) {
-	//cout << "RESOLVING " << d->id << " AND " << other->id << endl;
-	//cout << "other: " << other->position.x << " y: " << other->position.y << endl;
 	SDL_Point deltaD = { 0,0 };
 	SDL_Point deltaO = { 0,0 };
 	if (triggeredByX == true){
@@ -329,7 +327,6 @@ void CollisionSystem::resolveCollision(DisplayObject* d, DisplayObject* other,
 		other->position.x -= xDelta2;
 		deltaO.x = -xDelta2;
 		triggeredByX = false;
-		cout << "TRIGGERED X DELTA " << xDelta1 << " " << xDelta2 << endl;
 	}
 	if (triggeredByY == true){
 		d->position.y -= yDelta1;
@@ -337,7 +334,6 @@ void CollisionSystem::resolveCollision(DisplayObject* d, DisplayObject* other,
 		other->position.y -= yDelta2;
 		deltaO.y = -yDelta2;
 		triggeredByY = false;
-		cout << "TRIGGERED Y DELTA " << yDelta1 << " " << yDelta2 << endl;
 	}
 	
 	notifyCollision(d, other, deltaD, deltaO);

@@ -3,6 +3,7 @@
 #include "DevTool.h"
 #include <string>
 #include "../objects/Player.h"
+#include "../objects/Mummy.h"
 #include <ctime>
 #include "../engine/Game.h"
 #include "../engine/Scene.h"
@@ -170,7 +171,15 @@ vector<string>DevTool::getImagesFromFolder(string folderName){
 	HANDLE hFind;
 	if ((hFind = FindFirstFile(pattern.c_str(), &data)) != INVALID_HANDLE_VALUE) {
 		do {
-			temp.push_back(data.cFileName);
+			string file = string(data.cFileName);
+			if ((file.find(".png") != std::string::npos)) {
+				//cout << directory->d_name << endl;
+				temp.push_back(folderName + "/" + data.cFileName);
+			}
+			if (!((file.find(".") != std::string::npos))) {
+				//cout << directory -> d_name << endl;
+				getImagesFromFolder(folderName + "/" + data.cFileName);
+			}
 		} while (FindNextFile(hFind, &data) != 0);
 		FindClose(hFind);
 	}
@@ -240,9 +249,7 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 				cout << "Loading scene " << filename << endl;
 				scene->loadScene(filename);
 				for (DisplayObjectContainer* child : scene->children){
-					if (child->id == "player"){
-						child->inDevtool = true;
-					}
+					child->inDevtool = true;
 					onScreen.push_back(child);
 				}
 				selected = NULL;
@@ -282,6 +289,12 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 					temp->pivot = {0, 0};
 					temp->inDevtool = true;
 					temp->showHitbox = false;
+					scene->addChild(temp);
+					onScreen.push_back(temp);
+				}
+				if (objectType == "mummy" || objectType == "Mummy") {
+					Mummy* temp = new Mummy(100, 100);
+					temp->inDevtool = true;
 					scene->addChild(temp);
 					onScreen.push_back(temp);
 				}
@@ -365,7 +378,6 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 					selected->position.y = selected->position.y - (selected->position.y % gridPixels) + gridPixels;
 				}
 				break;*/
-			/*
 			// Delete
 			case SDL_SCANCODE_BACKSPACE:
 				// Delete
@@ -386,8 +398,9 @@ void DevTool::update(set<SDL_Scancode> pressedKeys, vector<ControllerState *> co
 					cout << "SETTING NULL" << endl;
 					selected = NULL;
 					cout << "BREAKING" << endl;
-					break;
-				}*/
+					
+				}
+				break;
 			case SDL_SCANCODE_C:
 				// Copy
 				if (selected != NULL) {
