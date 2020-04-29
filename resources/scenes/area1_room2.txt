@@ -1,5 +1,5 @@
 DisplayObjectContainer bg ./resources/tilesets/rooms/a1rm2.png -750 -600 0 0 66 58 0 100 100 255
-DisplayObjectContainer player_spawn ./resources/bosses/boulder/aasquare.png 3950 900 0 0 1 1 0 100 100 255
+DisplayObjectContainer player_spawn ./resources/bosses/boulder/aasquare.png 3950 800 0 0 1 1 0 100 100 255
 DisplayObjectContainer 0 0 1050 200 0 0 1 1 0 100 100 255
 DisplayObjectContainer 0 0 1050 4400 0 0 1 1 0 100 100 255
 DisplayObjectContainer 0 0 1150 200 0 0 1 1 0 100 100 255
