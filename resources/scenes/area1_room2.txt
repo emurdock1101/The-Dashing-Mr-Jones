@@ -161,8 +161,6 @@ DisplayObjectContainer 1 ./resources/bosses/boulder/aaa2.png 650 4300 0 0 1 1 0 
 DisplayObjectContainer 1 ./resources/bosses/boulder/aaa2.png 750 4300 0 0 1 1 0 100 100 255
 DisplayObjectContainer 1 ./resources/bosses/boulder/aaa2.png 850 4300 0 0 1 1 0 100 100 255
 DisplayObjectContainer 1 ./resources/bosses/boulder/aaa2.png 950 4300 0 0 1 1 0 100 100 255
-DisplayObjectContainer 2 ./resources/bosses/boulder/aasquare.png 3950 4200 0 0 1 1 0 100 100 255
-DisplayObjectContainer 2 ./resources/bosses/boulder/aasquare.png 3950 4300 0 0 1 1 0 100 100 255
 cb 0 0 150 300 0 0 1 6 0 100 100 255
 cb 0 0 650 900 0 0 6 1 0 100 100 255
 cb 0 0 3350 1000 0 0 7 1 0 100 100 255
@@ -221,3 +219,4 @@ DisplayObjectContainer 1 ./resources/bosses/boulder/aaa2.png 250 2100 0 0 1 1 0 
 cb 0 0 4150 700 0 0 1 1 0 100 100 255
 cb 0 0 4150 800 0 0 1 1 0 100 100 255
 cb 0 0 4150 900 0 0 1 1 0 100 100 255
+RoomChangeBlock ./resources/scenes/area1_room3.txt ./resources/bosses/boulder/aasquare.png 3950 4300 0 0 1 1 0 100 200 255

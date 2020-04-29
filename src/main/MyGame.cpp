@@ -29,7 +29,6 @@ MyGame::MyGame() : Game(1920, 1000), EventListener() {
 	cammy->y = -this->windowHeight;
 	instance->addChild(sc);
 
-
 	player = new Player("player");
 	player->position.y = 0;
 	player->position.x = 0;
